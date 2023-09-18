@@ -238,7 +238,8 @@
                 {
                  "height":16,
                  "id":474,
-                 "name":"pipeFunnel()",
+				 "webBrowserVersionChange_name":"fix syntax error",
+                 "name":"pipeFunnel(myTarget)",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -249,7 +250,8 @@
                 {
                  "height":16,
                  "id":475,
-                 "name":"pipeFunnel()",
+				 "webBrowserVersionChange_name":"fix syntax error",
+                 "name":"pipeFunnel(myTarget)",
                  "rotation":0,
                  "type":"",
                  "visible":true,

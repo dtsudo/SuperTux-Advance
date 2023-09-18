@@ -7,6 +7,15 @@
 	meContribLevels = []
 	if(fileExists("contrib")){
 		local contrib = lsdir("contrib")
+		
+		// webBrowserVersionChange: filter out worlds that still seem to be in development (and not yet complete)
+		local contribFiltered = [];
+		foreach(item in contrib) {
+			if (item != "osop-prequel")
+				contribFiltered.push(item);
+		}
+		contrib = contribFiltered;
+		
 		foreach(item in contrib){
 			if(item != "." && item != ".." && isdir("contrib/"+item) && fileExists("contrib/"+item+"/info.json")){
 				local data = jsonRead(fileRead("contrib/"+item+"/info.json"))
@@ -15,8 +24,9 @@
 						contribFolder = item
 						contribName = data["name"]
 						contribWorldmap = data["worldmap"]
-						name = function() { return contribName }
-						func = function() {
+						// webBrowserVersionChange: slight change to handle variables captured in a closure
+						name = (function (x) { return function () { return x }; })(data["name"])
+						func = (function (contribFolder, contribWorldmap) { return function() {
 							lastLevelsCounted = {"contribFolder":null, "completed":null, "total":null, "percentage":null}
 							game=createNewGameObject()
 							game.file = contribFolder
@@ -47,8 +57,8 @@
 							}
 							if(fileExists("save/" + contribFolder + ".json")) loadGame(contribFolder)
 							else startOverworld("contrib/" + contribFolder + "/" + contribWorldmap)
-						}
-						desc = function() {
+						} })(item, data["worldmap"])
+						desc = (function (contribFolder, contribWorldmap) { return function() {
 							if(lastLevelsCounted["contribFolder"] == contribFolder) {
 								//Check if the same world as last frame is selected and if so, return saved data.
 								return "Progress: " + lastLevelsCounted["completed"] + "/" + lastLevelsCounted["total"] + " (" + lastLevelsCounted["percentage"] + "%)"
@@ -90,11 +100,12 @@
 							}
 
 							local percentage = 0
-							if(levels.len() > 0) percentage = completedLevelsCount * 100 / levels.len()
+							// webBrowserVersionChange: use floor to enforce integer division
+							if(levels.len() > 0) percentage = floor(completedLevelsCount * 100 / levels.len())
 
 							lastLevelsCounted = {"contribFolder":contribFolder, "completed":completedLevelsCount, "total":levels.len(), "percentage":percentage}
 							return "Progress: " + completedLevelsCount + "/" + levels.len() + " (" + percentage + "%)"
-						}
+						} })(item, data["worldmap"])
 					}
 				)
 			}

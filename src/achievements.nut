@@ -101,16 +101,17 @@
 
 	foreach(key, i in gvAchievements) {
 		local newKey = key
+		// webBrowserVersionChange: slight change to handle variables captured in a closure
 		if(gvLangObj["achi-name"].rawin(newKey)) meAchievements.push({
-			name = function() {
+			name = (function (newKey) { return function() {
 				if(gvUnlockedAchievements.rawin(newKey)) return gvLangObj["achi-name"][newKey]
 				else return "????"
-			}
+			} })(newKey)
 			func = function() {}
-			desc = function() {
+			desc = (function (newKey) { return function() {
 				if(gvLangObj["achi-desc"].rawin(newKey)) return gvLangObj["achi-desc"][newKey]
 				else return "????"
-			}
+			} })(newKey)
 			disabled = !gvUnlockedAchievements.rawin(newKey)
 		})
 	}

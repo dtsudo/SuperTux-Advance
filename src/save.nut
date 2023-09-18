@@ -50,7 +50,11 @@
 			foundMissing = false
 			foreach(key, i in game.characters) {
 				if(!(key in gvCharacters)) {
-					delete game.characters[key]
+					// webBrowserVersionChange: Commented out this line since the transpiler doesn't
+					// support the "delete" keyword.
+					// There shouldn't be any "removed characters" anyway since that would presumably
+					// only happen if you migrated a save file from a different version of the game.
+					// delete game.characters[key]
 					foundMissing = true
 				}
 			}
@@ -71,8 +75,9 @@
 		else continue
 		hasSaveFiles = true
 		local o = {}
-		o.name <- function() { return "File " + f }
-		o.func <- function() { loadGame(f) }
+		// webBrowserVersionChange: slight changes to handle the variable f (captured in a closure)
+		o.name <- (function (f) { return function() { return "File " + f }})(f)
+		o.func <- (function (f) { return function() { loadGame(f) } })(f)
 		meLoadGame.push(o)
 	}
 

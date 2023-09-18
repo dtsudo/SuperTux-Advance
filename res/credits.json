@@ -1,6 +1,7 @@
 {
+	"credits_webBrowserVersionChange": "Updated height of res/gfx/title.png from 55 to 80",
 	"credits" : [
-		{"type":"image","image":"res/gfx/title.png","w":220,"h":55,"f":0,"l":0,"s":0.00},
+		{"type":"image","image":"res/gfx/title.png","w":220,"h":80,"f":0,"l":0,"s":0.00},
 
 		{"type":"spacing","height":2},
 		{"type":"normal","trText":"starring"},

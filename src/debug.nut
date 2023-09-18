@@ -14,11 +14,15 @@
 ::gvConOut <- ""
 
 ::drawDebug <- function() {
-	if(keyPress(k_f12)) {
-		debug = !debug
-		//if(debug) foreach(i in actor) print(typeof i)
-	}
-	if(keyPress(k_f1)) devcom = !devcom
+
+	// webBrowserVersionChange: disable ability to set debug to true
+	//if(keyPress(k_f12)) {
+	//	debug = !debug
+	//	//if(debug) foreach(i in actor) print(typeof i)
+	//}
+	
+	// webBrowserVersionChange: change key from F1 to tilde
+	if(keyPress(k_tick)) devcom = !devcom
 
 	//If drawing is disabled, exit
 	if(!debug) return

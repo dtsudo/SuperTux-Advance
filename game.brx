@@ -10,6 +10,9 @@
 |                                 |
 \*===============================*/
 
+// webBrowserVersionChange: add new boolean indicating whether or not we're running the web version
+::isWebBrowserVersion <- false 
+
 setWriteDir(getPrefDir("sta", "supertux-advance"))
 
 //Game source
@@ -205,8 +208,9 @@ if(fileExists("contrib")) {
 
 	if(getcon("pause", "press") && (levelEndRunner == 0 || levelEndRunner == 1) && gvGameMode != gmMain)
 		togglePause()
-	if(keyPress(k_tick))
-		toggleConsole()
+	// webBrowserVersionChange: disable console
+	//if(keyPress(k_tick))
+	//	toggleConsole()
 	gvGameMode()
 }
 
@@ -217,8 +221,12 @@ if(fileExists("contrib")) {
 
 ::gameExit <- function() {}
 
-while(!getQuit() && !gvQuit) {
-	gameCycle()
-	gameRender()
-	update()
+// webBrowserVersionChange: the web version handles the game loop directly in javascript
+if (!isWebBrowserVersion)
+{
+	while(!getQuit() && !gvQuit) {
+		gameCycle()
+		gameRender()
+		update()
+	}
 }

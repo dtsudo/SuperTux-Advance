@@ -321,7 +321,8 @@
 	lang = "en"
 	showleveligt = false
 	showglobaligt = false
-	light = true
+	// webBrowserVersionChange: set light to false
+	light = false
 	showcursor = true
 	usefilter = false
 	soundVolume = 64

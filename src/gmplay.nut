@@ -298,8 +298,9 @@
 						if(!("polyline" in obj || "polygon" in obj)) break
 						local poly = []
 
-						if("polyline" in obj) for(local j = 0; j < obj.polyline.len(); j++) poly.push([obj.x + obj.polyline[j].x, obj.y + obj.polyline[j].y])
-						else for(local j = 0; j < obj.polygon.len(); j++) poly.push([obj.x + obj.polygon[j].x, obj.y + obj.polygon[j].y])
+						// webBrowserVersionChange: avoid reusing the variable name j
+						if("polyline" in obj) for(local jj = 0; jj < obj.polyline.len(); jj++) poly.push([obj.x + obj.polyline[jj].x, obj.y + obj.polyline[jj].y])
+						else for(local jj = 0; jj < obj.polygon.len(); jj++) poly.push([obj.x + obj.polygon[jj].x, obj.y + obj.polygon[jj].y])
 
 						local c = newActor(SecretJoiner, obj.x, obj.y, poly)
 						mapActor[obj.id] <- c
@@ -390,57 +391,73 @@
 
 		local runAnim = getroottable()[game.playerChar2].an["run"]
 		switch(game.ps2.weapon) {
+			// webBrowserVersionChange: use floor to enforce integer division
 			case "normal":
-				drawSprite(getroottable()[gvCharacters[game.playerChar2]["normal"]], runAnim[(getFrames() / 4) % runAnim.len()], (gvScreenW / 2) - charx, gvScreenH / 2)
+				drawSprite(getroottable()[gvCharacters[game.playerChar2]["normal"]], runAnim[floor(getFrames() / 4) % runAnim.len()], (gvScreenW / 2) - charx, gvScreenH / 2)
 				break
+			// webBrowserVersionChange: use floor to enforce integer division
 			case "fire":
-				drawSprite(getroottable()[gvCharacters[game.playerChar2]["fire"]], runAnim[(getFrames() / 4) % runAnim.len()], (gvScreenW / 2) - charx, gvScreenH / 2)
+				drawSprite(getroottable()[gvCharacters[game.playerChar2]["fire"]], runAnim[floor(getFrames() / 4) % runAnim.len()], (gvScreenW / 2) - charx, gvScreenH / 2)
 				break
+			// webBrowserVersionChange: use floor to enforce integer division
 			case "ice":
-				drawSprite(getroottable()[gvCharacters[game.playerChar2]["ice"]], runAnim[(getFrames() / 4) % runAnim.len()], (gvScreenW / 2) - charx, gvScreenH / 2)
+				drawSprite(getroottable()[gvCharacters[game.playerChar2]["ice"]], runAnim[floor(getFrames() / 4) % runAnim.len()], (gvScreenW / 2) - charx, gvScreenH / 2)
 				break
+			// webBrowserVersionChange: use floor to enforce integer division
 			case "air":
-				drawSprite(getroottable()[gvCharacters[game.playerChar2]["air"]], runAnim[(getFrames() / 4) % runAnim.len()], (gvScreenW / 2) - charx, gvScreenH / 2)
+				drawSprite(getroottable()[gvCharacters[game.playerChar2]["air"]], runAnim[floor(getFrames() / 4) % runAnim.len()], (gvScreenW / 2) - charx, gvScreenH / 2)
 				break
+			// webBrowserVersionChange: use floor to enforce integer division
 			case "earth":
-				drawSprite(getroottable()[gvCharacters[game.playerChar2]["earth"]], runAnim[(getFrames() / 4) % runAnim.len()], (gvScreenW / 2) - charx, gvScreenH / 2)
+				drawSprite(getroottable()[gvCharacters[game.playerChar2]["earth"]], runAnim[floor(getFrames() / 4) % runAnim.len()], (gvScreenW / 2) - charx, gvScreenH / 2)
 				break
+			// webBrowserVersionChange: use floor to enforce integer division
 			case "shock":
-				drawSprite(getroottable()[gvCharacters[game.playerChar2]["shock"]], runAnim[(getFrames() / 4) % runAnim.len()], (gvScreenW / 2) - charx, gvScreenH / 2)
+				drawSprite(getroottable()[gvCharacters[game.playerChar2]["shock"]], runAnim[floor(getFrames() / 4) % runAnim.len()], (gvScreenW / 2) - charx, gvScreenH / 2)
 				break
+			// webBrowserVersionChange: use floor to enforce integer division
 			case "water":
-				drawSprite(getroottable()[gvCharacters[game.playerChar2]["water"]], runAnim[(getFrames() / 4) % runAnim.len()], (gvScreenW / 2) - charx, gvScreenH / 2)
+				drawSprite(getroottable()[gvCharacters[game.playerChar2]["water"]], runAnim[floor(getFrames() / 4) % runAnim.len()], (gvScreenW / 2) - charx, gvScreenH / 2)
 				break
+			// webBrowserVersionChange: use floor to enforce integer division
 			default:
-				drawSprite(getroottable()[gvCharacters[game.playerChar2]["normal"]], runAnim[(getFrames() / 4) % runAnim.len()], (gvScreenW / 2) - charx, gvScreenH / 2)
+				drawSprite(getroottable()[gvCharacters[game.playerChar2]["normal"]], runAnim[floor(getFrames() / 4) % runAnim.len()], (gvScreenW / 2) - charx, gvScreenH / 2)
 		}
 	}
 
 	local runAnim = getroottable()[game.playerChar].an["run"]
 	switch(game.ps.weapon) {
+		// webBrowserVersionChange: use floor to enforce integer division
 		case "normal":
-			drawSprite(getroottable()[gvCharacters[game.playerChar]["normal"]], runAnim[(getFrames() / 4) % runAnim.len()], charx + gvScreenW / 2, gvScreenH / 2)
+			drawSprite(getroottable()[gvCharacters[game.playerChar]["normal"]], runAnim[floor(getFrames() / 4) % runAnim.len()], charx + gvScreenW / 2, gvScreenH / 2)
 			break
+		// webBrowserVersionChange: use floor to enforce integer division
 		case "fire":
-			drawSprite(getroottable()[gvCharacters[game.playerChar]["fire"]], runAnim[(getFrames() / 4) % runAnim.len()], charx + gvScreenW / 2, gvScreenH / 2)
+			drawSprite(getroottable()[gvCharacters[game.playerChar]["fire"]], runAnim[floor(getFrames() / 4) % runAnim.len()], charx + gvScreenW / 2, gvScreenH / 2)
 			break
+		// webBrowserVersionChange: use floor to enforce integer division
 		case "ice":
-			drawSprite(getroottable()[gvCharacters[game.playerChar]["ice"]], runAnim[(getFrames() / 4) % runAnim.len()], charx + gvScreenW / 2, gvScreenH / 2)
+			drawSprite(getroottable()[gvCharacters[game.playerChar]["ice"]], runAnim[floor(getFrames() / 4) % runAnim.len()], charx + gvScreenW / 2, gvScreenH / 2)
 			break
+		// webBrowserVersionChange: use floor to enforce integer division
 		case "air":
-			drawSprite(getroottable()[gvCharacters[game.playerChar]["air"]], runAnim[(getFrames() / 4) % runAnim.len()], charx + gvScreenW / 2, gvScreenH / 2)
+			drawSprite(getroottable()[gvCharacters[game.playerChar]["air"]], runAnim[floor(getFrames() / 4) % runAnim.len()], charx + gvScreenW / 2, gvScreenH / 2)
 			break
+		// webBrowserVersionChange: use floor to enforce integer division
 		case "earth":
-			drawSprite(getroottable()[gvCharacters[game.playerChar]["earth"]], runAnim[(getFrames() / 4) % runAnim.len()], charx + gvScreenW / 2, gvScreenH / 2)
+			drawSprite(getroottable()[gvCharacters[game.playerChar]["earth"]], runAnim[floor(getFrames() / 4) % runAnim.len()], charx + gvScreenW / 2, gvScreenH / 2)
 			break
+		// webBrowserVersionChange: use floor to enforce integer division
 		case "shock":
-			drawSprite(getroottable()[gvCharacters[game.playerChar]["shock"]], runAnim[(getFrames() / 4) % runAnim.len()], charx + gvScreenW / 2, gvScreenH / 2)
+			drawSprite(getroottable()[gvCharacters[game.playerChar]["shock"]], runAnim[floor(getFrames() / 4) % runAnim.len()], charx + gvScreenW / 2, gvScreenH / 2)
 			break
+		// webBrowserVersionChange: use floor to enforce integer division
 		case "water":
-			drawSprite(getroottable()[gvCharacters[game.playerChar]["water"]], runAnim[(getFrames() / 4) % runAnim.len()], charx + gvScreenW / 2, gvScreenH / 2)
+			drawSprite(getroottable()[gvCharacters[game.playerChar]["water"]], runAnim[floor(getFrames() / 4) % runAnim.len()], charx + gvScreenW / 2, gvScreenH / 2)
 			break
+		// webBrowserVersionChange: use floor to enforce integer division
 		default:
-			drawSprite(getroottable()[gvCharacters[game.playerChar]["normal"]], runAnim[(getFrames() / 4) % runAnim.len()], charx + gvScreenW / 2, gvScreenH / 2)
+			drawSprite(getroottable()[gvCharacters[game.playerChar]["normal"]], runAnim[floor(getFrames() / 4) % runAnim.len()], charx + gvScreenW / 2, gvScreenH / 2)
 	}
 
 	//Draw Sulphur

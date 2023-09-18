@@ -820,7 +820,18 @@
 		}
 	}
 
-	hurtFire = Deathcap.hurtFire
+	// webBrowserVersionChange: rewrite this since the transpilation code can't handle the original line
+	function hurtFire() {
+		newActor(Flame, x, y - 1)
+		die()
+		stopSound(sndFlame)
+		playSound(sndFlame, 0)
+
+		if(randInt(20) == 0) {
+			local a = actor[newActor(MuffinBlue, x, y)]
+			a.vspeed = -2
+		}
+	}
 
 	function hurtIce() { frozen = 600 }
 
@@ -2256,7 +2267,17 @@
 		}
 	}
 
-	hurtFire = Deathcap.hurtFire
+	// webBrowserVersionChange: rewrite this since the transpilation code can't handle the original line
+	function hurtFire() {
+		newActor(Flame, x, y - 1)
+		die()
+		popSound(sndFlame, 0)
+
+		if(randInt(20) == 0) {
+			local a = actor[newActor(MuffinBlue, x, y)]
+			a.vspeed = -2
+		}
+	}
 
 	function hurtIce() { frozen = 600 }
 }
@@ -2551,7 +2572,8 @@
 			else drawSprite(sprIceTrapSmall, 0, x - camx, y - camy - 1)
 		}
 		else if(chasing) drawSprite(sprHaywire, wrap(getFrames() / 4, 12, 15), x - camx, y - camy, 0, flip.tointeger(), 1, 1, 1)
-		else if(squish && !chasing) drawSprite(sprHaywire, anAgro[wrap(frame, 0, anAgro.len() - 1)], x - camx, y - camy, 0, flip.tointeger(), 1, 1, 1)
+		// webBrowserVersionChange: floor the frame value
+		else if(squish && !chasing) drawSprite(sprHaywire, anAgro[wrap(floor(frame), 0, anAgro.len() - 1)], x - camx, y - camy, 0, flip.tointeger(), 1, 1, 1)
 		else if(squish) drawSprite(sprHaywire, wrap(frame, 12, 15), x - camx, y - camy, 0, flip.tointeger(), 1, 1, 1)
 		else drawSprite(sprHaywire, wrap(getFrames() / 16, 0, 3), x - camx, y - camy, 0, flip.tointeger(), 1, 1, 1)
 	}

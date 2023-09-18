@@ -18,7 +18,8 @@
 ::sprFont2A <- newSprite("res/gfx/font-achieve.png", 12, 14, 0, 0, 0, 0)
 ::font2A <- newFont(sprFont2A, 32, 0, true, -4)
 ::sprDebug <- newSprite("res/gfx/debugkeys.png", 8, 8, 0, 0, 0, 0)
-::sprTitle <- newSprite("res/gfx/title.png", 220, 55, 0, 0, 110, 0)
+// webBrowserVersionChange: update title.png height
+::sprTitle <- newSprite("res/gfx/title.png", 220, 80, 0, 0, 110, 0)
 ::sprActors <- newSprite("res/gfx/actors.png", 16, 16, 0, 0, 8, 8)
 
 

@@ -31,10 +31,18 @@
 	}
 
 	function run() {
+		// webBrowserVersionChange: rewrite dostr() code into javascript
 		if(gvPlayer && hitTest(shape, gvPlayer.shape))
-			dostr("x <- " + x + "; y <- " + y + "; w <- " + w + "; h <- " + h + "; id <- " + id + "; myTarget <- gvPlayer; " + code)
+			if (::isWebBrowserVersion)
+				dostr("/*js*/ x = " + x + "; y = " + y + "; w = " + w + "; h = " + h + "; id = " + id + "; myTarget = gvPlayer; " + code)
+			else
+				dostr("x <- " + x + "; y <- " + y + "; w <- " + w + "; h <- " + h + "; id <- " + id + "; myTarget <- gvPlayer; " + code)
+		// webBrowserVersionChange: rewrite dostr() code into javascript
 		if(gvPlayer2 && hitTest(shape, gvPlayer2.shape))
-			dostr("x <- " + x + "; y <- " + y + "; w <- " + w + "; h <- " + h + "; id <- " + id + "; myTarget <- gvPlayer2; " + code)
+			if (::isWebBrowserVersion)
+				dostr("/*js*/ x = " + x + "; y = " + y + "; w = " + w + "; h = " + h + "; id = " + id + "; myTarget = gvPlayer2; " + code)
+			else
+				dostr("x <- " + x + "; y <- " + y + "; w <- " + w + "; h <- " + h + "; id <- " + id + "; myTarget <- gvPlayer2; " + code)
 	}
 
 	function _typeof() { return "Trigger" }

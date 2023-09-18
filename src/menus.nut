@@ -51,8 +51,10 @@ const menuY = 40
 		menuItemsPos.append({index = i, x = textX, y = textY, len = menu[i].name().len() * fontW})
 
 		//Draw scroll indicators
-		if(cursorOffset > 0) for(local i = 0; i < 4; i++) drawSprite(font2, 116, (screenW() / 2 - 24) + (i * 12), screenH() - menuY - (fontH * (menuMax + 1)))
-		if(cursorOffset < menu.len() - menuMax) for(local i = 0; i < 4; i++) drawSprite(font2, 111, (screenW() / 2 - 24) + (i * 12), screenH() - menuY)
+		// webBrowserVersionChange: avoid reusing the variable name i
+		if(cursorOffset > 0) for(local ii = 0; ii < 4; ii++) drawSprite(font2, 116, (screenW() / 2 - 24) + (ii * 12), screenH() - menuY - (fontH * (menuMax + 1)))
+		// webBrowserVersionChange: avoid reusing the variable name i
+		if(cursorOffset < menu.len() - menuMax) for(local ii = 0; ii < 4; ii++) drawSprite(font2, 111, (screenW() / 2 - 24) + (ii * 12), screenH() - menuY)
 	}
 	//If all items can fit on screen at once
 	else for(local i = 0; i < menu.len(); i++) {
@@ -160,11 +162,12 @@ const menuY = 40
 	{
 		name = function() { return gvLangObj["main-menu"]["extras"] },
 		func = function() { menu = meExtras }
-	},
-	{
-		name = function() { return gvLangObj["main-menu"]["quit"] },
-		func = function() { gvQuit = 1 }
 	}
+	// webBrowserVersionChange: remove "quit" option 
+	//{
+	//	name = function() { return gvLangObj["main-menu"]["quit"] },
+	//	func = function() { gvQuit = 1 }
+	//}
 ]
 
 ::meExtras <- [
@@ -387,11 +390,12 @@ const menuY = 40
 		name = function() { return gvLangObj["options-menu"]["audio"] },
 		func = function() { cursor = 0; menu = meAudio }
 	},
-	{
-		name = function() { return gvLangObj["options-menu"]["language"] },
-		desc = function() { return gvLangObj["options-menu-desc"]["language"] },
-		func = function() { selectLanguage() }
-	},
+	// webBrowserVersionChange: remove language option
+	//{
+	//	name = function() { return gvLangObj["options-menu"]["language"] },
+	//	desc = function() { return gvLangObj["options-menu-desc"]["language"] },
+	//	func = function() { selectLanguage() }
+	//},
 	{
 		name = function() { return gvLangObj["options-menu"]["accessibility"] },
 		func = function() { cursor = 0; menu = meAccessibility }
