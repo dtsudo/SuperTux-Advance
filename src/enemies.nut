@@ -3399,7 +3399,7 @@ Haywire <- class extends Enemy {
 						} else if (placeFree(x - mspeed, y - mspeed * 2)) {
 							x -= mspeed;
 							y -= 1.0;
-						} else flip = false;
+						} else if(!chasing) flip = false;
 
 						if (placeFree(x - 8, y + 14) && !placeFree(x, y + 2)) {
 							if (!chasing) flip = false;
@@ -3416,7 +3416,7 @@ Haywire <- class extends Enemy {
 						} else if (placeFree(x + mspeed * 2, y - mspeed * 2)) {
 							x += mspeed;
 							y -= 1.0;
-						} else flip = true;
+						} else if(!chasing) flip = true;
 
 						if (placeFree(x + 8, y + 14) && !placeFree(x, y + 2)) {
 							if (!chasing) flip = true;

@@ -524,7 +524,6 @@ meTimeAttack <- {
 };
 
 meTimeAttackWorld <- {
-	left = true,
 	size = menuLarge,
 	back = function () {
 		menu = meTimeAttack;

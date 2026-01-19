@@ -1,3 +1,22 @@
+gvTitleMessage <- [
+	"Also try OG SuperTux!",
+	"Also try SuperTuxKart!",
+	"Also try Tuxemon!",
+	"Also try Hexoshi!",
+	"Made with SDL!",
+	"Kyrodian Legends is in development!",
+	"Don't go into the dark!",
+	"Haywire remembers...",
+	"That's not how momentum works!",
+	"Everything changed when Windows updated.",
+	"Eat the rich!",
+	"It's gonna be alright.",
+	"Have you fed your otter today?",
+	"No digging!",
+	""
+];
+gvTitleMessageNumber <- 0;
+
 startMain <- function () {
 	stopMusic();
 	songPlay(musTheme);
@@ -10,6 +29,7 @@ startMain <- function () {
 	gvLight = 0xffffffff;
 	gvLightTarget = 0xffffffff;
 	levelEndRunner = 0;
+	gvTitleMessageNumber = randInt(gvTitleMessage.len());
 };
 
 gmMain <- function () {
