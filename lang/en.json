@@ -261,7 +261,8 @@
 		"coins" : "Coins",
 		"secrets" : "Secrets",
 		"time" : "Best Time",
-		"final-time": "Final Time"
+		"final-time" : "Final Time",
+		"new-pb" : "New PB:  %s / Old: %s"
 	},
 
 	"info" : {

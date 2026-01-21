@@ -21,8 +21,7 @@ newGame <- function (f) {
 		game.randLevel = gvTARandomLevel;
 
 		// Break RNG
-		if (gvTARandomItem || gvTARandomLevel || gvTARandomPlayer)
-			randSeed(getFrames());
+		if (gvTARandomItem || gvTARandomLevel || gvTARandomPlayer) randSeed(getFrames());
 		else randSeed(0);
 
 		if (gvTARandomLevel) {
@@ -80,22 +79,21 @@ newTimeAttack <- function () {
 	local tempPlayer1 = game.playerChar;
 	local tempPlayer2 = game.playerChar2;
 	game = createNewGameObject();
+	if (fileExists("save/-1.json"))
+		game.bestTime = mergeTable(createNewGameObject().bestTime, jsonRead(fileRead("save/-1.json")).bestTime);
 	game.playerChar = tempPlayer1;
 	game.playerChar2 = tempPlayer2;
 	game.file = -1;
 	gvDoIGT = true;
 	game.difficulty = newdif;
 	game.path = path;
+	game.check = false;
 	if (fileExists(path + "/text.json")) {
-		gvLangObj = mergeTable(
-			gvLangObj,
-			jsonRead(fileRead(path + "/text.json"))
-		);
+		gvLangObj = mergeTable(gvLangObj, jsonRead(fileRead(path + "/text.json")));
 		print("Found text.json");
 	}
 	// Break RNG
-	if (gvTARandomItem || gvTARandomLevel || gvTARandomPlayer)
-		randSeed(getFrames());
+	if (gvTARandomItem || gvTARandomLevel || gvTARandomPlayer) randSeed(getFrames());
 	else randSeed(0);
 
 	if (gvTARandomLevel) {
@@ -119,17 +117,13 @@ newTimeAttack <- function () {
 };
 
 saveGame <- function () {
-	if (game.file != -1)
-		fileWrite("save/" + game.file.tostring() + ".json", jsonWrite(game));
+	if (game.file != -1 || gvTimeAttack) fileWrite("save/" + game.file.tostring() + ".json", jsonWrite(game));
 };
 
 loadGame <- function (f) {
 	gvBattleMode = false;
 	if (fileExists("save/" + f.tostring() + ".json")) {
-		game = mergeTable(
-			createNewGameObject(),
-			jsonRead(fileRead("save/" + f.tostring() + ".json"))
-		);
+		game = mergeTable(createNewGameObject(), jsonRead(fileRead("save/" + f.tostring() + ".json")));
 		// Sanitize removed characters
 		local foundMissing = true;
 		while (foundMissing) {

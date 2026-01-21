@@ -99,12 +99,8 @@ startPlay <- function (level, newLevel = true, skipIntro = false) {
 		gvFoundItems.clear();
 
 		ghostRecordName = gvMap.name + "." + game.playerChar + ".gst";
-		if (game.path == "res/map/")
-			ghostRecordOld = loadGhostFile("ghosts/" + ghostRecordName);
-		else
-			ghostRecordOld = loadGhostFile(
-				"ghosts/" + game.path + ghostRecordName
-			);
+		if (game.path == "res/map/") ghostRecordOld = loadGhostFile("ghosts/" + ghostRecordName);
+		else ghostRecordOld = loadGhostFile("ghosts/" + game.path + ghostRecordName);
 		ghostRecordNew = [];
 	}
 
@@ -151,10 +147,7 @@ startPlay <- function (level, newLevel = true, skipIntro = false) {
 		if (game.playerChar2 != "") {
 			do {
 				game.playerChar2 = cl[randInt(cl.len())];
-			} while (
-				game.playerChar == game.playerChar2 ||
-				game.playerChar == "Neverball"
-			);
+			} while (game.playerChar == game.playerChar2 || game.playerChar == "Neverball");
 		}
 	}
 
@@ -191,20 +184,13 @@ startPlay <- function (level, newLevel = true, skipIntro = false) {
 						gvYetFoundItems[i.id] <- actor[mapActor[i.id]].id;
 						break;
 					case "ItemBlock":
-						if (actor[mapActor[i.id]].item == 0)
-							gvYetFoundItems[i.id] <- actor[mapActor[i.id]].id;
+						if (actor[mapActor[i.id]].item == 0) gvYetFoundItems[i.id] <- actor[mapActor[i.id]].id;
 						break;
 				}
 		}
 
 		// Rectangle actors
-		if (
-			!i.rawin("polygon") &&
-			!i.rawin("polyline") &&
-			!i.rawin("ellipse") &&
-			!i.rawin("point") &&
-			!i.rawin("gid")
-		)
+		if (!i.rawin("polygon") && !i.rawin("polyline") && !i.rawin("ellipse") && !i.rawin("point") && !i.rawin("gid"))
 			if (i.name != "") {
 				local c = 0;
 				local arg = split(i.name, ",");
@@ -215,12 +201,7 @@ startPlay <- function (level, newLevel = true, skipIntro = false) {
 				if (getroottable().rawin(n))
 					if (typeof getroottable()[n] == "class") {
 						print(i.x + " - " + i.y);
-						c = newActor(
-							getroottable()[n],
-							i.x + i.width / 2.0,
-							i.y + i.height / 2.0,
-							arg
-						);
+						c = newActor(getroottable()[n], i.x + i.width / 2.0, i.y + i.height / 2.0, arg);
 						actor[c].w = i.width / 2.0;
 						actor[c].h = i.height / 2.0;
 						mapActor[i.id] <- c;
@@ -236,16 +217,8 @@ startPlay <- function (level, newLevel = true, skipIntro = false) {
 					// Create polygon to pass to object
 					local poly = [];
 					for (local j = 0; j <= i.polygon.len(); j++) {
-						if (j == i.polygon.len())
-							poly.push([
-								i.x + i.polygon[0].x,
-								i.y + i.polygon[0].y
-							]);
-						else
-							poly.push([
-								i.x + i.polygon[j].x,
-								i.y + i.polygon[j].y
-							]);
+						if (j == i.polygon.len()) poly.push([i.x + i.polygon[0].x, i.y + i.polygon[0].y]);
+						else poly.push([i.x + i.polygon[j].x, i.y + i.polygon[j].y]);
 					}
 
 					arg[0] = poly;
@@ -267,10 +240,7 @@ startPlay <- function (level, newLevel = true, skipIntro = false) {
 					// Create polygon to pass to object
 					local poly = [];
 					for (local j = 0; j < i.polyline.len(); j++)
-						poly.push([
-							i.x + i.polyline[j].x,
-							i.y + i.polyline[j].y
-						]);
+						poly.push([i.x + i.polyline[j].x, i.y + i.polyline[j].y]);
 
 					arg[0] = poly;
 					local c;
@@ -288,13 +258,11 @@ startPlay <- function (level, newLevel = true, skipIntro = false) {
 		if ("AttackPidgin" in actor) {
 			local sulphurList = [];
 			foreach (i in actor["AttackPidgin"]) sulphurList.push(i.id);
-			for (local j = 0; j < sulphurList.len(); j++)
-				deleteActor(sulphurList[j]);
+			for (local j = 0; j < sulphurList.len(); j++) deleteActor(sulphurList[j]);
 		}
 
 		if (gvPlayer) {
-			local c =
-				actor[newActor(AttackPidgin, gvPlayer.x, gvPlayer.y - 32)];
+			local c = actor[newActor(AttackPidgin, gvPlayer.x, gvPlayer.y - 32)];
 			c.freed = game.hasPidgin;
 		}
 	}
@@ -302,8 +270,8 @@ startPlay <- function (level, newLevel = true, skipIntro = false) {
 	// Go through collected items
 	if (game.check)
 		foreach (k, i in gvFoundItems) {
-			print(typeof actor[mapActor[k]]);
-			if (k in mapActor && mapActor[k] in actor)
+			if (k in mapActor && mapActor[k] in actor) {
+				print(typeof actor[mapActor[k]]);
 				switch (i) {
 					case "ItemBlock":
 						if (actor[mapActor[k]].item != 0) break;
@@ -332,6 +300,7 @@ startPlay <- function (level, newLevel = true, skipIntro = false) {
 						deleteActor(mapActor[k]);
 						break;
 				}
+			}
 		}
 
 	// Other shape layers
@@ -342,17 +311,8 @@ startPlay <- function (level, newLevel = true, skipIntro = false) {
 				local obj = gvMap.data.layers[i].objects[j];
 				switch (lana) {
 					case "trigger":
-						if (
-							"polyline" in obj ||
-							"polygon" in obj ||
-							"ellipse" in obj
-						)
-							break;
-						local c = newActor(
-							Trigger,
-							obj.x + obj.width / 2,
-							obj.y + obj.height / 2
-						);
+						if ("polyline" in obj || "polygon" in obj || "ellipse" in obj) break;
+						local c = newActor(Trigger, obj.x + obj.width / 2, obj.y + obj.height / 2);
 						actor[c].shape = Rec(
 							obj.x + obj.width / 2,
 							obj.y + obj.height / 2,
@@ -372,18 +332,8 @@ startPlay <- function (level, newLevel = true, skipIntro = false) {
 						mapActor[obj.id] <- actor[c].id;
 						break;
 					case "water":
-						if (
-							"polyline" in obj ||
-							"polygon" in obj ||
-							"ellipse" in obj
-						)
-							break;
-						local c = newActor(
-							Water,
-							obj.x + obj.width / 2,
-							obj.y + obj.height / 2,
-							obj.name
-						);
+						if ("polyline" in obj || "polygon" in obj || "ellipse" in obj) break;
+						local c = newActor(Water, obj.x + obj.width / 2, obj.y + obj.height / 2, obj.name);
 						actor[c].shape = Rec(
 							obj.x + obj.width / 2,
 							obj.y + obj.height / 2,
@@ -394,23 +344,11 @@ startPlay <- function (level, newLevel = true, skipIntro = false) {
 						mapActor[obj.id] <- actor[c].id;
 						break;
 					case "secret":
-						if (
-							"polyline" in obj ||
-							"polygon" in obj ||
-							"ellipse" in obj
-						)
-							break;
-						local c =
-							actor[newActor(SecretWall, obj.x, obj.y, obj.name)];
+						if ("polyline" in obj || "polygon" in obj || "ellipse" in obj) break;
+						local c = actor[newActor(SecretWall, obj.x, obj.y, obj.name)];
 						c.dw = obj.width / 16;
 						c.dh = obj.height / 16;
-						c.shape = Rec(
-							c.x + c.dw * 8,
-							c.y + c.dh * 8,
-							-4 + c.dw * 8,
-							-4 + c.dh * 8,
-							5
-						);
+						c.shape = Rec(c.x + c.dw * 8, c.y + c.dh * 8, -4 + c.dw * 8, -4 + c.dh * 8, 5);
 						mapActor[obj.id] <- c.id;
 						break;
 				}
@@ -431,16 +369,10 @@ startPlay <- function (level, newLevel = true, skipIntro = false) {
 
 						if ("polyline" in obj)
 							for (local j = 0; j < obj.polyline.len(); j++)
-								poly.push([
-									obj.x + obj.polyline[j].x,
-									obj.y + obj.polyline[j].y
-								]);
+								poly.push([obj.x + obj.polyline[j].x, obj.y + obj.polyline[j].y]);
 						else
 							for (local j = 0; j < obj.polygon.len(); j++)
-								poly.push([
-									obj.x + obj.polygon[j].x,
-									obj.y + obj.polygon[j].y
-								]);
+								poly.push([obj.x + obj.polygon[j].x, obj.y + obj.polygon[j].y]);
 
 						local c = newActor(SecretJoiner, obj.x, obj.y, poly);
 						mapActor[obj.id] <- c;
@@ -495,32 +427,11 @@ startPlay <- function (level, newLevel = true, skipIntro = false) {
 
 			if (config.light && gvGameMode == gmOverworld) drawAmbientLight();
 
-			drawSprite(
-				sprIris,
-				0,
-				gvScreenW / 2,
-				gvScreenH / 2,
-				0,
-				0,
-				dx * (1.0 - di),
-				dy * (1.0 - di)
-			);
+			drawSprite(sprIris, 0, gvScreenW / 2, gvScreenH / 2, 0, 0, dx * (1.0 - di), dy * (1.0 - di));
 			drawRec(0, 0, gvScreenW * (di / 2.0), gvScreenH, true);
-			drawRec(
-				gvScreenW,
-				0,
-				-(gvScreenW * (di / 2.0)) - 2,
-				gvScreenH,
-				true
-			);
+			drawRec(gvScreenW, 0, -(gvScreenW * (di / 2.0)) - 2, gvScreenH, true);
 			drawRec(0, 0, gvScreenW, gvScreenH * (di / 2.0), true);
-			drawRec(
-				0,
-				gvScreenH,
-				gvScreenW,
-				-(gvScreenH * (di / 2.0)) - 2,
-				true
-			);
+			drawRec(0, gvScreenH, gvScreenW, -(gvScreenH * (di / 2.0)) - 2, true);
 
 			setDrawTarget(gvScreen);
 
@@ -554,12 +465,7 @@ gmLevelStart <- function () {
 	drawRec(0, 0, gvScreenW, gvScreenH, true);
 
 	if (gvLangObj["level"].rawin(gvMap.name))
-		drawText(
-			font2,
-			gvScreenW / 2 - gvLangObj["level"][gvMap.name].len() * 4,
-			8,
-			gvLangObj["level"][gvMap.name]
-		);
+		drawText(font2, gvScreenW / 2 - gvLangObj["level"][gvMap.name].len() * 4, 8, gvLangObj["level"][gvMap.name]);
 
 	local charx = 0;
 	if (game.playerChar2 != 0 && game.playerChar2 != "") {
@@ -577,9 +483,7 @@ gmLevelStart <- function () {
 			switch (game.ps2.weapon) {
 				case "normal":
 					drawSprite(
-						getroottable()[
-							gvCharacters[game.playerChar2]["normal"]
-						],
+						getroottable()[gvCharacters[game.playerChar2]["normal"]],
 						runAnim[(getFrames() / 4) % runAnim.len()],
 						gvScreenW / 2 - charx,
 						gvScreenH / 2
@@ -635,9 +539,7 @@ gmLevelStart <- function () {
 					break;
 				default:
 					drawSprite(
-						getroottable()[
-							gvCharacters[game.playerChar2]["normal"]
-						],
+						getroottable()[gvCharacters[game.playerChar2]["normal"]],
 						runAnim[(getFrames() / 4) % runAnim.len()],
 						gvScreenW / 2 - charx,
 						gvScreenH / 2
@@ -749,32 +651,24 @@ gmLevelStart <- function () {
 	drawText(font, gvScreenW / 2 - bt.len() * 3, gvScreenH - 56, bt);
 
 	local bc = gvLangObj["stats"]["coins"] + ": ";
-	if (game.bestCoins.rawin(gvMap.name))
-		bc += game.bestCoins[gvMap.name] + " / " + game.maxCoins;
+	if (game.bestCoins.rawin(gvMap.name)) bc += game.bestCoins[gvMap.name] + " / " + game.maxCoins;
 	else bc += "0 / " + game.maxCoins;
 	drawText(font, gvScreenW / 2 - bc.len() * 3, gvScreenH - 48, bc);
 
 	local be = gvLangObj["stats"]["enemies"] + ": ";
-	if (game.bestEnemies.rawin(gvMap.name))
-		be += game.bestEnemies[gvMap.name] + " / " + game.maxEnemies;
+	if (game.bestEnemies.rawin(gvMap.name)) be += game.bestEnemies[gvMap.name] + " / " + game.maxEnemies;
 	else be += "0 / " + game.maxEnemies;
 	drawText(font, gvScreenW / 2 - be.len() * 3, gvScreenH - 40, be);
 
 	local bs = gvLangObj["stats"]["secrets"] + ": ";
-	if (game.bestSecrets.rawin(gvMap.name))
-		bs += game.bestSecrets[gvMap.name] + " / " + game.maxSecrets;
+	if (game.bestSecrets.rawin(gvMap.name)) bs += game.bestSecrets[gvMap.name] + " / " + game.maxSecrets;
 	else bs += "0 / " + game.maxSecrets;
 	drawText(font, gvScreenW / 2 - bs.len() * 3, gvScreenH - 32, bs);
 
 	resetDrawTarget();
 	drawImage(gvScreen, 0, 0);
 
-	if (
-		getcon("jump", "press") ||
-		getcon("shoot", "press") ||
-		getcon("pause", "press") ||
-		getcon("accept", "press")
-	)
+	if (getcon("jump", "press") || getcon("shoot", "press") || getcon("pause", "press") || getcon("accept", "press"))
 		gvGameMode = gmPlay;
 };
 
@@ -797,8 +691,7 @@ gmPlay <- function () {
 			if (i.name == "run") dostr(i.value);
 		}
 
-	if (gvPlayer && levelEndRunner == 0)
-		ghostRecordNew.push([int(gvPlayer.x), int(gvPlayer.y)]);
+	if (gvPlayer && levelEndRunner == 0) ghostRecordNew.push([int(gvPlayer.x), int(gvPlayer.y)]);
 
 	////////////////
 	// CAMERA 0/1 //
@@ -827,15 +720,7 @@ gmPlay <- function () {
 	if (gvLightBG) drawImage(gvPlayScreen, 0, 0);
 	if (drawWeather != 0 && config.weather) drawWeather();
 
-	gvMap.drawTiles(
-		floor(-camx),
-		floor(-camy),
-		camx - 48,
-		camy,
-		gvScreenW / 16 + 5,
-		gvScreenH / 16 + 2,
-		"bg"
-	);
+	gvMap.drawTiles(floor(-camx), floor(-camy), camx - 48, camy, gvScreenW / 16 + 5, gvScreenH / 16 + 2, "bg");
 	for (local i = 0; i <= 100; i++)
 		gvMap.drawTiles(
 			floor(-camx),
@@ -846,22 +731,12 @@ gmPlay <- function () {
 			gvScreenH / 16 + 2,
 			"bg" + str(i)
 		);
-	gvMap.drawTiles(
-		floor(-camx),
-		floor(-camy),
-		camx - 48,
-		camy,
-		gvScreenW / 16 + 5,
-		gvScreenH / 16 + 2,
-		"mg"
-	);
+	gvMap.drawTiles(floor(-camx), floor(-camy), camx - 48, camy, gvScreenW / 16 + 5, gvScreenH / 16 + 2, "mg");
 	if (gvMap.name != "shop" && gvVoidFog)
 		for (local i = 0; i < gvScreenW / 16 + 1; i++) {
 			drawSprite(sprVoid, 0, 0 + i * 16, gvMap.h - 32 - camy);
 		}
-	foreach (i in actor)
-		if ("draw" in i && typeof i.draw == "function" && typeof i != "Water")
-			i.draw();
+	foreach (i in actor) if ("draw" in i && typeof i.draw == "function" && typeof i != "Water") i.draw();
 	drawZList(8);
 	if (actor.rawin("Water"))
 		foreach (i in actor["Water"]) {
@@ -882,16 +757,7 @@ gmPlay <- function () {
 			1,
 			gvLight
 		);
-	else
-		gvMap.drawTiles(
-			floor(-camx),
-			floor(-camy),
-			camx - 48,
-			camy,
-			gvScreenW / 16 + 5,
-			gvScreenH / 16 + 2,
-			"fg"
-		);
+	else gvMap.drawTiles(floor(-camx), floor(-camy), camx - 48, camy, gvScreenW / 16 + 5, gvScreenH / 16 + 2, "fg");
 	for (local i = 0; i <= 100; i++) {
 		if (config.light)
 			gvMap.drawTiles(
@@ -927,16 +793,7 @@ gmPlay <- function () {
 			i.draw();
 		}
 	if (debug)
-		gvMap.drawTiles(
-			floor(-camx),
-			floor(-camy),
-			camx,
-			camy,
-			gvScreenW / 16 + 5,
-			gvScreenH / 16 + 2,
-			"solid",
-			0.5
-		);
+		gvMap.drawTiles(floor(-camx), floor(-camy), camx, camy, gvScreenW / 16 + 5, gvScreenH / 16 + 2, "solid", 0.5);
 
 	// Draw HUD-level elements
 	drawHudList();
@@ -967,15 +824,7 @@ gmPlay <- function () {
 		if (gvLightBG) drawImage(gvPlayScreen2, 0, 0);
 		if (drawWeather2 != 0 && config.weather) drawWeather2();
 
-		gvMap.drawTiles(
-			floor(-camx),
-			floor(-camy),
-			camx - 48,
-			camy,
-			gvScreenW / 16 + 5,
-			gvScreenH / 16 + 2,
-			"bg"
-		);
+		gvMap.drawTiles(floor(-camx), floor(-camy), camx - 48, camy, gvScreenW / 16 + 5, gvScreenH / 16 + 2, "bg");
 		for (local i = 0; i <= 100; i++)
 			gvMap.drawTiles(
 				floor(-camx),
@@ -986,26 +835,12 @@ gmPlay <- function () {
 				gvScreenH / 16 + 2,
 				"bg" + str(i)
 			);
-		gvMap.drawTiles(
-			floor(-camx),
-			floor(-camy),
-			camx - 48,
-			camy,
-			gvScreenW / 16 + 5,
-			gvScreenH / 16 + 2,
-			"mg"
-		);
+		gvMap.drawTiles(floor(-camx), floor(-camy), camx - 48, camy, gvScreenW / 16 + 5, gvScreenH / 16 + 2, "mg");
 		if (gvMap.name != "shop" && gvVoidFog)
 			for (local i = 0; i < gvScreenW / 16 + 1; i++) {
 				drawSprite(sprVoid, 0, 0 + i * 16, gvMap.h - 32 - camy);
 			}
-		foreach (i in actor)
-			if (
-				"draw" in i &&
-				typeof i.draw == "function" &&
-				typeof i != "Water"
-			)
-				i.draw();
+		foreach (i in actor) if ("draw" in i && typeof i.draw == "function" && typeof i != "Water") i.draw();
 		drawZList(8);
 		if (actor.rawin("Water"))
 			foreach (i in actor["Water"]) {
@@ -1026,16 +861,7 @@ gmPlay <- function () {
 				1,
 				gvLight2
 			);
-		else
-			gvMap.drawTiles(
-				floor(-camx),
-				floor(-camy),
-				camx - 48,
-				camy,
-				gvScreenW / 16 + 5,
-				gvScreenH / 16 + 2,
-				"fg"
-			);
+		else gvMap.drawTiles(floor(-camx), floor(-camy), camx - 48, camy, gvScreenW / 16 + 5, gvScreenH / 16 + 2, "fg");
 		for (local i = 0; i <= 100; i++) {
 			if (config.light)
 				gvMap.drawTiles(
@@ -1097,14 +923,8 @@ gmPlay <- function () {
 			"invincible" in gvPlayer2 &&
 			gvPlayer.invincible == 0 &&
 			gvPlayer2.invincible == 0) ||
-		(gvPlayer &&
-			!gvPlayer2 &&
-			"invincible" in gvPlayer &&
-			gvPlayer.invincible == 0) ||
-		(gvPlayer2 &&
-			!gvPlayer &&
-			"invincible" in gvPlayer2 &&
-			gvPlayer2.invincible == 0)
+		(gvPlayer && !gvPlayer2 && "invincible" in gvPlayer && gvPlayer.invincible == 0) ||
+		(gvPlayer2 && !gvPlayer && "invincible" in gvPlayer2 && gvPlayer2.invincible == 0)
 	)
 		songPlay(gvMusicName);
 
@@ -1198,12 +1018,7 @@ gmPlay <- function () {
 						if (
 							nearestFish == null ||
 							distance2(i.x, i.y, gvPlayer.x, gvPlayer.y) <
-								distance2(
-									nearestFish.x,
-									nearestFish.y,
-									gvPlayer.x,
-									gvPlayer.y
-								)
+								distance2(nearestFish.x, nearestFish.y, gvPlayer.x, gvPlayer.y)
 						)
 							nearestFish = i;
 					}
@@ -1213,12 +1028,7 @@ gmPlay <- function () {
 						getFrames() / 16,
 						gvPlayer.x - camx0,
 						gvPlayer.y - camy0,
-						pointAngle(
-							gvPlayer.x,
-							gvPlayer.y,
-							nearestFish.x,
-							nearestFish.y
-						)
+						pointAngle(gvPlayer.x, gvPlayer.y, nearestFish.x, nearestFish.y)
 					);
 				}
 
@@ -1228,12 +1038,7 @@ gmPlay <- function () {
 						if (
 							nearestFish == null ||
 							distance2(i.x, i.y, gvPlayer2.x, gvPlayer2.y) <
-								distance2(
-									nearestFish.x,
-									nearestFish.y,
-									gvPlayer2.x,
-									gvPlayer2.y
-								)
+								distance2(nearestFish.x, nearestFish.y, gvPlayer2.x, gvPlayer2.y)
 						)
 							nearestFish = i;
 					}
@@ -1243,12 +1048,7 @@ gmPlay <- function () {
 						getFrames() / 16,
 						gvPlayer2.x - camx0,
 						gvPlayer2.y - camy0,
-						pointAngle(
-							gvPlayer2.x,
-							gvPlayer2.y,
-							nearestFish.x,
-							nearestFish.y
-						)
+						pointAngle(gvPlayer2.x, gvPlayer2.y, nearestFish.x, nearestFish.y)
 					);
 				}
 			} else {
@@ -1259,12 +1059,7 @@ gmPlay <- function () {
 							if (
 								nearestFish == null ||
 								distance2(i.x, i.y, gvPlayer.x, gvPlayer.y) <
-									distance2(
-										nearestFish.x,
-										nearestFish.y,
-										gvPlayer.x,
-										gvPlayer.y
-									)
+									distance2(nearestFish.x, nearestFish.y, gvPlayer.x, gvPlayer.y)
 							)
 								nearestFish = i;
 						}
@@ -1274,12 +1069,7 @@ gmPlay <- function () {
 							getFrames() / 16,
 							gvPlayer.x - camx1 + gvScreenW / 2,
 							gvPlayer.y - camy1,
-							pointAngle(
-								gvPlayer.x,
-								gvPlayer.y,
-								nearestFish.x,
-								nearestFish.y
-							)
+							pointAngle(gvPlayer.x, gvPlayer.y, nearestFish.x, nearestFish.y)
 						);
 					}
 
@@ -1289,12 +1079,7 @@ gmPlay <- function () {
 							if (
 								nearestFish == null ||
 								distance2(i.x, i.y, gvPlayer2.x, gvPlayer2.y) <
-									distance2(
-										nearestFish.x,
-										nearestFish.y,
-										gvPlayer2.x,
-										gvPlayer2.y
-									)
+									distance2(nearestFish.x, nearestFish.y, gvPlayer2.x, gvPlayer2.y)
 							)
 								nearestFish = i;
 						}
@@ -1304,12 +1089,7 @@ gmPlay <- function () {
 							getFrames() / 16,
 							gvPlayer2.x - camx2,
 							gvPlayer2.y - camy2,
-							pointAngle(
-								gvPlayer2.x,
-								gvPlayer2.y,
-								nearestFish.x,
-								nearestFish.y
-							)
+							pointAngle(gvPlayer2.x, gvPlayer2.y, nearestFish.x, nearestFish.y)
 						);
 					}
 				} else {
@@ -1319,12 +1099,7 @@ gmPlay <- function () {
 							if (
 								nearestFish == null ||
 								distance2(i.x, i.y, gvPlayer.x, gvPlayer.y) <
-									distance2(
-										nearestFish.x,
-										nearestFish.y,
-										gvPlayer.x,
-										gvPlayer.y
-									)
+									distance2(nearestFish.x, nearestFish.y, gvPlayer.x, gvPlayer.y)
 							)
 								nearestFish = i;
 						}
@@ -1334,12 +1109,7 @@ gmPlay <- function () {
 							getFrames() / 16,
 							gvPlayer.x - camx1,
 							gvPlayer.y - camy1,
-							pointAngle(
-								gvPlayer.x,
-								gvPlayer.y,
-								nearestFish.x,
-								nearestFish.y
-							)
+							pointAngle(gvPlayer.x, gvPlayer.y, nearestFish.x, nearestFish.y)
 						);
 					}
 
@@ -1349,12 +1119,7 @@ gmPlay <- function () {
 							if (
 								nearestFish == null ||
 								distance2(i.x, i.y, gvPlayer2.x, gvPlayer2.y) <
-									distance2(
-										nearestFish.x,
-										nearestFish.y,
-										gvPlayer2.x,
-										gvPlayer2.y
-									)
+									distance2(nearestFish.x, nearestFish.y, gvPlayer2.x, gvPlayer2.y)
 							)
 								nearestFish = i;
 						}
@@ -1364,12 +1129,7 @@ gmPlay <- function () {
 							getFrames() / 16,
 							gvPlayer2.x - camx2 + gvScreenW / 2,
 							gvPlayer2.y - camy2,
-							pointAngle(
-								gvPlayer2.x,
-								gvPlayer2.y,
-								nearestFish.x,
-								nearestFish.y
-							)
+							pointAngle(gvPlayer2.x, gvPlayer2.y, nearestFish.x, nearestFish.y)
 						);
 					}
 				}
@@ -1424,27 +1184,18 @@ gmPlay <- function () {
 
 		// Update stats
 		gvBarStats.health1 = (game.ps.health + gvBarStats.health1 * 9.0) / 10.0;
-		if (fabs(game.ps.health - gvBarStats.health1) < 0.5)
-			gvBarStats.health1 = game.ps.health;
+		if (fabs(game.ps.health - gvBarStats.health1) < 0.5) gvBarStats.health1 = game.ps.health;
 		gvBarStats.mana1 = (game.ps.energy + gvBarStats.mana1 * 9.0) / 10.0;
-		if (fabs(game.ps.energy - gvBarStats.mana1) < 0.5)
-			gvBarStats.mana1 = game.ps.energy;
-		gvBarStats.stamina1 =
-			(game.ps.stamina + gvBarStats.stamina1 * 9.0) / 10.0;
-		if (fabs(game.ps.stamina - gvBarStats.stamina1) < 0.5)
-			gvBarStats.stamina1 = game.ps.stamina;
+		if (fabs(game.ps.energy - gvBarStats.mana1) < 0.5) gvBarStats.mana1 = game.ps.energy;
+		gvBarStats.stamina1 = (game.ps.stamina + gvBarStats.stamina1 * 9.0) / 10.0;
+		if (fabs(game.ps.stamina - gvBarStats.stamina1) < 0.5) gvBarStats.stamina1 = game.ps.stamina;
 
-		gvBarStats.health2 =
-			(game.ps2.health + gvBarStats.health2 * 9.0) / 10.0;
-		if (fabs(game.ps2.health - gvBarStats.health2) < 0.5)
-			gvBarStats.health2 = game.ps2.health;
+		gvBarStats.health2 = (game.ps2.health + gvBarStats.health2 * 9.0) / 10.0;
+		if (fabs(game.ps2.health - gvBarStats.health2) < 0.5) gvBarStats.health2 = game.ps2.health;
 		gvBarStats.mana2 = (game.ps2.energy + gvBarStats.mana2 * 9.0) / 10.0;
-		if (fabs(game.ps2.energy - gvBarStats.mana2) < 0.5)
-			gvBarStats.mana2 = game.ps2.energy;
-		gvBarStats.stamina2 =
-			(game.ps2.stamina + gvBarStats.stamina2 * 9.0) / 10.0;
-		if (fabs(game.ps2.stamina - gvBarStats.stamina2) < 0.5)
-			gvBarStats.stamina2 = game.ps2.stamina;
+		if (fabs(game.ps2.energy - gvBarStats.mana2) < 0.5) gvBarStats.mana2 = game.ps2.energy;
+		gvBarStats.stamina2 = (game.ps2.stamina + gvBarStats.stamina2 * 9.0) / 10.0;
+		if (fabs(game.ps2.stamina - gvBarStats.stamina2) < 0.5) gvBarStats.stamina2 = game.ps2.stamina;
 
 		if (game.ps.health > game.maxHealth) game.ps.health = game.maxHealth;
 		if (game.ps2.health > game.maxHealth) game.ps2.health = game.maxHealth;
@@ -1453,20 +1204,8 @@ gmPlay <- function () {
 		if (gvSplitScreen) {
 			local elementFrame = 0;
 
-			drawMeter(
-				24 + (gvSwapScreen ? gvScreenW / 2 : 0),
-				8,
-				game.maxHealth,
-				gvBarStats.health1,
-				0xf83810ff
-			);
-			drawMeter(
-				8 + (gvSwapScreen ? gvScreenW / 2 : 0),
-				8,
-				6,
-				game.ps.berries / 2.0,
-				0xf81038ff
-			);
+			drawMeter(24 + (gvSwapScreen ? gvScreenW / 2 : 0), 8, game.maxHealth, gvBarStats.health1, 0xf83810ff);
+			drawMeter(8 + (gvSwapScreen ? gvScreenW / 2 : 0), 8, 6, game.ps.berries / 2.0, 0xf81038ff);
 			drawMeter(
 				24 + (gvSwapScreen ? gvScreenW / 2 : 0),
 				16,
@@ -1510,27 +1249,10 @@ gmPlay <- function () {
 					elementFrame = 8;
 					break;
 			}
-			drawSprite(
-				sprElement,
-				elementFrame,
-				8 + (gvSwapScreen ? gvScreenW / 2 : 0),
-				16
-			);
+			drawSprite(sprElement, elementFrame, 8 + (gvSwapScreen ? gvScreenW / 2 : 0), 16);
 
-			drawMeter(
-				24 + (gvSwapScreen ? 0 : gvScreenW / 2),
-				8,
-				game.maxHealth,
-				gvBarStats.health2,
-				0xf83810ff
-			);
-			drawMeter(
-				8 + (gvSwapScreen ? 0 : gvScreenW / 2),
-				8,
-				6,
-				game.ps2.berries / 2.0,
-				0xf81038ff
-			);
+			drawMeter(24 + (gvSwapScreen ? 0 : gvScreenW / 2), 8, game.maxHealth, gvBarStats.health2, 0xf83810ff);
+			drawMeter(8 + (gvSwapScreen ? 0 : gvScreenW / 2), 8, 6, game.ps2.berries / 2.0, 0xf81038ff);
 			drawMeter(
 				24 + (gvSwapScreen ? 0 : gvScreenW / 2),
 				16,
@@ -1574,29 +1296,12 @@ gmPlay <- function () {
 					elementFrame = 8;
 					break;
 			}
-			drawSprite(
-				sprElement,
-				elementFrame,
-				8 + (gvSwapScreen ? 0 : gvScreenW / 2),
-				16
-			);
+			drawSprite(sprElement, elementFrame, 8 + (gvSwapScreen ? 0 : gvScreenW / 2), 16);
 		} else {
 			drawMeter(24, 8, game.maxHealth, gvBarStats.health1, 0xf83810ff);
 			drawMeter(8, 8, 6, game.ps.berries / 2.0, 0xf81038ff);
-			drawMeter(
-				24,
-				16,
-				game.ps.maxEnergy * 2.0,
-				gvBarStats.mana1 * 2.0,
-				0x1080b0ff
-			);
-			drawMeter(
-				24,
-				24,
-				game.ps.maxStamina * 2.0,
-				gvBarStats.stamina1 * 2.0,
-				0x70a048ff
-			);
+			drawMeter(24, 16, game.ps.maxEnergy * 2.0, gvBarStats.mana1 * 2.0, 0x1080b0ff);
+			drawMeter(24, 24, game.ps.maxStamina * 2.0, gvBarStats.stamina1 * 2.0, 0x70a048ff);
 
 			local elementFrame = 0;
 			switch (game.ps.weapon) {
@@ -1633,34 +1338,10 @@ gmPlay <- function () {
 			// Player 2 stats
 			if (gvNumPlayers > 1) {
 				local baryOffset = 28;
-				drawMeter(
-					24,
-					8 + baryOffset,
-					game.maxHealth,
-					gvBarStats.health2,
-					0xf83810ff
-				);
-				drawMeter(
-					8,
-					8 + baryOffset,
-					6,
-					game.ps2.berries / 2.0,
-					0xf81038ff
-				);
-				drawMeter(
-					24,
-					16 + baryOffset,
-					game.ps.maxEnergy * 2.0,
-					gvBarStats.mana2 * 2.0,
-					0x1080b0ff
-				);
-				drawMeter(
-					24,
-					24 + baryOffset,
-					game.ps.maxStamina * 2.0,
-					gvBarStats.stamina2 * 2.0,
-					0x70a048ff
-				);
+				drawMeter(24, 8 + baryOffset, game.maxHealth, gvBarStats.health2, 0xf83810ff);
+				drawMeter(8, 8 + baryOffset, 6, game.ps2.berries / 2.0, 0xf81038ff);
+				drawMeter(24, 16 + baryOffset, game.ps.maxEnergy * 2.0, gvBarStats.mana2 * 2.0, 0x1080b0ff);
+				drawMeter(24, 24 + baryOffset, game.ps.maxStamina * 2.0, gvBarStats.stamina2 * 2.0, 0x70a048ff);
 
 				local elementFrame = 0;
 				switch (game.ps2.weapon) {
@@ -1704,81 +1385,30 @@ gmPlay <- function () {
 			drawSprite(sprBossHealth, 6, gvScreenW - 23, gvScreenH - 88);
 			drawSprite(sprSkull, 0, gvScreenW - 26, gvScreenH - 86);
 			for (local i = 0; i < 10; i++) {
-				if (i < fullhearts)
-					drawSprite(
-						sprBossHealth,
-						4,
-						gvScreenW - 23,
-						gvScreenH - 96 - 8 * i
-					);
+				if (i < fullhearts) drawSprite(sprBossHealth, 4, gvScreenW - 23, gvScreenH - 96 - 8 * i);
 				else if (i == fullhearts && game.bossHealth > 0)
-					drawSprite(
-						sprBossHealth,
-						game.bossHealth % 4,
-						gvScreenW - 23,
-						gvScreenH - 96 - 8 * i
-					);
-				else
-					drawSprite(
-						sprBossHealth,
-						0,
-						gvScreenW - 23,
-						gvScreenH - 96 - 8 * i
-					);
+					drawSprite(sprBossHealth, game.bossHealth % 4, gvScreenW - 23, gvScreenH - 96 - 8 * i);
+				else drawSprite(sprBossHealth, 0, gvScreenW - 23, gvScreenH - 96 - 8 * i);
 			}
-			drawSprite(
-				sprBossHealth,
-				5,
-				gvScreenW - 23,
-				gvScreenH - 96 - 8 * 10
-			);
+			drawSprite(sprBossHealth, 5, gvScreenW - 23, gvScreenH - 96 - 8 * 10);
 		}
 
 		// Draw coins & herrings
 		drawSprite(sprCoin, 0, 16, gvScreenH - 16);
 		if (game.maxCoins > 0) {
 			if (!config.completion) {
-				if (levelEndRunner)
-					drawText(font2, 24, gvScreenH - 23, game.coins.tostring());
-				else
-					drawText(
-						font2,
-						24,
-						gvScreenH - 23,
-						(game.coins + game.levelCoins).tostring()
-					);
-			} else
-				drawText(
-					font2,
-					24,
-					gvScreenH - 23,
-					game.levelCoins.tostring() + "/" + game.maxCoins.tostring()
-				);
+				if (levelEndRunner) drawText(font2, 24, gvScreenH - 23, game.coins.tostring());
+				else drawText(font2, 24, gvScreenH - 23, (game.coins + game.levelCoins).tostring());
+			} else drawText(font2, 24, gvScreenH - 23, game.levelCoins.tostring() + "/" + game.maxCoins.tostring());
 			if (config.completion) {
 				drawSprite(sprDeathcap, 0, 16, gvScreenH - 48);
-				drawText(
-					font2,
-					24,
-					gvScreenH - 56,
-					game.enemies.tostring() + "/" + game.maxEnemies.tostring()
-				);
+				drawText(font2, 24, gvScreenH - 56, game.enemies.tostring() + "/" + game.maxEnemies.tostring());
 				drawSprite(sprIcoSecret, 0, 16, gvScreenH - 32);
-				drawText(
-					font2,
-					24,
-					gvScreenH - 40,
-					game.secrets.tostring() + "/" + game.maxSecrets.tostring()
-				);
+				drawText(font2, 24, gvScreenH - 40, game.secrets.tostring() + "/" + game.maxSecrets.tostring());
 			}
 		} else drawText(font2, 24, gvScreenH - 23, game.coins.tostring());
 		// Herrings (redcoins)
-		if (game.maxRedCoins > 0)
-			drawSprite(
-				sprHerring,
-				0,
-				16,
-				gvScreenH - (config.completion ? 64 : 32)
-			);
+		if (game.maxRedCoins > 0) drawSprite(sprHerring, 0, 16, gvScreenH - (config.completion ? 64 : 32));
 		if (game.maxRedCoins > 0)
 			drawText(
 				font2,
@@ -1788,182 +1418,72 @@ gmPlay <- function () {
 			);
 		// Draw subitem
 		if (gvSplitScreen) {
-			drawSprite(
-				sprSubItem,
-				0,
-				gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2),
-				18
-			);
-			drawSprite(
-				sprSubItem,
-				1,
-				gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0),
-				18
-			);
+			drawSprite(sprSubItem, 0, gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2), 18);
+			drawSprite(sprSubItem, 1, gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0), 18);
 
 			switch (game.ps.subitem) {
 				case "fire":
-					drawSprite(
-						sprFlowerFire,
-						0,
-						gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2),
-						18
-					);
+					drawSprite(sprFlowerFire, 0, gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2), 18);
 					break;
 				case "ice":
-					drawSprite(
-						sprFlowerIce,
-						0,
-						gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2),
-						18
-					);
+					drawSprite(sprFlowerIce, 0, gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2), 18);
 					break;
 				case "air":
-					drawSprite(
-						sprAirFeather,
-						0,
-						gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2),
-						18
-					);
+					drawSprite(sprAirFeather, 0, gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2), 18);
 					break;
 				case "earth":
-					drawSprite(
-						sprEarthShell,
-						0,
-						gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2),
-						18
-					);
+					drawSprite(sprEarthShell, 0, gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2), 18);
 					break;
 				case "shock":
-					drawSprite(
-						sprShockBulb,
-						0,
-						gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2),
-						18
-					);
+					drawSprite(sprShockBulb, 0, gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2), 18);
 					break;
 				case "water":
-					drawSprite(
-						sprWaterLily,
-						0,
-						gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2),
-						18
-					);
+					drawSprite(sprWaterLily, 0, gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2), 18);
 					break;
 				case "muffinBlue":
-					drawSprite(
-						sprMuffin,
-						0,
-						gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2),
-						18
-					);
+					drawSprite(sprMuffin, 0, gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2), 18);
 					break;
 				case "muffinRed":
-					drawSprite(
-						sprMuffin,
-						1,
-						gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2),
-						18
-					);
+					drawSprite(sprMuffin, 1, gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2), 18);
 					break;
 				case "star":
-					drawSprite(
-						sprStar,
-						0,
-						gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2),
-						18
-					);
+					drawSprite(sprStar, 0, gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2), 18);
 					break;
 				case "coffee":
-					drawSprite(
-						sprCoffee,
-						0,
-						gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2),
-						17
-					);
+					drawSprite(sprCoffee, 0, gvScreenW - 18 - (gvSwapScreen ? 0 : gvScreenW / 2), 17);
 					break;
 			}
 
 			switch (game.ps2.subitem) {
 				case "fire":
-					drawSprite(
-						sprFlowerFire,
-						0,
-						gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0),
-						18
-					);
+					drawSprite(sprFlowerFire, 0, gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0), 18);
 					break;
 				case "ice":
-					drawSprite(
-						sprFlowerIce,
-						0,
-						gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0),
-						18
-					);
+					drawSprite(sprFlowerIce, 0, gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0), 18);
 					break;
 				case "air":
-					drawSprite(
-						sprAirFeather,
-						0,
-						gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0),
-						18
-					);
+					drawSprite(sprAirFeather, 0, gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0), 18);
 					break;
 				case "earth":
-					drawSprite(
-						sprEarthShell,
-						0,
-						gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0),
-						18
-					);
+					drawSprite(sprEarthShell, 0, gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0), 18);
 					break;
 				case "shock":
-					drawSprite(
-						sprShockBulb,
-						0,
-						gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0),
-						18
-					);
+					drawSprite(sprShockBulb, 0, gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0), 18);
 					break;
 				case "water":
-					drawSprite(
-						sprWaterLily,
-						0,
-						gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0),
-						18
-					);
+					drawSprite(sprWaterLily, 0, gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0), 18);
 					break;
 				case "muffinBlue":
-					drawSprite(
-						sprMuffin,
-						0,
-						gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0),
-						18
-					);
+					drawSprite(sprMuffin, 0, gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0), 18);
 					break;
 				case "muffinRed":
-					drawSprite(
-						sprMuffin,
-						1,
-						gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0),
-						18
-					);
+					drawSprite(sprMuffin, 1, gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0), 18);
 					break;
 				case "star":
-					drawSprite(
-						sprStar,
-						0,
-						gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0),
-						18
-					);
+					drawSprite(sprStar, 0, gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0), 18);
 					break;
 				case "coffee":
-					drawSprite(
-						sprCoffee,
-						0,
-						gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0),
-						17
-					);
+					drawSprite(sprCoffee, 0, gvScreenW - 18 - (gvSwapScreen ? gvScreenW / 2 : 0), 17);
 					break;
 			}
 		} else {
@@ -2041,11 +1561,7 @@ gmPlay <- function () {
 		// Draw level IGT
 		local timey = 0;
 		if (gvNumPlayers >= 2 && !gvNetPlay) timey = 32;
-		if (
-			gvDoIGT &&
-			(config.showleveligt || gvTimeAttack) &&
-			levelEndRunner != 1
-		)
+		if (gvDoIGT && (config.showleveligt || gvTimeAttack) && levelEndRunner != 1)
 			drawText(font2, 8, 32 + timey, formatTime(gvIGT));
 
 		// Draw offscreen player
@@ -2065,17 +1581,7 @@ gmPlay <- function () {
 				stopSound(sndWarning);
 				playSound(sndWarning, 0);
 			}
-			drawSprite(
-				sprWarning,
-				0,
-				gvScreenW / 2,
-				gvScreenH / 2,
-				0,
-				0,
-				1,
-				1,
-				abs(sin(gvWarning / 30.0))
-			);
+			drawSprite(sprWarning, 0, gvScreenW / 2, gvScreenH / 2, 0, 0, 1, 1, abs(sin(gvWarning / 30.0)));
 			gvWarning += 1.5;
 		}
 
@@ -2095,9 +1601,7 @@ gmPlay <- function () {
 			if ((typeof gvPlayer2) in gvCharacters)
 				drawSprite(
 					getroottable()[gvCharacters[typeof gvPlayer2]["doll"]],
-					enWeapons[
-						config.showTF ? gvPlayer2.stats.weapon : "normal"
-					],
+					enWeapons[config.showTF ? gvPlayer2.stats.weapon : "normal"],
 					gvScreenW - kx,
 					gvScreenH - 16
 				);
@@ -2158,24 +1662,11 @@ gmPlay <- function () {
 	// Draw exit timer
 	local exside = gvExitSide ? gvScreenW * 0.9 : gvScreenW * 0.1;
 	if (gvExitTimer > 0) {
-		drawSprite(
-			sprExit,
-			getFrames() / 16,
-			exside,
-			gvScreenH / 2,
-			0,
-			gvExitSide
-		);
+		drawSprite(sprExit, getFrames() / 16, exside, gvScreenH / 2, 0, gvExitSide);
 		setDrawColor(0x101010ff);
 		drawRec(exside - 16, gvScreenH / 2 + 12, 32, 4, true);
 		setDrawColor(0xf8f8f8ff);
-		drawRec(
-			exside - (15.0 / 30.0) * gvExitTimer,
-			gvScreenH / 2 + 13,
-			(31.0 / 30.0) * gvExitTimer,
-			2,
-			true
-		);
+		drawRec(exside - (15.0 / 30.0) * gvExitTimer, gvScreenH / 2 + 13, (31.0 / 30.0) * gvExitTimer, 2, true);
 	}
 
 	// Draw surface to screen
@@ -2194,11 +1685,7 @@ gmPlay <- function () {
 		if (game.ps.health < game.maxHealth) {
 			game.ps.health++;
 			game.ps.berries = 0;
-			if(gvPlayer) newActor(
-				Heal,
-				gvPlayer.x - 16 + randInt(32),
-				gvPlayer.y - 16 + randInt(32)
-			);
+			if (gvPlayer) newActor(Heal, gvPlayer.x - 16 + randInt(32), gvPlayer.y - 16 + randInt(32));
 		} else if (game.ps.berries > 12) game.ps.berries--;
 	}
 
@@ -2206,11 +1693,7 @@ gmPlay <- function () {
 		if (game.ps2.health < game.maxHealth) {
 			game.ps2.health++;
 			game.ps2.berries = 0;
-			if(gvPlayer2) newActor(
-				Heal,
-				gvPlayer2.x - 16 + randInt(32),
-				gvPlayer2.y - 16 + randInt(32)
-			);
+			if (gvPlayer2) newActor(Heal, gvPlayer2.x - 16 + randInt(32), gvPlayer2.y - 16 + randInt(32));
 		} else if (game.ps2.berries > 12) game.ps2.berries--;
 	}
 
@@ -2313,50 +1796,18 @@ createPlatformActors <- function (n, i, c) {
 
 				if (!gvPlayer && getroottable().rawin(game.playerChar)) {
 					if (game.check == false) {
-						c =
-							actor[
-								newActor(
-									getroottable()[game.playerChar],
-									i.x + 8,
-									i.y - 16
-								)
-							];
+						c = actor[newActor(getroottable()[game.playerChar], i.x + 8, i.y - 16)];
 					} else {
-						c =
-							actor[
-								newActor(
-									getroottable()[game.playerChar],
-									game.chx,
-									game.chy
-								)
-							];
+						c = actor[newActor(getroottable()[game.playerChar], game.chx, game.chy)];
 					}
 					gvNumPlayers++;
 				}
 
-				if (
-					game.playerChar2 != "" &&
-					!gvPlayer2 &&
-					getroottable().rawin(game.playerChar2)
-				) {
+				if (game.playerChar2 != "" && !gvPlayer2 && getroottable().rawin(game.playerChar2)) {
 					if (game.check == false) {
-						c =
-							actor[
-								newActor(
-									getroottable()[game.playerChar2],
-									i.x + 8,
-									i.y - 16
-								)
-							];
+						c = actor[newActor(getroottable()[game.playerChar2], i.x + 8, i.y - 16)];
 					} else {
-						c =
-							actor[
-								newActor(
-									getroottable()[game.playerChar2],
-									game.chx,
-									game.chy
-								)
-							];
+						c = actor[newActor(getroottable()[game.playerChar2], game.chx, game.chy)];
 					}
 					gvNumPlayers++;
 				}
@@ -2365,8 +1816,7 @@ createPlatformActors <- function (n, i, c) {
 				camy = c.y - gvScreenH / 2;
 				if (gvPlayer) gvCamTarget = gvPlayer;
 
-				if (config.useBeam && gvNumPlayers == 1)
-					newActor(BeamBug, i.x + 8, i.y - 16);
+				if (config.useBeam && gvNumPlayers == 1) newActor(BeamBug, i.x + 8, i.y - 16);
 
 				if (gvBattleMode && gvPlayer && gvPlayer2) {
 					gvPlayer.blinking = 10;
@@ -2430,8 +1880,7 @@ createPlatformActors <- function (n, i, c) {
 			break;
 
 		case 12:
-			if (game.difficulty >= 3)
-				c = newActor(CaptainMorel, i.x + 8, i.y - 8, i.name);
+			if (game.difficulty >= 3) c = newActor(CaptainMorel, i.x + 8, i.y - 8, i.name);
 			else c = newActor(Deathcap, i.x + 8, i.y - 8, false);
 			game.maxEnemies++;
 			break;
@@ -2481,24 +1930,13 @@ createPlatformActors <- function (n, i, c) {
 			break;
 
 		case 22:
-			if (gvLangObj["info"].rawin(i.name))
-				c = newActor(
-					InfoBlock,
-					i.x + 8,
-					i.y - 8,
-					gvLangObj["info"][i.name]
-				);
+			if (gvLangObj["info"].rawin(i.name)) c = newActor(InfoBlock, i.x + 8, i.y - 8, gvLangObj["info"][i.name]);
 			else c = newActor(InfoBlock, i.x + 8, i.y - 8, "");
 			break;
 
 		case 23:
 			if (gvLangObj["devcom"].rawin(i.name))
-				c = newActor(
-					KelvinScarf,
-					i.x + 8,
-					i.y - 8,
-					gvLangObj["devcom"][i.name]
-				);
+				c = newActor(KelvinScarf, i.x + 8, i.y - 8, gvLangObj["devcom"][i.name]);
 			else c = newActor(KelvinScarf, i.x + 8, i.y - 8, "");
 			break;
 
@@ -2511,8 +1949,7 @@ createPlatformActors <- function (n, i, c) {
 			break;
 
 		case 26:
-			if (game.difficulty >= 3)
-				c = newActor(Haywire, i.x + 8, i.y - 8, i.name);
+			if (game.difficulty >= 3) c = newActor(Haywire, i.x + 8, i.y - 8, i.name);
 			else c = newActor(CarlBoom, i.x + 8, i.y - 8);
 			game.maxEnemies++;
 			break;
@@ -2523,15 +1960,13 @@ createPlatformActors <- function (n, i, c) {
 			break;
 
 		case 28:
-			if (game.difficulty >= 3)
-				c = newActor(RedFish, i.x + 8, i.y - 8, i.name);
+			if (game.difficulty >= 3) c = newActor(RedFish, i.x + 8, i.y - 8, i.name);
 			else c = newActor(BlueFish, i.x + 8, i.y - 8);
 			game.maxEnemies++;
 			break;
 
 		case 29:
-			if (game.difficulty >= 3)
-				c = newActor(GreenFish, i.x + 8, i.y - 8, i.name);
+			if (game.difficulty >= 3) c = newActor(GreenFish, i.x + 8, i.y - 8, i.name);
 			else c = newActor(RedFish, i.x + 8, i.y - 8);
 			game.maxEnemies++;
 			break;
@@ -2599,8 +2034,7 @@ createPlatformActors <- function (n, i, c) {
 			break;
 
 		case 44:
-			if (game.difficulty >= 3)
-				c = newActor(Puffranah, i.x + 8, i.y - 8, i.name);
+			if (game.difficulty >= 3) c = newActor(Puffranah, i.x + 8, i.y - 8, i.name);
 			else c = newActor(GreenFish, i.x + 8, i.y - 8);
 			game.maxEnemies++;
 			break;
@@ -2686,8 +2120,7 @@ createPlatformActors <- function (n, i, c) {
 			if (arg.len() == 1) arg = arg[0];
 			else if (arg.len() == 0) arg = null;
 			if (getroottable().rawin(n))
-				if (typeof getroottable()[n] == "class")
-					c = newActor(getroottable()[n], i.x + 8, i.y - 8, arg);
+				if (typeof getroottable()[n] == "class") c = newActor(getroottable()[n], i.x + 8, i.y - 8, arg);
 			break;
 
 		case 65:
@@ -2973,8 +2406,7 @@ createRacerActors <- function (n, i, c) {
 			if (arg.len() == 1) arg = arg[0];
 			else if (arg.len() == 0) arg = null;
 			if (getroottable().rawin(n))
-				if (typeof getroottable()[n] == "class")
-					c = newActor(getroottable()[n], i.x + 8, i.y - 8, arg);
+				if (typeof getroottable()[n] == "class") c = newActor(getroottable()[n], i.x + 8, i.y - 8, arg);
 			break;
 	}
 
