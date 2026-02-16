@@ -626,12 +626,16 @@ DeadPlayer <- class extends Actor {
 		vspeed += 0.1;
 		y += vspeed;
 		timer--;
-		if (timer == 0 && !gvPlayer && !gvPlayer2) {
-			startPlay(gvMap.file, true, true);
+		if (timer == 0) {
+			if (!gvPlayer && !gvPlayer2) {
+				startPlay(gvMap.file, true, true);
+				if (game.check == false) {
+					gvIGT = 0;
+				}
+			}
 
 			if (playerNum == 1) game.ps.weapon = "normal";
 			if (playerNum == 2) game.ps2.weapon = "normal";
-			gvIGT = 0;
 		}
 	}
 

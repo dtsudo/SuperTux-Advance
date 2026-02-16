@@ -3,6 +3,7 @@
 ///////////////
 
 gvLevel <- "";
+gvEncounterList <- [];
 
 OverPlayer <- class extends PhysAct {
 	// 0 = right
@@ -542,6 +543,7 @@ startOverworld <- function (world) {
 	gvYetFoundItems.clear();
 	gvFoundItems.clear();
 	gvAutoCon = false;
+	gvEncounterList.clear();
 
 	if (game.characters.len() == 0)
 		game.characters = {

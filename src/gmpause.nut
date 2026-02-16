@@ -25,7 +25,7 @@ togglePause <- function () {
 			!gvPlayer2
 		) {
 			startPlay(gvMap.file, true, true);
-			gvIGT = 0;
+			if(game.check == false) gvIGT = 0;
 			game.ps.weapon = "normal";
 			game.ps2.weapon = "normal";
 		} else {
