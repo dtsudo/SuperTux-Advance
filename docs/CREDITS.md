@@ -27,7 +27,7 @@ Tux - CC-BY-SA 4.0
 Penny - CC-BY-SA 4.0
 Konqi - CC-BY-SA 4.0
 Katie - CC-BY-SA 4.0
-Midi Waffle - CC-BY-SA 4.0 / KLPL
+Midi Waffle - KLPL 1.0
 Cannon Bob - CC-BY-SA 4.0
 Igloo edits - CC-BY-SA 4.0
 Mama Bear - CC-BY-SA 4.0
@@ -43,8 +43,8 @@ Elemental explosions - CC-BY-SA 4.0
 tux-title.png - CC-BY-SA 4.0
 
 
-**All graphics by Kelvin are CC-BY-SA 4.0**
-**Midi and Duke are released under KLPL**
+**Midi and Duke are released under KLPL 1.0**
+**All other graphics by Kelvin are CC-BY-SA 4.0**
 acid.png
 acidsurface.png
 actors-big.png

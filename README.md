@@ -21,6 +21,10 @@ To open the game in the Brux GDK engine for development or contributions, follow
 
 To download and play SuperTux Advance, download and unzip the [latest release from itch.io](https://kelvinshadewing.itch.io/supertux-advance). If on Windows, run the excecutable located at `/sta-0.2.48/sta/sta.exe` by double clicking it. If on linux, navigate to the `sta` subdirectory (e.g., `cd ~/Downloads/sta-0.2.48/sta`), install SDL2 (e.g., `sudo apt install libsdl2*`), then run the `sta` file (i.e., `./sta`).
 
+## Kyrodian Legends Public License
+
+Midi Waffle and Duke are free characters under the Kyrodian Legends Public License, found in KLPL.md. Please read it before using them.
+
 ## Controls
 
 You can rebind the controls from the Options menu found on the title screen.

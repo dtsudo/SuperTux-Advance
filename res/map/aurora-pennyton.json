@@ -379,7 +379,7 @@
          "name":"water",
          "objects":[
                 {
-                 "height":128,
+                 "height":144,
                  "id":39,
                  "name":"",
                  "rotation":0,
@@ -387,10 +387,10 @@
                  "visible":true,
                  "width":320,
                  "x":3200,
-                 "y":352
+                 "y":336
                 }, 
                 {
-                 "height":80,
+                 "height":96,
                  "id":110,
                  "name":"",
                  "rotation":0,
@@ -398,7 +398,7 @@
                  "visible":true,
                  "width":688,
                  "x":3520,
-                 "y":400
+                 "y":384
                 }],
          "opacity":1,
          "type":"objectgroup",

@@ -3,6 +3,8 @@ creditsOffset <- 0;
 creditsTimer <- 0;
 creditsLength <- 0;
 creditsSprites <- [];
+fontH <- 10;
+
 startCredits <- function (folder = "res") {
 	creditsData = jsonRead(fileRead(folder + "/credits.json"));
 	if (creditsData == null) {

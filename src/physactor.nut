@@ -601,11 +601,11 @@ PhysAct <- class extends Actor {
 							case 25: // Thin Down
 								gvMap.shape.setPos(
 									(cx + i) * 16 + 8,
-									(cy + j) * 16 + 15
+									(cy + j) * 16 + 16
 								);
 								gvMap.shape.kind = 0;
 								gvMap.shape.w = 8.0;
-								gvMap.shape.h = 1.0;
+								gvMap.shape.h = 2.0;
 								if (hitTest(ns, gvMap.shape)) return false;
 								break;
 							case 26: // Thin Up

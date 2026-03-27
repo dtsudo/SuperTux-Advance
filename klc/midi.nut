@@ -57,11 +57,9 @@ Midi <- class extends Player {
 	an = {
 		stand = null,
 		standB = [
-			0, 0, 0, 0, 0, 0, 0, 0, 238, 238, 238, 238, 238, 238, 238, 238, 0,
-			0, 0, 0, 180, 181, 180, 181, 180, 181, 180, 181, 0, 0, 0, 0, 0, 0,
-			0, 6, 87, 175, 175, 175, 175, 175, 175, 175, 175, 175, 175, 175,
-			175, 175, 175, 175, 175, 175, 175, 175, 175, 175, 175, 175, 175,
-			175, 175, 175, 175, 175, 175, 175, 175, 87, 6
+			0, 0, 0, 0, 0, 0, 0, 0, 238, 238, 238, 238, 238, 238, 238, 238, 0, 0, 0, 0, 180, 181, 180, 181, 180, 181,
+			180, 181, 0, 0, 0, 0, 0, 0, 0, 6, 87, 175, 175, 175, 175, 175, 175, 175, 175, 175, 175, 175, 175, 175, 175,
+			175, 175, 175, 175, 175, 175, 175, 175, 175, 175, 175, 175, 175, 175, 175, 175, 175, 175, 87, 6
 		],
 		standN = [1, 2, 3, 4],
 		standW = [204, 204, 204, 205, 206, 206, 206, 207],
@@ -304,16 +302,8 @@ Midi <- class extends Player {
 
 		switch (anim) {
 			case "walk":
-				if (
-					canMove &&
-					getcon("left", "hold", true, playerNum) &&
-					getcon("right", "hold", true, playerNum)
-				) {
-					if (
-						fabs(hspeed) >= 1.5 &&
-						fabs(hspeed) < 2.0 &&
-						(!endMode || placeFree(x + hspeed, y))
-					)
+				if (canMove && getcon("left", "hold", true, playerNum) && getcon("right", "hold", true, playerNum)) {
+					if (fabs(hspeed) >= 1.5 && fabs(hspeed) < 2.0 && (!endMode || placeFree(x + hspeed, y)))
 						hspeed *= 0.9;
 					if (fabs(hspeed) <= 1.4) hspeed *= 1.1;
 				}
@@ -348,10 +338,8 @@ Midi <- class extends Player {
 				// Line alignment
 				local lineType = 0;
 				if (atZipline()) lineType = tileGetSolid(x, y - shape.h);
-				else if (atZipline(0, -1))
-					lineType = tileGetSolid(x, y - shape.h - 1);
-				else if (atZipline(0, 1))
-					lineType = tileGetSolid(x, y - shape.h + 1);
+				else if (atZipline(0, -1)) lineType = tileGetSolid(x, y - shape.h - 1);
+				else if (atZipline(0, 1)) lineType = tileGetSolid(x, y - shape.h + 1);
 
 				y = y - (y % 16) + 4;
 
@@ -364,11 +352,7 @@ Midi <- class extends Player {
 		}
 
 		if (fabs(hspeed) < friction) hspeed = 0.0;
-		if (
-			(placeFree(x, y + 2) || vspeed < 0) &&
-			(vspeed < 2 || (vspeed < 16 && !nowInWater)) &&
-			antigrav <= 0
-		)
+		if ((placeFree(x, y + 2) || vspeed < 0) && (vspeed < 2 || (vspeed < 16 && !nowInWater)) && antigrav <= 0)
 			vspeed += vspeed > 5 ? gravity / vspeed : gravity;
 		else if (antigrav > 0) antigrav--;
 		if (!placeFree(x, y - 1) && vspeed < 0) vspeed = 0.0;
@@ -430,10 +414,7 @@ Midi <- class extends Player {
 				if (wasOnGround)
 					for (local i = 0; i < min(max(8, abs(hspeed * 3)), 12); i++)
 						if (
-							!placeFree(
-								x,
-								y + min(max(8, abs(hspeed * 3)), 12) - i
-							) &&
+							!placeFree(x, y + min(max(8, abs(hspeed * 3)), 12) - i) &&
 							placeFree(x, y + 1) &&
 							!swimming &&
 							vspeed >= 0 &&
@@ -457,7 +438,7 @@ Midi <- class extends Player {
 						// if(slippery && !swimming && !placeFree(xprev, yprev + 2) && fabs(hspeed) > 4.0) vspeed -= 2.0
 						break;
 					} else if (nowInWater && placeFree(x + hspeed, y + i)) {
-						h += hspeed;
+						x += hspeed;
 						y += i;
 						if (i > 2) {
 							if (hspeed > 0) hspeed -= 0.2;
@@ -470,8 +451,7 @@ Midi <- class extends Player {
 				}
 
 				// If no step was taken, slow down
-				if (didstep == false && fabs(hspeed) >= 1)
-					hspeed -= hspeed / fabs(hspeed);
+				if (didstep == false && fabs(hspeed) >= 1) hspeed -= hspeed / fabs(hspeed);
 				else if (didstep == false && fabs(hspeed) < 1) hspeed = 0;
 			}
 		}
@@ -485,8 +465,7 @@ Midi <- class extends Player {
 			!placeFree(x, y)
 		) {
 			shape = shapeCrawl;
-			if ((anim == "stand" && an.stand != an.crouch) || anim == "walk")
-				anim = "crawl";
+			if ((anim == "stand" && an.stand != an.crouch) || anim == "walk") anim = "crawl";
 		}
 
 		shapeStand.setPos(x, y);
@@ -510,52 +489,34 @@ Midi <- class extends Player {
 		// Movement
 		if (!placeFree(x, y + 1) || onPlatform()) {
 			if (anim == "ball") {
-				if (hspeed > 0 && !getcon("right", "hold", true, playerNum))
-					hspeed -= friction / 3.0;
-				if (hspeed < 0 && !getcon("left", "hold", true, playerNum))
-					hspeed += friction / 3.0;
+				if (hspeed > 0 && !getcon("right", "hold", true, playerNum)) hspeed -= friction / 3.0;
+				if (hspeed < 0 && !getcon("left", "hold", true, playerNum)) hspeed += friction / 3.0;
 			} else {
 				if (hspeed > 0) {
 					if (
-						(!(
-							mspeed > 2 &&
-							getcon("right", "hold", true, playerNum)
-						) ||
-							anim == "hurt" ||
-							!canMove) &&
+						(!(mspeed > 2 && getcon("right", "hold", true, playerNum)) || anim == "hurt" || !canMove) &&
 						!nowInWater
 					)
 						hspeed -= friction;
-					else if (nowInWater || resTime > 0)
-						hspeed -= friction / 3.0;
+					else if (nowInWater || resTime > 0) hspeed -= friction / 3.0;
 				}
 				if (hspeed < 0) {
 					if (
-						(!(
-							mspeed > 2 &&
-							getcon("left", "hold", true, playerNum)
-						) ||
-							anim == "hurt" ||
-							!canMove) &&
+						(!(mspeed > 2 && getcon("left", "hold", true, playerNum)) || anim == "hurt" || !canMove) &&
 						!nowInWater
 					)
 						hspeed += friction;
-					else if (nowInWater || resTime > 0)
-						hspeed += friction / 3.0;
+					else if (nowInWater || resTime > 0) hspeed += friction / 3.0;
 				}
 			}
 		} else {
-			if (hspeed > 0 && !getcon("right", "hold", true, playerNum))
-				hspeed -= friction / 3.0;
-			if (hspeed < 0 && !getcon("left", "hold", true, playerNum))
-				hspeed += friction / 3.0;
+			if (hspeed > 0 && !getcon("right", "hold", true, playerNum)) hspeed -= friction / 3.0;
+			if (hspeed < 0 && !getcon("left", "hold", true, playerNum)) hspeed += friction / 3.0;
 		}
 
 		if (nowInWater || resTime > 0) {
-			if (vspeed > 0 && !getcon("down", "hold", true, playerNum))
-				vspeed -= friction / 4.0;
-			if (vspeed < 0 && !getcon("up", "hold", true, playerNum))
-				vspeed += friction / 4.0;
+			if (vspeed > 0 && !getcon("down", "hold", true, playerNum)) vspeed -= friction / 4.0;
+			if (vspeed < 0 && !getcon("up", "hold", true, playerNum)) vspeed += friction / 4.0;
 		}
 	}
 
@@ -566,8 +527,7 @@ Midi <- class extends Player {
 			case "stand":
 				frame += 0.1;
 				if (zoomies) frame += 0.1;
-				if (getcon("down", "hold", true, playerNum) && !shooting)
-					an.stand = an.crouch;
+				if (getcon("down", "hold", true, playerNum) && !shooting) an.stand = an.crouch;
 				else if (stats.health <= min(8, game.maxHealth / 4)) {
 					an.stand = an.standW;
 					boredom = 0;
@@ -577,20 +537,10 @@ Midi <- class extends Player {
 				boredom++;
 
 				if ((abs(rspeed) > 0.1 || abs(hspeed) > 1) && !slippery) {
-					if (
-						flip == 0 &&
-						hspeed < 0 &&
-						!endMode &&
-						!getcon("right", "hold", true, playerNum)
-					) {
+					if (flip == 0 && hspeed < 0 && !endMode && !getcon("right", "hold", true, playerNum)) {
 						anim = "skid";
 						rspeed = fabs(hspeed / 1.5);
-					} else if (
-						flip == 1 &&
-						hspeed > 0 &&
-						!endMode &&
-						!getcon("left", "hold", true, playerNum)
-					) {
+					} else if (flip == 1 && hspeed > 0 && !endMode && !getcon("left", "hold", true, playerNum)) {
 						anim = "skid";
 						rspeed = fabs(hspeed / 1.5);
 					} else if (an.stand == an.crouch) anim = "crawl";
@@ -600,12 +550,7 @@ Midi <- class extends Player {
 					frame = 0.0;
 				}
 
-				if (
-					freeDown2 &&
-					!onPlatform() &&
-					placeFree(x - hspeed, y + 2) &&
-					fabs(vspeed) > 1
-				) {
+				if (freeDown2 && !onPlatform() && placeFree(x - hspeed, y + 2) && fabs(vspeed) > 1) {
 					anim = "jumpT";
 					frame = 0.0;
 					break;
@@ -624,35 +569,20 @@ Midi <- class extends Player {
 					frame = 0.0;
 					switch (shootDir) {
 						case 0:
-							animOffset =
-								an.shootF1[0] +
-								4 * (shooting - 1) +
-								min(3, shootTimer);
+							animOffset = an.shootF1[0] + 4 * (shooting - 1) + min(3, shootTimer);
 							break;
 						case 1:
-							animOffset =
-								an.shootU1[0] +
-								4 * (shooting - 1) +
-								min(3, shootTimer);
+							animOffset = an.shootU1[0] + 4 * (shooting - 1) + min(3, shootTimer);
 							break;
 						case 2:
-							animOffset =
-								an.shootUF1[0] +
-								4 * (shooting - 1) +
-								min(3, shootTimer);
+							animOffset = an.shootUF1[0] + 4 * (shooting - 1) + min(3, shootTimer);
 							break;
 						case 3:
-							animOffset =
-								an.shootTop[0] +
-								4 * (shooting - 1) +
-								min(3, shootTimer);
+							animOffset = an.shootTop[0] + 4 * (shooting - 1) + min(3, shootTimer);
 							hspeed = 0;
 							break;
 						case 4:
-							animOffset =
-								an.shootDF1[0] +
-								4 * (shooting - 1) +
-								min(3, shootTimer);
+							animOffset = an.shootDF1[0] + 4 * (shooting - 1) + min(3, shootTimer);
 							break;
 					}
 					animOffset -= 1; // Account for starting frame in sheet
@@ -661,10 +591,7 @@ Midi <- class extends Player {
 
 			case "crawl":
 				frame += abs(rspeed) / (8 + abs(rspeed));
-				if (
-					!getcon("down", "hold", true, playerNum) ||
-					(placeFree(x, y + 4) && fabs(vspeed) > 2)
-				) {
+				if (!getcon("down", "hold", true, playerNum) || (placeFree(x, y + 4) && fabs(vspeed) > 2)) {
 					shape = shapeStand;
 					if (placeFree(x, y)) anim = "stand";
 					else shape = shapeCrawl;
@@ -679,10 +606,7 @@ Midi <- class extends Player {
 					flip == 0 &&
 					hspeed < 0 &&
 					!endMode &&
-					!(
-						getcon("left", "hold", true, playerNum) &&
-						fabs(hspeed) < 2.0
-					)
+					!(getcon("left", "hold", true, playerNum) && fabs(hspeed) < 2.0)
 				) {
 					if (!slippery) hspeed += 0.2;
 					else hspeed += 0.1;
@@ -691,10 +615,7 @@ Midi <- class extends Player {
 					flip == 1 &&
 					hspeed > 0 &&
 					!endMode &&
-					!(
-						getcon("right", "hold", true, playerNum) &&
-						fabs(hspeed) < 2.0
-					)
+					!(getcon("right", "hold", true, playerNum) && fabs(hspeed) < 2.0)
 				) {
 					if (!slippery) hspeed -= 0.2;
 					else hspeed -= 0.1;
@@ -704,11 +625,9 @@ Midi <- class extends Player {
 				if (anim == "walk") {
 					// Offset frame based on movement speed and if shooting
 					if (
-						((getcon("right", "hold", true, playerNum) &&
-							getcon("left", "hold", true, playerNum)) ||
+						((getcon("right", "hold", true, playerNum) && getcon("left", "hold", true, playerNum)) ||
 							endMode) &&
-						((flip == 0 && hspeed < 0) ||
-							(flip == 1 && hspeed > 0)) &&
+						((flip == 0 && hspeed < 0) || (flip == 1 && hspeed > 0)) &&
 						fabs(rspeed) <= 1.8 &&
 						!shooting &&
 						fabs(hspeed) < 2.0
@@ -720,10 +639,8 @@ Midi <- class extends Player {
 						if (fabs(rspeed) >= 4.0) animOffset = 32;
 						if (shooting) animOffset += 8;
 					}
-					if (abs(rspeed) <= 0.1 && (fabs(hspeed) <= 0.1 || slippery))
-						anim = "stand";
-					else if (fabs(rspeed) < fabs(hspeed) && !slippery)
-						rspeed = fabs(hspeed);
+					if (abs(rspeed) <= 0.1 && (fabs(hspeed) <= 0.1 || slippery)) anim = "stand";
+					else if (fabs(rspeed) < fabs(hspeed) && !slippery) rspeed = fabs(hspeed);
 				}
 
 				if (placeFree(x, y + 8) && !onPlatform() && fabs(vspeed) > 1) {
@@ -741,12 +658,7 @@ Midi <- class extends Player {
 				frame += 0.25;
 				if (an.jump == an.jumpR) frame += 0.25;
 
-				if (
-					(!placeFree(x, y + 4) ||
-						!placeFree(x - hspeed, y + 4) ||
-						onPlatform()) &&
-					vspeed >= 0
-				) {
+				if ((!placeFree(x, y + 4) || !placeFree(x - hspeed, y + 4) || onPlatform()) && vspeed >= 0) {
 					anim = "stand";
 					frame = 0.0;
 				}
@@ -757,27 +669,25 @@ Midi <- class extends Player {
 				}
 
 				if (
+					getcon("up", "hold", true, playerNum) &&
 					vspeed < 0 &&
 					vspeed > -2 &&
 					((!freeLeft && getcon("left", "hold", true, playerNum)) ||
-						(!freeRight &&
-							getcon("right", "hold", true, playerNum))) &&
-					freeDown2
+						(!freeRight && getcon("right", "hold", true, playerNum))) &&
+					freeDown2 &&
+					stats.stamina >= 1.0
 				) {
 					anim = "parkour";
 					if (vspeed < -2) vspeed = min(vspeed, -4.0);
+					if (vspeed > 0) vspeed /= 2.0;
 				}
 				break;
 
 			case "jumpT":
 			case "parkour":
 				frame += anim == "parkour" ? 0.3 : 0.2;
-				if (
-					(!placeFree(x, y + 4) ||
-						!placeFree(x - hspeed, y + 4) ||
-						onPlatform()) &&
-					vspeed >= 0
-				) {
+
+				if ((!placeFree(x, y + 4) || !placeFree(x - hspeed, y + 4) || onPlatform()) && vspeed >= 0) {
 					anim = "stand";
 					frame = 0.0;
 				}
@@ -791,26 +701,52 @@ Midi <- class extends Player {
 
 				if (anim == "parkour") {
 					didJump = false;
+					if (getFrames() % 4 == 0)
+						newActor(PoofTiny, x + (flip == 0 ? 4 : -4) + 2 - randInt(4), y + 12 - randInt(2));
+
 					if (
-						vspeed >= 0 ||
+						!getcon("up", "hold", true, playerNum) ||
+						stats.stamina <= 0.0 ||
 						(freeLeft && freeRight) ||
-						(!freeLeft &&
-							!getcon("left", "hold", true, playerNum)) ||
-						(!freeRight &&
-							!getcon("right", "hold", true, playerNum))
+						(!freeLeft && !getcon("left", "hold", true, playerNum)) ||
+						(!freeRight && !getcon("right", "hold", true, playerNum)) ||
+						!freeUp
 					) {
 						anim = "fall";
 						frame = 0.0;
 					}
-					if (
-						stats.stamina > 0 &&
-						vspeed > (zoomies > 0 ? -4.0 : -3.0)
-					) {
-						vspeed -= 0.5;
-						if (zoomies <= 0) stats.stamina -= 0.4;
+					if (stats.stamina > 0) {
+						if (vspeed > (zoomies > 0 ? -4.0 : -3.0)) {
+							vspeed -= 0.4;
+							if (zoomies <= 0 && vspeed < -2.0) stats.stamina -= 0.4;
+						}
+						if ((flip == 0 && onIce(x + 8, y - 16)) || (flip == 1 && onIce(x - 8, y - 16))) {
+							if (vspeed > 1.0) vspeed /= 2.0;
+							vspeed += 0.3;
+							if (zoomies <= 0 && vspeed > 0.0) stats.stamina -= 0.4;
+						}
 					}
 
 					if (floor(x) != floor(xprev)) anim = "fall";
+
+					//Ledge grab
+
+					local oldShape = shape;
+					shape = shapeGrip;
+
+					if (placeFree(x - 5, y - 16) && !placeFree(x - 5, y - 14) && placeFree(x, y + 4)) {
+						vspeed = 0;
+						anim = "ledge";
+						flip = 1;
+					}
+
+					if (placeFree(x + 5, y - 16) && !placeFree(x + 5, y - 14) && placeFree(x, y + 4)) {
+						vspeed = 0;
+						anim = "ledge";
+						flip = 0;
+					}
+
+					shape = oldShape;
 
 					/*
 					local oldShape = shape;
@@ -844,16 +780,24 @@ Midi <- class extends Player {
 			case "fall":
 				fallTimer++;
 				frame += 0.1 + (1.0 / 64.0) * vspeed;
-				if (
-					(!placeFree(x, y + 4) ||
-						!placeFree(x - hspeed, y + 4) ||
-						onPlatform()) &&
-					vspeed >= 0
-				) {
+				if ((!placeFree(x, y + 4) || !placeFree(x - hspeed, y + 4) || onPlatform()) && vspeed >= 0) {
 					anim = "stand";
 					frame = 0.0;
 				}
 				if (vspeed < 0.5) anim = "jump";
+
+				if (
+					getcon("up", "hold", true, playerNum) &&
+					((!freeLeft && getcon("left", "hold", true, playerNum)) ||
+						(!freeRight && getcon("right", "hold", true, playerNum))) &&
+					freeDown2 &&
+					placeFree(x, y - 8) &&
+					stats.stamina >= 1.0
+				) {
+					anim = "parkour";
+					if (vspeed < -2) vspeed = min(vspeed, -4.0);
+					if (vspeed > 0) vspeed /= 2.0;
+				}
 				break;
 
 			case "wall":
@@ -948,8 +892,7 @@ Midi <- class extends Player {
 			case "ledge":
 				if (shooting) {
 					frame = 0.0;
-					animOffset =
-						an.shootClimb[0] - an[anim][0] + min(3, shootTimer);
+					animOffset = an.shootClimb[0] - an[anim][0] + min(3, shootTimer);
 				}
 
 				if (anim == "climbWall") {
@@ -980,8 +923,7 @@ Midi <- class extends Player {
 				}
 				if (frame >= an[anim].len()) {
 					if ("WeaponEffect" in actor)
-						foreach (i in actor["WeaponEffect"])
-							if (i instanceof NutMine) deleteActor(i.id);
+						foreach (i in actor["WeaponEffect"]) if (i instanceof NutMine) deleteActor(i.id);
 
 					local nutType = "normal";
 					if (hand == 0) nutType = stats.weapon;
@@ -1009,8 +951,7 @@ Midi <- class extends Player {
 
 				if (shooting) {
 					frame = 0.0;
-					animOffset =
-						an["shootHang"][0] - an[anim][0] + min(3, shootTimer);
+					animOffset = an["shootHang"][0] - an[anim][0] + min(3, shootTimer);
 				}
 
 				if (hspeed != 0 && !partnerHang) frame += fabs(hspeed) * 0.1;
@@ -1033,13 +974,7 @@ Midi <- class extends Player {
 					} else partnerHang = false;
 				}
 
-				if (
-					!atZipline() &&
-					!atZipline(0, 1) &&
-					!atZipline(0, -1) &&
-					!partnerHang
-				)
-					anim = "jump";
+				if (!atZipline() && !atZipline(0, 1) && !atZipline(0, -1) && !partnerHang) anim = "jump";
 
 				break;
 		}
@@ -1047,8 +982,7 @@ Midi <- class extends Player {
 		if (endMode && hspeed == 0) anim = "win";
 		else if (anim == "win") anim = "stand";
 
-		if (anim in an && an[anim] != null && anim != "hurt")
-			frame = wrap(abs(frame), 0, an[anim].len() - 1);
+		if (anim in an && an[anim] != null && anim != "hurt") frame = wrap(abs(frame), 0, an[anim].len() - 1);
 
 		if (shooting) {
 			shootTimer += 0.25;
@@ -1078,16 +1012,10 @@ Midi <- class extends Player {
 						animOffset = an.shootAir[0] + min(3, shootTimer);
 						break;
 					case 1:
-						animOffset =
-							an.shootAU1[0] +
-							4 * (shooting - 1) +
-							min(3, shootTimer);
+						animOffset = an.shootAU1[0] + 4 * (shooting - 1) + min(3, shootTimer);
 						break;
 					case 4:
-						animOffset =
-							an.shootAD1[0] +
-							4 * (shooting - 1) +
-							min(3, shootTimer);
+						animOffset = an.shootAD1[0] + 4 * (shooting - 1) + min(3, shootTimer);
 						break;
 				}
 				if (an[anim] != null) animOffset -= an[anim][0]; // Account for starting frame in sheet
@@ -1127,52 +1055,21 @@ Midi <- class extends Player {
 				if (chargeTimer2 == 180) tftime = 0;
 			}
 
-			if (
-				getcon("shoot", "release", true, playerNum) &&
-				stats.energy > 0 &&
-				chargeTimer >= 90
-			)
+			if (getcon("shoot", "release", true, playerNum) && stats.energy > 0 && chargeTimer >= 90)
 				shootNut(0, min(floor(chargeTimer / 90) + 1, stats.energy));
-			if (
-				getcon("spec1", "release", true, playerNum) &&
-				stats.energy > 0 &&
-				chargeTimer2 >= 90
-			)
+			if (getcon("spec1", "release", true, playerNum) && stats.energy > 0 && chargeTimer2 >= 90)
 				shootNut(1, min(floor(chargeTimer2 / 90) + 1, stats.energy));
 
-			if (
-				!getcon("shoot", "hold", true, playerNum) &&
-				anim != "plantMine"
-			)
-				chargeTimer = 0;
-			if (
-				!getcon("spec1", "hold", true, playerNum) &&
-				anim != "plantMine"
-			)
-				chargeTimer2 = 0;
+			if (!getcon("shoot", "hold", true, playerNum) && anim != "plantMine") chargeTimer = 0;
+			if (!getcon("spec1", "hold", true, playerNum) && anim != "plantMine") chargeTimer2 = 0;
 
-			if (
-				(chargeTimer > 180 || chargeTimer2 > 180) &&
-				getFrames() % 4 == 0
-			) {
-				newActor(
-					GoldCharge,
-					x - 12 + randInt(24),
-					y - 12 + randInt(24)
-				);
+			if ((chargeTimer > 180 || chargeTimer2 > 180) && getFrames() % 4 == 0) {
+				newActor(GoldCharge, x - 12 + randInt(24), y - 12 + randInt(24));
 			}
 		} else if (!canMove) {
-			if (
-				getcon("shoot", "release", true, playerNum) &&
-				stats.energy > 0 &&
-				chargeTimer >= 90
-			)
+			if (getcon("shoot", "release", true, playerNum) && stats.energy > 0 && chargeTimer >= 90)
 				shootNut(0, min(floor(chargeTimer / 90) + 1, stats.energy));
-			if (
-				getcon("spec1", "release", true, playerNum) &&
-				stats.energy > 0 &&
-				chargeTimer2 >= 90
-			)
+			if (getcon("spec1", "release", true, playerNum) && stats.energy > 0 && chargeTimer2 >= 90)
 				shootNut(1, min(floor(chargeTimer2 / 90) + 1, stats.energy));
 		} else if (holding) chargeTimer = 0;
 
@@ -1181,18 +1078,22 @@ Midi <- class extends Player {
 			firetime--;
 		}
 
-		if (firetime <= 0 && stats.energy < stats.maxEnergy)
-			stats.energy += 1.0 / 30.0;
+		if (firetime <= 0 && stats.energy < stats.maxEnergy) stats.energy += 1.0 / 30.0;
 
-		if (anim != "parkour" && stats.stamina < stats.maxStamina)
-			stats.stamina++;
+		if (
+			anim != "parkour" &&
+			anim != "jump" &&
+			anim != "fall" &&
+			anim != "jumpT" &&
+			stats.stamina < stats.maxStamina
+		)
+			stats.stamina += 0.5;
 
 		// After image
 		if (zoomies > 0 && getFrames() % 2 == 0 && an[anim] != null)
 			newActor(AfterImage, x, y, [
 				sprite,
-				an[anim][wrap(floor(frame), 0, an[anim].len() - 1)] +
-					animOffset,
+				an[anim][wrap(floor(frame), 0, an[anim].len() - 1)] + animOffset,
 				0,
 				flip,
 				0,
@@ -1272,8 +1173,7 @@ Midi <- class extends Player {
 				local j = null;
 				if (playerNum == 1) j = config.joy;
 				if (playerNum == 2) j = config.joy2;
-				if (abs(joyX(j.index)) > js_max * 0.1)
-					mspeed = (3.0 * abs(joyX(j.index))) / float(js_max);
+				if (abs(joyX(j.index)) > js_max * 0.1) mspeed = (3.0 * abs(joyX(j.index))) / float(js_max);
 			}
 
 			if (invincible) mspeed += 0.4;
@@ -1368,51 +1268,29 @@ Midi <- class extends Player {
 				vspeed = 0;
 
 				// Ladder controls
-				if (
-					getcon("up", "hold", true, playerNum) &&
-					!shooting &&
-					placeFree(x, y - 2)
-				) {
+				if (getcon("up", "hold", true, playerNum) && !shooting && placeFree(x, y - 2)) {
 					frame -= climbdir / 8;
 					y -= 2;
 					y = round(y);
 				}
 
-				if (
-					getcon("down", "hold", true, playerNum) &&
-					!shooting &&
-					placeFree(x, y + 2)
-				) {
+				if (getcon("down", "hold", true, playerNum) && !shooting && placeFree(x, y + 2)) {
 					frame += climbdir / 8;
 					y += 2;
 					y = round(y);
 				}
 
-				if (
-					getcon("left", "hold", true, playerNum) &&
-					atCrossLadder() &&
-					!shooting
-				)
+				if (getcon("left", "hold", true, playerNum) && atCrossLadder() && !shooting)
 					if (placeFree(x - 2, y)) {
-						if (
-							!getcon("up", "hold", true, playerNum) &&
-							!getcon("down", "hold", true, playerNum)
-						)
+						if (!getcon("up", "hold", true, playerNum) && !getcon("down", "hold", true, playerNum))
 							frame -= climbdir / 8;
 						x -= 1;
 						x = round(x);
 					}
 
-				if (
-					getcon("right", "hold", true, playerNum) &&
-					atCrossLadder() &&
-					!shooting
-				)
+				if (getcon("right", "hold", true, playerNum) && atCrossLadder() && !shooting)
 					if (placeFree(x + 2, y)) {
-						if (
-							!getcon("up", "hold", true, playerNum) &&
-							!getcon("down", "hold", true, playerNum)
-						)
+						if (!getcon("up", "hold", true, playerNum) && !getcon("down", "hold", true, playerNum))
 							frame += climbdir / 8;
 						x += 1;
 						x = round(x);
@@ -1431,30 +1309,20 @@ Midi <- class extends Player {
 				}
 
 				// Change direction
-				if (getcon("right", "press", true, playerNum) && canMove)
-					flip = 0;
-				if (getcon("left", "press", true, playerNum) && canMove)
-					flip = 1;
+				if (getcon("right", "press", true, playerNum) && canMove) flip = 0;
+				if (getcon("left", "press", true, playerNum) && canMove) flip = 1;
 			}
 
 			if (anim == "climbWall") {
 				vspeed = 0;
 
 				// Ladder controls
-				if (
-					getcon("up", "hold", true, playerNum) &&
-					!shooting &&
-					placeFree(x, y - 2)
-				) {
+				if (getcon("up", "hold", true, playerNum) && !shooting && placeFree(x, y - 2)) {
 					frame -= climbdir / 8;
 					y -= 2;
 				}
 
-				if (
-					getcon("down", "hold", true, playerNum) &&
-					!shooting &&
-					placeFree(x, y + 2)
-				) {
+				if (getcon("down", "hold", true, playerNum) && !shooting && placeFree(x, y + 2)) {
 					frame += climbdir / 8;
 					y += 2;
 				}
@@ -1475,23 +1343,15 @@ Midi <- class extends Player {
 
 			// Get on monkeybar
 			if (
-				((getcon("down", "hold", true, playerNum) &&
-					placeFree(x, y + 2)) ||
+				((getcon("down", "hold", true, playerNum) && placeFree(x, y + 2)) ||
 					getcon("up", "hold", true, playerNum)) &&
 				anim != "hurt" &&
 				anim != "climbWall" &&
 				anim != "monkey" &&
 				anim != "climb" &&
-				(vspeed >= 0 ||
-					getcon("down", "press", true, playerNum) ||
-					getcon("up", "press", true, playerNum))
+				(vspeed >= 0 || getcon("down", "press", true, playerNum) || getcon("up", "press", true, playerNum))
 			) {
-				if (
-					(atZipline() ||
-						atZipline(0, -vspeed) ||
-						atZipline(0, vspeed)) &&
-					y % 16 < 4
-				) {
+				if ((atZipline() || atZipline(0, -vspeed) || atZipline(0, vspeed)) && y % 16 < 4) {
 					anim = "monkey";
 					frame = 0.0;
 					hspeed = 0;
@@ -1502,14 +1362,8 @@ Midi <- class extends Player {
 
 				shapeGrip.setPos(x, y - 28);
 				if (
-					(playerNum == 1 &&
-						gvPlayer2 &&
-						gvPlayer2.anim == "fly" &&
-						hitTest(shapeGrip, gvPlayer2.shape)) ||
-					(playerNum == 2 &&
-						gvPlayer &&
-						gvPlayer.anim == "fly" &&
-						hitTest(shapeGrip, gvPlayer.shape))
+					(playerNum == 1 && gvPlayer2 && gvPlayer2.anim == "fly" && hitTest(shapeGrip, gvPlayer2.shape)) ||
+					(playerNum == 2 && gvPlayer && gvPlayer.anim == "fly" && hitTest(shapeGrip, gvPlayer.shape))
 				) {
 					anim = "monkey";
 					frame = 0.0;
@@ -1521,16 +1375,13 @@ Midi <- class extends Player {
 
 			// Get on ladder
 			if (
-				((getcon("down", "hold", true, playerNum) &&
-					placeFree(x, y + 2)) ||
+				((getcon("down", "hold", true, playerNum) && placeFree(x, y + 2)) ||
 					getcon("up", "hold", true, playerNum)) &&
 				anim != "hurt" &&
 				anim != "climbWall" &&
 				anim != "climb" &&
 				anim != "monkey" &&
-				(vspeed >= 0 ||
-					getcon("down", "press", true, playerNum) ||
-					getcon("up", "press", true, playerNum))
+				(vspeed >= 0 || getcon("down", "press", true, playerNum) || getcon("up", "press", true, playerNum))
 			) {
 				if (atLadder() || atCrossLadder()) {
 					anim = "climb";
@@ -1543,16 +1394,13 @@ Midi <- class extends Player {
 
 			// Get on wall ladder
 			if (
-				((getcon("down", "hold", true, playerNum) &&
-					placeFree(x, y + 2)) ||
+				((getcon("down", "hold", true, playerNum) && placeFree(x, y + 2)) ||
 					getcon("up", "hold", true, playerNum)) &&
 				anim != "hurt" &&
 				anim != "climbWall" &&
 				anim != "climb" &&
 				anim != "monkey" &&
-				(vspeed >= 0 ||
-					getcon("down", "press", true, playerNum) ||
-					getcon("up", "press", true, playerNum))
+				(vspeed >= 0 || getcon("down", "press", true, playerNum) || getcon("up", "press", true, playerNum))
 			) {
 				if (atWallLadder()) {
 					anim = "climbWall";
@@ -1565,12 +1413,7 @@ Midi <- class extends Player {
 
 			// Jumping
 			if (getcon("jump", "press", true, playerNum) || jumpBuffer > 0) {
-				if (
-					onPlatform() &&
-					!placeFree(x, y + 2) &&
-					getcon("down", "hold", true, playerNum) &&
-					vspeed >= 0
-				) {
+				if (onPlatform() && !placeFree(x, y + 2) && getcon("down", "hold", true, playerNum) && vspeed >= 0) {
 					y++;
 					canJump = 32;
 
@@ -1580,22 +1423,16 @@ Midi <- class extends Player {
 
 					jumpBuffer = 0;
 				} else if (
-					(canJump > 0 &&
-						(placeFree(x, y, shapeStand) || anim != "crawl")) ||
+					(canJump > 0 && (placeFree(x, y, shapeStand) || anim != "crawl")) ||
 					anim == "ledge" ||
 					anim == "monkey"
 				) {
 					jumpBuffer = 0;
-					if (
-						!getcon("down", "hold", true, playerNum) ||
-						!freeDown2
-					) {
+					if (!getcon("down", "hold", true, playerNum) || !freeDown2) {
 						if (anim == "climb") {
 							vspeed = -5;
-							if (getcon("left", "hold", true, playerNum))
-								hspeed = -2;
-							if (getcon("right", "hold", true, playerNum))
-								hspeed = 2;
+							if (getcon("left", "hold", true, playerNum)) hspeed = -2;
+							if (getcon("right", "hold", true, playerNum)) hspeed = 2;
 						} else vspeed = -6.5;
 					}
 					didJump = true;
@@ -1606,12 +1443,7 @@ Midi <- class extends Player {
 						if (anim != "morphIn") anim = "jump";
 						frame = 0.0;
 					}
-					if (
-						!freeDown2 ||
-						(freeRight &&
-							freeLeft &&
-							!getcon("down", "hold", true, playerNum))
-					)
+					if (!freeDown2 || (freeRight && freeLeft && !getcon("down", "hold", true, playerNum)))
 						popSound(sndMidiJump, 0);
 				} else if (
 					freeDown &&
@@ -1661,19 +1493,16 @@ Midi <- class extends Player {
 				if (!freeLeft && !(onIce(x - 8, y) || onIce(x - 8, y - 16))) {
 					local oldShape = shape;
 					shape = shapeGrip;
-					if (
-						placeFree(x - 5, y - 16) &&
-						!placeFree(x - 5, y - 14) &&
-						placeFree(x, y + 4)
-					) {
-						if (!getcon("down", "hold", true, playerNum))
-							vspeed = 0;
+					if (placeFree(x - 5, y - 16) && !placeFree(x - 5, y - 14) && placeFree(x, y + 4)) {
+						if (!getcon("down", "hold", true, playerNum)) vspeed = 0;
 						anim = "ledge";
 						flip = 1;
-					} else {
-						if (vspeed > 0.5) vspeed = 0.5;
-						if ((getFrames() / 4) % 4 == 0)
-							newActor(PoofTiny, x - 4, y + 12);
+					} else if (anim != "ledge") {
+						if (vspeed > 0.5) {
+							vspeed -= 0.4;
+							if (vspeed < 0.5) vspeed = 0.5;
+						}
+						if (getFrames() % 8 == 0) newActor(PoofTiny, x - 4 + 2 - randInt(4), y + 12 - randInt(2));
 						an["fall"] = an["fallW"];
 						anim = "fall";
 						flip = 0;
@@ -1683,19 +1512,16 @@ Midi <- class extends Player {
 				if (!freeRight && !(onIce(x + 8, y) || onIce(x + 8, y - 16))) {
 					local oldShape = shape;
 					shape = shapeGrip;
-					if (
-						placeFree(x + 5, y - 16) &&
-						!placeFree(x + 5, y - 14) &&
-						placeFree(x, y + 4)
-					) {
-						if (!getcon("down", "hold", true, playerNum))
-							vspeed = 0;
+					if (placeFree(x + 5, y - 16) && !placeFree(x + 5, y - 14) && placeFree(x, y + 4)) {
+						if (!getcon("down", "hold", true, playerNum)) vspeed = 0;
 						anim = "ledge";
 						flip = 0;
-					} else {
-						if (vspeed > 0.5) vspeed = 0.5;
-						if ((getFrames() / 4) % 4 == 0)
-							newActor(PoofTiny, x + 4, y + 12);
+					} else if (anim != "ledge") {
+						if (vspeed > 0.5) {
+							vspeed -= 0.4;
+							if (vspeed < 0.5) vspeed = 0.5;
+						}
+						if (getFrames() % 8 == 0) newActor(PoofTiny, x + 4 + 2 - randInt(4), y + 12 - randInt(2));
 						an["fall"] = an["fallW"];
 						anim = "fall";
 						flip = 1;
@@ -1713,11 +1539,7 @@ Midi <- class extends Player {
 				jumpBuffer = 8;
 			if (jumpBuffer > 0) jumpBuffer--;
 
-			if (
-				!getcon("jump", "hold", true, playerNum) &&
-				(vspeed < 0 || anim == "fall") &&
-				didJump
-			) {
+			if (!getcon("jump", "hold", true, playerNum) && (vspeed < 0 || anim == "fall") && didJump) {
 				didJump = false;
 				vspeed /= 2.5;
 			}
@@ -1729,12 +1551,7 @@ Midi <- class extends Player {
 			}
 		} else rspeed = min(rspeed, abs(hspeed));
 
-		if (
-			anim != "ledge" &&
-			anim != "wall" &&
-			anim != "climbWall" &&
-			!(anim == "fall" && an.fall == an.fallW)
-		) {
+		if (anim != "ledge" && anim != "wall" && anim != "climbWall" && !(anim == "fall" && an.fall == an.fallW)) {
 			if (
 				(getcon("right", "hold", true, playerNum) &&
 					!getcon("left", "hold", true, playerNum) &&
@@ -1800,16 +1617,10 @@ Midi <- class extends Player {
 				if (hspeed < mspeed) hspeed += accel / 2.0;
 				flip = 0;
 			}
-			if (getcon("up", "hold", true, playerNum) && vspeed > -mspeed)
-				vspeed -= accel / 2.0;
-			if (getcon("down", "hold", true, playerNum) && vspeed < mspeed)
-				vspeed += accel / 2.0;
+			if (getcon("up", "hold", true, playerNum) && vspeed > -mspeed) vspeed -= accel / 2.0;
+			if (getcon("down", "hold", true, playerNum) && vspeed < mspeed) vspeed += accel / 2.0;
 
-			if (
-				getcon("spec2", "press", true, playerNum) &&
-				anim != "hurt" &&
-				resTime <= 0
-			) {
+			if (getcon("spec2", "press", true, playerNum) && anim != "hurt" && resTime <= 0) {
 				anim = "morphIn";
 				frame = 0.0;
 			}
@@ -1844,13 +1655,7 @@ Midi <- class extends Player {
 	function ruBall() {
 		if (anim == "sit") routine = ruNormal;
 		// Controls
-		if (
-			(!placeFree(x - hspeed, y + 2) ||
-				!placeFree(x, y + 2) ||
-				onPlatform()) &&
-			!onWall &&
-			vspeed >= 0
-		) {
+		if ((!placeFree(x - hspeed, y + 2) || !placeFree(x, y + 2) || onPlatform()) && !onWall && vspeed >= 0) {
 			canJump = 16;
 		} else {
 			if (canJump > 0) canJump--;
@@ -1862,8 +1667,7 @@ Midi <- class extends Player {
 				local j = null;
 				if (playerNum == 1) j = config.joy;
 				if (playerNum == 2) j = config.joy2;
-				if (abs(joyX(j.index)) > js_max * 0.1)
-					mspeed = (3.0 * abs(joyX(j.index))) / float(js_max);
+				if (abs(joyX(j.index)) > js_max * 0.1) mspeed = (3.0 * abs(joyX(j.index))) / float(js_max);
 			}
 
 			if (invincible) mspeed += 0.4;
@@ -1912,12 +1716,7 @@ Midi <- class extends Player {
 
 			// Jumping
 			if (getcon("jump", "press", true, playerNum) || jumpBuffer > 0) {
-				if (
-					onPlatform() &&
-					!placeFree(x, y + 1) &&
-					getcon("down", "hold", true, playerNum) &&
-					vspeed >= 0
-				) {
+				if (onPlatform() && !placeFree(x, y + 1) && getcon("down", "hold", true, playerNum) && vspeed >= 0) {
 					y++;
 					canJump = 32;
 					if (!placeFree(x, y) && !placeFree(x, y - 1)) y--;
@@ -1925,10 +1724,8 @@ Midi <- class extends Player {
 					jumpBuffer = 0;
 					if (anim == "climb") {
 						vspeed = -5;
-						if (getcon("left", "hold", true, playerNum))
-							hspeed = -2;
-						if (getcon("right", "hold", true, playerNum))
-							hspeed = 2;
+						if (getcon("left", "hold", true, playerNum)) hspeed = -2;
+						if (getcon("right", "hold", true, playerNum)) hspeed = 2;
 					} else if (nowInWater) vspeed = -4.0;
 					else vspeed = -6.5;
 					didJump = true;
@@ -1946,22 +1743,14 @@ Midi <- class extends Player {
 				jumpBuffer = config.jumpBuffer;
 			if (jumpBuffer > 0) jumpBuffer--;
 
-			if (
-				!getcon("jump", "hold", true, playerNum) &&
-				(vspeed < 0 || anim == "fall") &&
-				didJump
-			) {
+			if (!getcon("jump", "hold", true, playerNum) && (vspeed < 0 || anim == "fall") && didJump) {
 				didJump = false;
 				vspeed /= 2.5;
 			}
 		} else rspeed = min(rspeed, abs(hspeed));
 
 		// Unmorph
-		if (
-			getcon("spec2", "press", true, playerNum) &&
-			placeFree(x, y - 8) &&
-			anim == "ball"
-		) {
+		if (getcon("spec2", "press", true, playerNum) && placeFree(x, y - 8) && anim == "ball") {
 			anim = "morphOut";
 			frame = 0.0;
 		}
@@ -2197,15 +1986,7 @@ Midi <- class extends Player {
 				);
 			}
 			if (shooting && anim == "walk")
-				drawSpriteZ(
-					2,
-					sprite,
-					an["armShoot"][min(3, shootTimer)],
-					x - camx,
-					y - camy,
-					0,
-					flip
-				);
+				drawSpriteZ(2, sprite, an["armShoot"][min(3, shootTimer)], x - camx, y - camy, 0, flip);
 			if (anim == "ball" && inMelee && spinAlpha < 1.0) spinAlpha += 0.2;
 			if (spinAlpha > 0) spinAlpha -= 0.1;
 			if (spinAlpha < 0) spinAlpha = 0;
@@ -2296,8 +2077,7 @@ Midi <- class extends Player {
 			// Transformation flash
 			if (tftime != -1) {
 				if (tftime < 4) {
-					if (!hidden)
-						drawSpriteZ(3, sprTFflash, tftime, x - camx, y - camy);
+					if (!hidden) drawSpriteZ(3, sprTFflash, tftime, x - camx, y - camy);
 					tftime += 0.25;
 				} else tftime = -1;
 			}
@@ -2324,18 +2104,12 @@ Midi <- class extends Player {
 			deleteActor(id);
 			if (playerNum == 1) gvPlayer = false;
 			if (playerNum == 2) gvPlayer2 = false;
-			newActor(DeadMidi, x, y, [
-				sprite,
-				an["hurtHeavy"],
-				playerNum,
-				flip
-			]);
+			newActor(DeadMidi, x, y, [sprite, an["hurtHeavy"], playerNum, flip]);
 		}
 	}
 
 	function shootNut(_hand, _power = 1) {
-		if (stats.energy < 1 || (shooting && (shootTimer < 2 || _hand == hand)))
-			return;
+		if (stats.energy < 1 || (shooting && (shootTimer < 2 || _hand == hand))) return;
 		popSound(sndThrow, 0);
 		hand = _hand;
 		if (flip) shooting = 2 - hand;
@@ -2348,23 +2122,16 @@ Midi <- class extends Player {
 		local nutType = "normal";
 		if (hand == 0) nutType = stats.weapon;
 		if (hand == 1) nutType = stats.subitem;
-		if (
-			!["normal", "fire", "ice", "air", "earth", "shock", "water"].find(
-				nutType
-			)
-		)
-			nutType = "normal";
+		if (!["normal", "fire", "ice", "air", "earth", "shock", "water"].find(nutType)) nutType = "normal";
 
 		if (
 			getcon("up", "hold", true, playerNum) &&
-			(getcon("left", "hold", true, playerNum) ||
-				getcon("right", "hold", true, playerNum))
+			(getcon("left", "hold", true, playerNum) || getcon("right", "hold", true, playerNum))
 		)
 			shootDir = 2;
 		else if (
 			getcon("down", "hold", true, playerNum) &&
-			(getcon("left", "hold", true, playerNum) ||
-				getcon("right", "hold", true, playerNum))
+			(getcon("left", "hold", true, playerNum) || getcon("right", "hold", true, playerNum))
 		)
 			shootDir = 3;
 		else if (getcon("down", "hold", true, playerNum)) shootDir = 4;
@@ -2389,29 +2156,15 @@ Midi <- class extends Player {
 					c.vspeed = 2.0;
 				} else {
 					c = fireWeapon(WingNut, x, y + 8, 1, id);
-					if (
-						routine != ruBall ||
-						getcon("down", "hold", true, playerNum)
-					)
-						c.sprite = nutSprite;
+					if (routine != ruBall || getcon("down", "hold", true, playerNum)) c.sprite = nutSprite;
 				}
 			}
-		} else if (
-			shootDir == 4 &&
-			(!freeDown || onPlatform()) &&
-			anim != "plantMine" &&
-			!nowInWater
-		) {
+		} else if (shootDir == 4 && (!freeDown || onPlatform()) && anim != "plantMine" && !nowInWater) {
 			frame = 0.0;
 			anim = "plantMine";
 			vspeed = 0.0;
 		} else if (
-			!(
-				shootDir == 3 &&
-				(!freeDown || onPlatform()) &&
-				routine == ruNormal &&
-				hspeed == 0
-			) &&
+			!(shootDir == 3 && (!freeDown || onPlatform()) && routine == ruNormal && hspeed == 0) &&
 			anim != "plantMine"
 		) {
 			if (!freeDown && shootDir == 3 && routine != ruSwim) {
@@ -2511,14 +2264,7 @@ DeadMidi <- class extends Actor {
 
 	function draw() {
 		if (timer > 120) {
-			drawSprite(
-				sprite,
-				anim[min((150 - timer) / 15, 1)],
-				x - camx,
-				y - camy,
-				0,
-				flip
-			);
+			drawSprite(sprite, anim[min((150 - timer) / 15, 1)], x - camx, y - camy, 0, flip);
 			drawLight(sprLightBasic, 0, x - camx, y - camy);
 		} else if (timer > 30)
 			for (local i = 0; i < 8; i++) {
@@ -2539,14 +2285,8 @@ DeadMidi <- class extends Actor {
 					y + lendirY(120 - timer, i * 45 + 22.5) - camy,
 					0,
 					0,
-					min(
-						0.3 + abs(sin((getFrames() + i * 45) / 8.0)) * 0.2,
-						float(timer - 30.0) / 30.0
-					),
-					min(
-						0.3 + abs(sin((getFrames() + i * 45) / 8.0)) * 0.2,
-						float(timer - 30.0) / 30.0
-					)
+					min(0.3 + abs(sin((getFrames() + i * 45) / 8.0)) * 0.2, float(timer - 30.0) / 30.0),
+					min(0.3 + abs(sin((getFrames() + i * 45) / 8.0)) * 0.2, float(timer - 30.0) / 30.0)
 				);
 				drawSprite(
 					sprExplodeN,
@@ -2565,16 +2305,8 @@ DeadMidi <- class extends Actor {
 					y + lendirY((120 - timer) * 0.75, i * 45) - camy,
 					0,
 					0,
-					min(
-						0.3 +
-							abs(sin((getFrames() + i * 45 + 22.5) / 8.0)) * 0.2,
-						float(timer - 30.0) / 30.0
-					),
-					min(
-						0.3 +
-							abs(sin((getFrames() + i * 45 + 22.5) / 8.0)) * 0.2,
-						float(timer - 30.0) / 30.0
-					)
+					min(0.3 + abs(sin((getFrames() + i * 45 + 22.5) / 8.0)) * 0.2, float(timer - 30.0) / 30.0),
+					min(0.3 + abs(sin((getFrames() + i * 45 + 22.5) / 8.0)) * 0.2, float(timer - 30.0) / 30.0)
 				);
 			}
 	}
@@ -2583,6 +2315,10 @@ DeadMidi <- class extends Actor {
 		return "DeadPlayer";
 	}
 };
+
+// NOTE:
+// This section does not put the character of Kiki under the KLPL
+// The code is still AGPL
 
 Kiki <- class extends Midi {
 	// Replace sprites with Kiki versions as they're made
