@@ -4787,6 +4787,7 @@ Tallcap <- class extends Enemy {
 		c.nocount = nocount;
 		c.blinking = 10;
 		c.vspeed = -1.0;
+		c.active = true;
 		newActor(Poof, x, y);
 		popSound(sndSquish, 0);
 
