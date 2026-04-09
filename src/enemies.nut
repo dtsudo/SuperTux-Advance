@@ -67,13 +67,7 @@ Enemy <- class extends PhysAct {
 
 					if (hitTest(shape, i.shape)) {
 						if (checkActor(i.owner)) {
-							getHurt(
-								actor[i.owner],
-								i.power,
-								i.element,
-								i.cut,
-								i.blast
-							);
+							getHurt(actor[i.owner], i.power, i.element, i.cut, i.blast);
 							hitBy = i.owner;
 						} else getHurt(0, i.power, i.element, i.cut, i.blast);
 						if (i.piercing == 0) deleteActor(i.id);
@@ -112,26 +106,13 @@ Enemy <- class extends PhysAct {
 						gvPlayer.holding != id
 					) {
 						if (!squish) {
-							if (getcon("jump", "hold", false, 1))
-								gvPlayer.vspeed = -8.0;
+							if (getcon("jump", "hold", false, 1)) gvPlayer.vspeed = -8.0;
 							else gvPlayer.vspeed = -4.0;
 						}
-						getHurt(
-							gvPlayer,
-							gvPlayer.stompDamage,
-							"normal",
-							false,
-							false,
-							true
-						);
+						getHurt(gvPlayer, gvPlayer.stompDamage, "normal", false, false, true);
 						hitBy = gvPlayer.id;
-					} else if (
-						"anim" in gvPlayer &&
-						blinking == 0 &&
-						!sharpSide
-					) {
-						if (gvPlayer.inMelee)
-							getHurt(gvPlayer, 1, "normal", false, false, false);
+					} else if ("anim" in gvPlayer && blinking == 0 && !sharpSide) {
+						if (gvPlayer.inMelee) getHurt(gvPlayer, 1, "normal", false, false, false);
 						else hurtPlayer(gvPlayer);
 					} else hurtPlayer(gvPlayer);
 				}
@@ -154,33 +135,13 @@ Enemy <- class extends PhysAct {
 						gvPlayer2.holding != id
 					) {
 						if (!squish) {
-							if (getcon("jump", "hold", false, 1))
-								gvPlayer2.vspeed = -8.0;
+							if (getcon("jump", "hold", false, 1)) gvPlayer2.vspeed = -8.0;
 							else gvPlayer2.vspeed = -4.0;
 						}
-						getHurt(
-							gvPlayer2,
-							gvPlayer2.stompDamage,
-							"normal",
-							false,
-							false,
-							true
-						);
+						getHurt(gvPlayer2, gvPlayer2.stompDamage, "normal", false, false, true);
 						hitBy = gvPlayer2.id;
-					} else if (
-						"anim" in gvPlayer2 &&
-						blinking == 0 &&
-						!sharpSide
-					) {
-						if (gvPlayer2.inMelee)
-							getHurt(
-								gvPlayer2,
-								1,
-								"normal",
-								false,
-								false,
-								false
-							);
+					} else if ("anim" in gvPlayer2 && blinking == 0 && !sharpSide) {
+						if (gvPlayer2.inMelee) getHurt(gvPlayer2, 1, "normal", false, false, false);
 						else hurtPlayer(gvPlayer2);
 					} else hurtPlayer(gvPlayer2);
 				}
@@ -222,8 +183,7 @@ Enemy <- class extends PhysAct {
 		if (!nodrop) {
 			if (randInt(4 + game.difficulty) == 0) newActor(Berry, x, y, true);
 
-			if (randInt(4 + game.difficulty) == 0)
-				newActor(CoinSmall, x, y, true);
+			if (randInt(4 + game.difficulty) == 0) newActor(CoinSmall, x, y, true);
 		}
 
 		handleKiller();
@@ -232,26 +192,14 @@ Enemy <- class extends PhysAct {
 	function handleKiller() {
 		// Handle killer
 		if (checkActor(hitBy)) {
-			if (typeof actor[hitBy] == "Gooey")
-				fulfillAchievement("adorableWarfare");
+			if (typeof actor[hitBy] == "Gooey") fulfillAchievement("adorableWarfare");
 		}
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (blinking > 0) return;
 
-		local damage =
-			_mag *
-			(_element in damageMult
-				? damageMult[_element]
-				: damageMult["normal"]);
+		local damage = _mag * (_element in damageMult ? damageMult[_element] : damageMult["normal"]);
 		if (_cut) damage *= damageMult["cut"];
 		if (_blast) damage *= damageMult["blast"];
 		if (_stomp) damage *= damageMult["stomp"];
@@ -278,8 +226,7 @@ Enemy <- class extends PhysAct {
 	}
 
 	function hurtPlayer(target) {
-		if ((target != gvPlayer && target != gvPlayer2) || target == false)
-			return;
+		if ((target != gvPlayer && target != gvPlayer2) || target == false) return;
 
 		if (blinking || squish) return;
 		target.hurt =
@@ -322,11 +269,7 @@ Enemy <- class extends PhysAct {
 				target.holding = id;
 			}
 
-			if (
-				target.rawin("anClimb") &&
-				target.anim == target.anClimb &&
-				held
-			) {
+			if (target.rawin("anClimb") && target.anim == target.anClimb && held) {
 				target.holding = 0;
 
 				// escape from solid
@@ -388,10 +331,8 @@ Enemy <- class extends PhysAct {
 					)
 						throwH = 0;
 				}
-				if (getcon("left", "hold", false, target.playerNum) && held)
-					throwH = -1;
-				if (getcon("right", "hold", false, target.playerNum) && held)
-					throwH = 1;
+				if (getcon("left", "hold", false, target.playerNum) && held) throwH = -1;
+				if (getcon("right", "hold", false, target.playerNum) && held) throwH = 1;
 
 				local throwD = pointAngle(0, 0, throwH, throwV);
 
@@ -410,10 +351,7 @@ Enemy <- class extends PhysAct {
 						6,
 						sprIceTrapScaled,
 						0,
-						shape.x -
-							camx -
-							1 +
-							(floor(frozen / 4) % 4 == 0).tointeger() * 2,
+						shape.x - camx - 1 + (floor(frozen / 4) % 4 == 0).tointeger() * 2,
 						shape.y - camy - 1,
 						0,
 						0,
@@ -490,17 +428,7 @@ DeadNME <- class extends PhysAct {
 	}
 
 	function draw() {
-		drawSprite(
-			sprite,
-			frame,
-			floor(x - camx),
-			floor(y - camy),
-			angle,
-			flip,
-			1,
-			1,
-			1
-		);
+		drawSprite(sprite, frame, floor(x - camx), floor(y - camy), angle, flip, 1, 1, 1);
 	}
 
 	function _typeof() {
@@ -559,12 +487,7 @@ Deathcap <- class extends Enemy {
 							y -= 1.0;
 						} else flip = false;
 
-						if (smart)
-							if (
-								placeFree(x - 6, y + 14) &&
-								!placeFree(x + 2, y + 14)
-							)
-								flip = false;
+						if (smart) if (placeFree(x - 6, y + 14) && !placeFree(x + 2, y + 14)) flip = false;
 
 						if (x <= 0) flip = false;
 					} else {
@@ -577,12 +500,7 @@ Deathcap <- class extends Enemy {
 							y -= 1.0;
 						} else flip = true;
 
-						if (smart)
-							if (
-								placeFree(x + 6, y + 14) &&
-								!placeFree(x - 2, y + 14)
-							)
-								flip = true;
+						if (smart) if (placeFree(x + 6, y + 14) && !placeFree(x - 2, y + 14)) flip = true;
 
 						if (x >= gvMap.w) flip = true;
 					}
@@ -591,10 +509,8 @@ Deathcap <- class extends Enemy {
 				if (frozen) {
 					// Create ice block
 					local canice = true;
-					if (gvPlayer && hitTest(shape, gvPlayer.shape))
-						canice = false;
-					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape))
-						canice = false;
+					if (gvPlayer && hitTest(shape, gvPlayer.shape)) canice = false;
+					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape)) canice = false;
 					if (icebox == -1 && canice) {
 						if (health > 0) icebox = mapNewSolid(shape);
 					}
@@ -625,30 +541,8 @@ Deathcap <- class extends Enemy {
 
 		if (!squish) {
 			if (frozen) {
-				if (smart)
-					drawSprite(
-						sprGradcap,
-						0,
-						floor(x - camx),
-						floor(y - camy),
-						0,
-						flip.tointeger(),
-						1,
-						1,
-						1
-					);
-				else
-					drawSprite(
-						sprDeathcap,
-						0,
-						floor(x - camx),
-						floor(y - camy),
-						0,
-						flip.tointeger(),
-						1,
-						1,
-						1
-					);
+				if (smart) drawSprite(sprGradcap, 0, floor(x - camx), floor(y - camy), 0, flip.tointeger(), 1, 1, 1);
+				else drawSprite(sprDeathcap, 0, floor(x - camx), floor(y - camy), 0, flip.tointeger(), 1, 1, 1);
 			} else {
 				if (smart)
 					drawSprite(
@@ -705,14 +599,7 @@ Deathcap <- class extends Enemy {
 		base.draw();
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (squish) return;
 
 		if (_element == "ice") {
@@ -733,14 +620,7 @@ Deathcap <- class extends Enemy {
 			popSound(sndFlame, 0);
 
 			if (randInt(20) == 0) {
-				local a =
-					actor[
-						newActor(
-							game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-							x,
-							y
-						)
-					];
+				local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 				a.vspeed = -2;
 			}
 			return;
@@ -772,14 +652,7 @@ Deathcap <- class extends Enemy {
 			popSound(sndKick, 0);
 
 			if (randInt(20) == 0) {
-				local a =
-					actor[
-						newActor(
-							game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-							x,
-							y
-						)
-					];
+				local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 				a.vspeed = -2;
 			}
 		} else popSound(sndSquish, 0);
@@ -807,14 +680,7 @@ Deathcap <- class extends Enemy {
 		popSound(sndFlame, 0);
 
 		if (randInt(20) == 0) {
-			local a =
-				actor[
-					newActor(
-						game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-						x,
-						y
-					)
-				];
+			local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 			a.vspeed = -2;
 		}
 	}
@@ -894,68 +760,19 @@ PipeSnake <- class extends Enemy {
 
 	function draw() {
 		if (flip == 1)
-			drawSprite(
-				sprSnake,
-				frozen ? 1 : getFrames() / 8,
-				floor(x - camx),
-				floor(y - camy),
-				0,
-				0,
-				1,
-				1,
-				1
-			);
+			drawSprite(sprSnake, frozen ? 1 : getFrames() / 8, floor(x - camx), floor(y - camy), 0, 0, 1, 1, 1);
 		if (flip == -1)
-			drawSprite(
-				sprSnake,
-				frozen ? 1 : getFrames() / 8,
-				floor(x - camx),
-				floor(y - camy) + 32,
-				0,
-				2,
-				1,
-				1,
-				1
-			);
+			drawSprite(sprSnake, frozen ? 1 : getFrames() / 8, floor(x - camx), floor(y - camy) + 32, 0, 2, 1, 1, 1);
 
 		if (frozen > 0) {
-			if (flip == 1)
-				drawSprite(
-					sprSnake,
-					0,
-					floor(x - camx),
-					floor(y - camy),
-					0,
-					0,
-					1,
-					1,
-					1
-				);
-			if (flip == -1)
-				drawSprite(
-					sprSnake,
-					0,
-					floor(x - camx),
-					floor(y - camy) + 32,
-					0,
-					2,
-					1,
-					1,
-					1
-				);
+			if (flip == 1) drawSprite(sprSnake, 0, floor(x - camx), floor(y - camy), 0, 0, 1, 1, 1);
+			if (flip == -1) drawSprite(sprSnake, 0, floor(x - camx), floor(y - camy) + 32, 0, 2, 1, 1, 1);
 		}
 
 		base.draw();
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (_mag == 0) return;
 		if (_stomp) return;
 
@@ -1055,10 +872,8 @@ OrangeBounce <- class extends Enemy {
 				bounceTime = 5;
 			}
 			if (!placeFree(x, y - 1)) vspeed = fabs(vspeed);
-			if (!placeFree(x + 2, y - 2) && !placeFree(x + 2, y))
-				hspeed = -fabs(hspeed);
-			if (!placeFree(x - 2, y - 2) && !placeFree(x - 2, y))
-				hspeed = fabs(hspeed);
+			if (!placeFree(x + 2, y - 2) && !placeFree(x + 2, y)) hspeed = -fabs(hspeed);
+			if (!placeFree(x - 2, y - 2) && !placeFree(x - 2, y)) hspeed = fabs(hspeed);
 			vspeed += 0.1;
 
 			if (inWater(x, y) && vspeed > -4) vspeed -= 0.2;
@@ -1078,8 +893,7 @@ OrangeBounce <- class extends Enemy {
 				// Create ice block
 				local canice = true;
 				if (gvPlayer && hitTest(shape, gvPlayer.shape)) canice = false;
-				if (gvPlayer2 && hitTest(shape, gvPlayer2.shape))
-					canice = false;
+				if (gvPlayer2 && hitTest(shape, gvPlayer2.shape)) canice = false;
 				if (icebox == -1 && canice) {
 					if (health > 0) icebox = mapNewSolid(shape);
 				}
@@ -1116,14 +930,7 @@ OrangeBounce <- class extends Enemy {
 		base.draw();
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (gvPlayer && hitTest(shape, gvPlayer.shape) && _stomp) {
 			if (_mag > 0) die();
 			popSound(sndSquish, 0);
@@ -1234,8 +1041,7 @@ CarlBoom <- class extends Enemy {
 							y -= 1.0;
 						} else flip = false;
 
-						if (placeFree(x - 6, y + 14) && !placeFree(x, y + 2))
-							flip = false;
+						if (placeFree(x - 6, y + 14) && !placeFree(x, y + 2)) flip = false;
 
 						if (x <= 0) flip = false;
 					} else {
@@ -1248,8 +1054,7 @@ CarlBoom <- class extends Enemy {
 							y -= 1.0;
 						} else flip = true;
 
-						if (placeFree(x + 6, y + 14) && !placeFree(x, y + 2))
-							flip = true;
+						if (placeFree(x + 6, y + 14) && !placeFree(x, y + 2)) flip = true;
 
 						if (x >= gvMap.w) flip = true;
 					}
@@ -1258,10 +1063,8 @@ CarlBoom <- class extends Enemy {
 				if (frozen) {
 					// Create ice block
 					local canice = true;
-					if (gvPlayer && hitTest(shape, gvPlayer.shape))
-						canice = false;
-					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape))
-						canice = false;
+					if (gvPlayer && hitTest(shape, gvPlayer.shape)) canice = false;
+					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape)) canice = false;
 					if (icebox == -1 && canice) {
 						if (health > 0) icebox = mapNewSolid(shape);
 					}
@@ -1313,8 +1116,7 @@ CarlBoom <- class extends Enemy {
 					if (game.difficulty == 2) ex = ExplodeF3;
 					if (game.difficulty >= 3) ex = ExplodeF3Bloom;
 					fireWeapon(ex, x, y, 0, id);
-					if (gvPlayer)
-						if (gvPlayer.holding == id) gvPlayer.holding = 0;
+					if (gvPlayer) if (gvPlayer.holding == id) gvPlayer.holding = 0;
 				}
 			}
 
@@ -1325,30 +1127,9 @@ CarlBoom <- class extends Enemy {
 	}
 
 	function draw() {
-		if (squish)
-			drawSprite(
-				sprCarlBoom,
-				wrap(frame, 4, 7),
-				x - camx,
-				y - camy,
-				0,
-				flip.tointeger(),
-				1,
-				1,
-				1
-			);
+		if (squish) drawSprite(sprCarlBoom, wrap(frame, 4, 7), x - camx, y - camy, 0, flip.tointeger(), 1, 1, 1);
 		else if (frozen) {
-			drawSprite(
-				sprCarlBoom,
-				0,
-				floor(x - camx),
-				floor(y - camy),
-				0,
-				flip.tointeger(),
-				1,
-				1,
-				1
-			);
+			drawSprite(sprCarlBoom, 0, floor(x - camx), floor(y - camy), 0, flip.tointeger(), 1, 1, 1);
 		} else
 			drawSprite(
 				sprCarlBoom,
@@ -1375,14 +1156,7 @@ CarlBoom <- class extends Enemy {
 		squish = true;
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (!active) return;
 		if (held) return;
 		if (_element == "water") {
@@ -1458,10 +1232,8 @@ Shortfuse <- class extends Enemy {
 	}
 
 	function run() {
-		if (gvPlayer && hitTest(shape, gvPlayer.shape))
-			explodeX = gvPlayer.hspeed;
-		if (gvPlayer2 && hitTest(shape, gvPlayer2.shape))
-			explodeX = gvPlayer2.hspeed;
+		if (gvPlayer && hitTest(shape, gvPlayer.shape)) explodeX = gvPlayer.hspeed;
+		if (gvPlayer2 && hitTest(shape, gvPlayer2.shape)) explodeX = gvPlayer2.hspeed;
 
 		base.run();
 
@@ -1484,8 +1256,7 @@ Shortfuse <- class extends Enemy {
 							y -= 1.0;
 						} else flip = false;
 
-						if (placeFree(x - 6, y + 14) && !placeFree(x, y + 2))
-							flip = false;
+						if (placeFree(x - 6, y + 14) && !placeFree(x, y + 2)) flip = false;
 
 						if (x <= 0) flip = false;
 					} else {
@@ -1498,8 +1269,7 @@ Shortfuse <- class extends Enemy {
 							y -= 1.0;
 						} else flip = true;
 
-						if (placeFree(x + 6, y + 14) && !placeFree(x, y + 2))
-							flip = true;
+						if (placeFree(x + 6, y + 14) && !placeFree(x, y + 2)) flip = true;
 
 						if (x >= gvMap.w) flip = true;
 					}
@@ -1508,10 +1278,8 @@ Shortfuse <- class extends Enemy {
 				if (frozen) {
 					// Create ice block
 					local canice = true;
-					if (gvPlayer && hitTest(shape, gvPlayer.shape))
-						canice = false;
-					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape))
-						canice = false;
+					if (gvPlayer && hitTest(shape, gvPlayer.shape)) canice = false;
+					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape)) canice = false;
 					if (icebox == -1 && canice) {
 						if (health > 0) icebox = mapNewSolid(shape);
 					}
@@ -1563,8 +1331,7 @@ Shortfuse <- class extends Enemy {
 					if (game.difficulty == 2) ex = ExplodeF3;
 					if (game.difficulty >= 3) ex = ExplodeF3Bloom;
 					fireWeapon(ex, x, y, 0, id);
-					if (gvPlayer)
-						if (gvPlayer.holding == id) gvPlayer.holding = 0;
+					if (gvPlayer) if (gvPlayer.holding == id) gvPlayer.holding = 0;
 				}
 			}
 
@@ -1575,30 +1342,9 @@ Shortfuse <- class extends Enemy {
 	}
 
 	function draw() {
-		if (squish)
-			drawSprite(
-				sprShortfuse,
-				wrap(frame, 4, 7),
-				x - camx,
-				y - camy,
-				0,
-				flip.tointeger(),
-				1,
-				1,
-				1
-			);
+		if (squish) drawSprite(sprShortfuse, wrap(frame, 4, 7), x - camx, y - camy, 0, flip.tointeger(), 1, 1, 1);
 		else if (frozen) {
-			drawSprite(
-				sprShortfuse,
-				0,
-				floor(x - camx),
-				floor(y - camy),
-				0,
-				flip.tointeger(),
-				1,
-				1,
-				1
-			);
+			drawSprite(sprShortfuse, 0, floor(x - camx), floor(y - camy), 0, flip.tointeger(), 1, 1, 1);
 		} else
 			drawSprite(
 				sprShortfuse,
@@ -1619,14 +1365,7 @@ Shortfuse <- class extends Enemy {
 		die();
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		die();
 	}
 
@@ -1644,10 +1383,8 @@ Shortfuse <- class extends Enemy {
 		burnt = true;
 		base.die();
 		fireWeapon(ExplodeTiny, x + explodeX, y, 0, 0);
-		if (gvPlayer && hitTest(shape, gvPlayer.shape))
-			gvPlayer.hspeed = -explodeX;
-		if (gvPlayer2 && hitTest(shape, gvPlayer2.shape))
-			gvPlayer2.hspeed = -explodeX;
+		if (gvPlayer && hitTest(shape, gvPlayer.shape)) gvPlayer.hspeed = -explodeX;
+		if (gvPlayer2 && hitTest(shape, gvPlayer2.shape)) gvPlayer2.hspeed = -explodeX;
 
 		handleKiller();
 	}
@@ -1697,10 +1434,7 @@ BlueFish <- class extends Enemy {
 
 			local target = null;
 			if (gvPlayer && gvPlayer2) {
-				if (
-					distance2(x, y, gvPlayer.x, gvPlayer.y) <
-					distance2(x, y, gvPlayer2.x, gvPlayer2.y)
-				)
+				if (distance2(x, y, gvPlayer.x, gvPlayer.y) < distance2(x, y, gvPlayer2.x, gvPlayer2.y))
 					target = gvPlayer;
 				else target = gvPlayer2;
 			} else if (gvPlayer) target = gvPlayer;
@@ -1728,48 +1462,14 @@ BlueFish <- class extends Enemy {
 
 	function draw() {
 		if (biting) {
-			drawSprite(
-				sprBlueFish,
-				4 + frame,
-				x - camx,
-				y - camy,
-				0,
-				flip,
-				1,
-				1,
-				1
-			);
+			drawSprite(sprBlueFish, 4 + frame, x - camx, y - camy, 0, flip, 1, 1, 1);
 			frame += 0.125;
-		} else
-			drawSprite(
-				sprBlueFish,
-				wrap(getFrames() / 16, 0, 3),
-				x - camx,
-				y - camy,
-				0,
-				flip,
-				1,
-				1,
-				1
-			);
+		} else drawSprite(sprBlueFish, wrap(getFrames() / 16, 0, 3), x - camx, y - camy, 0, flip, 1, 1, 1);
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (_element == "water" || _mag == 0) return;
-		if (
-			("anim" in _by &&
-				_by.anim == "slide" &&
-				_by.stats.weapon == "earth") ||
-			!_stomp ||
-			!_by.swimming
-		)
+		if (("anim" in _by && _by.anim == "slide" && _by.stats.weapon == "earth") || !_stomp || !_by.swimming)
 			hurtFire();
 	}
 
@@ -1786,14 +1486,7 @@ BlueFish <- class extends Enemy {
 		newActor(Poof, x + 8, y);
 		newActor(Poof, x - 8, y);
 		if (randInt(20) == 0) {
-			local a =
-				actor[
-					newActor(
-						game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-						x,
-						y
-					)
-				];
+			local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 			a.vspeed = -2;
 		}
 	}
@@ -1841,10 +1534,7 @@ RedFish <- class extends Enemy {
 
 			local target = null;
 			if (gvPlayer && gvPlayer2) {
-				if (
-					distance2(x, y, gvPlayer.x, gvPlayer.y) <
-					distance2(x, y, gvPlayer2.x, gvPlayer2.y)
-				)
+				if (distance2(x, y, gvPlayer.x, gvPlayer.y) < distance2(x, y, gvPlayer2.x, gvPlayer2.y))
 					target = gvPlayer;
 				else target = gvPlayer2;
 			} else if (gvPlayer) target = gvPlayer;
@@ -1852,10 +1542,7 @@ RedFish <- class extends Enemy {
 
 			if (target != null) {
 				if (hitTest(shape, target.shape)) biting = true;
-				if (
-					inDistance2(x, y, target.x, target.y, 128) &&
-					inWater(x, y)
-				) {
+				if (inDistance2(x, y, target.x, target.y, 128) && inWater(x, y)) {
 					biting = true;
 					timer = 240;
 
@@ -1898,48 +1585,14 @@ RedFish <- class extends Enemy {
 
 	function draw() {
 		if (biting) {
-			drawSprite(
-				sprRedFish,
-				4 + frame,
-				x - camx,
-				y - camy,
-				0,
-				flip,
-				1,
-				1,
-				1
-			);
+			drawSprite(sprRedFish, 4 + frame, x - camx, y - camy, 0, flip, 1, 1, 1);
 			frame += 0.125;
-		} else
-			drawSprite(
-				sprRedFish,
-				wrap(getFrames() / 16, 0, 3),
-				x - camx,
-				y - camy,
-				0,
-				flip,
-				1,
-				1,
-				1
-			);
+		} else drawSprite(sprRedFish, wrap(getFrames() / 16, 0, 3), x - camx, y - camy, 0, flip, 1, 1, 1);
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (_element == "water" || _mag == 0) return;
-		if (
-			("anim" in _by &&
-				_by.anim == "slide" &&
-				_by.stats.weapon == "earth") ||
-			!_stomp ||
-			!_by.swimming
-		)
+		if (("anim" in _by && _by.anim == "slide" && _by.stats.weapon == "earth") || !_stomp || !_by.swimming)
 			hurtFire();
 	}
 
@@ -1956,14 +1609,7 @@ RedFish <- class extends Enemy {
 		newActor(Poof, x + 8, y);
 		newActor(Poof, x - 8, y);
 		if (randInt(20) == 0) {
-			local a =
-				actor[
-					newActor(
-						game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-						x,
-						y
-					)
-				];
+			local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 			a.vspeed = -2;
 		}
 	}
@@ -2061,49 +1707,19 @@ JellyFish <- class extends Enemy {
 	}
 
 	function draw() {
-		drawSprite(
-			sprJellyFish,
-			frame,
-			x - camx,
-			y - camy,
-			0,
-			fliph + flipv * 2,
-			1,
-			1,
-			1
-		);
+		drawSprite(sprJellyFish, frame, x - camx, y - camy, 0, fliph + flipv * 2, 1, 1, 1);
 		drawLight(sprLightIce, 0, x - camx, y - camy, 0, 0, 0.25, 0.25);
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (_element == "water" || _mag == 0) return;
-		if (
-			("anim" in _by &&
-				_by.anim == "slide" &&
-				_by.stats.weapon == "earth") ||
-			!_stomp ||
-			!_by.swimming
-		)
+		if (("anim" in _by && _by.anim == "slide" && _by.stats.weapon == "earth") || !_stomp || !_by.swimming)
 			hurtFire();
 	}
 
 	function hurtFire() {
 		if (randInt(20) == 0) {
-			local a =
-				actor[
-					newActor(
-						game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-						x,
-						y
-					)
-				];
+			local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 			a.vspeed = -2;
 		}
 		local c = newActor(DeadNME, x, y);
@@ -2147,20 +1763,13 @@ Clamor <- class extends Enemy {
 
 		local target = null;
 		if (gvPlayer && gvPlayer2) {
-			if (
-				distance2(x, y, gvPlayer.x, gvPlayer.y) <
-				distance2(x, y, gvPlayer2.x, gvPlayer2.y)
-			)
-				target = gvPlayer;
+			if (distance2(x, y, gvPlayer.x, gvPlayer.y) < distance2(x, y, gvPlayer2.x, gvPlayer2.y)) target = gvPlayer;
 			else target = gvPlayer2;
 		} else if (gvPlayer) target = gvPlayer;
 		else if (gvPlayer2) target = gvPlayer2;
 
 		if (target != null) {
-			if (
-				inDistance2(x + huntdir * 48, y - 32, target.x, target.y, 64) &&
-				timer == 0
-			) {
+			if (inDistance2(x + huntdir * 48, y - 32, target.x, target.y, 64) && timer == 0) {
 				timer = 240;
 				newActor(ClamorPearl, x, y, null);
 			}
@@ -2170,29 +1779,11 @@ Clamor <- class extends Enemy {
 	}
 
 	function draw() {
-		drawSprite(
-			sprClamor,
-			(timer < 30).tointeger(),
-			x - camx,
-			y - camy,
-			0,
-			flip,
-			1,
-			1,
-			1
-		);
+		drawSprite(sprClamor, (timer < 30).tointeger(), x - camx, y - camy, 0, flip, 1, 1, 1);
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
-		if ("anim" in _by)
-			if (_by.anim == "slide" && _by.stats.weapon == "earth") hurtFire();
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
+		if ("anim" in _by) if (_by.anim == "slide" && _by.stats.weapon == "earth") hurtFire();
 		if (_stomp && timer > 30) return;
 		if (_element == "fire") hurtFire();
 		if (_element != "water" && _element != "ice") hurtBlast();
@@ -2201,14 +1792,7 @@ Clamor <- class extends Enemy {
 	function hurtFire() {
 		if (timer < 30) {
 			if (randInt(20) == 0) {
-				local a =
-					actor[
-						newActor(
-							game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-							x,
-							y
-						)
-					];
+				local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 				a.vspeed = -2;
 			}
 			newActor(Poof, x, y - 1);
@@ -2306,10 +1890,7 @@ GreenFish <- class extends Enemy {
 
 			local target = null;
 			if (gvPlayer && gvPlayer2) {
-				if (
-					distance2(x, y, gvPlayer.x, gvPlayer.y) <
-					distance2(x, y, gvPlayer2.x, gvPlayer2.y)
-				)
+				if (distance2(x, y, gvPlayer.x, gvPlayer.y) < distance2(x, y, gvPlayer2.x, gvPlayer2.y))
 					target = gvPlayer;
 				else target = gvPlayer2;
 			} else if (gvPlayer) target = gvPlayer;
@@ -2317,10 +1898,7 @@ GreenFish <- class extends Enemy {
 
 			if (target != null) {
 				if (hitTest(shape, target.shape)) biting = true;
-				if (
-					inDistance2(x, y, target.x, target.y, 256) &&
-					inWater(x, y)
-				) {
+				if (inDistance2(x, y, target.x, target.y, 256) && inWater(x, y)) {
 					biting = true;
 
 					// Chase player
@@ -2332,8 +1910,7 @@ GreenFish <- class extends Enemy {
 						if (
 							canjump &&
 							!target.inWater(target.x, target.y) &&
-							((hspeed > 0 && target.x > x) ||
-								(hspeed < 0 && target.x < x))
+							((hspeed > 0 && target.x > x) || (hspeed < 0 && target.x < x))
 						) {
 							vspeed = -6;
 							canjump = false;
@@ -2390,48 +1967,14 @@ GreenFish <- class extends Enemy {
 
 	function draw() {
 		if (biting) {
-			drawSprite(
-				sprGreenFish,
-				4 + frame,
-				x - camx,
-				y - camy,
-				0,
-				flip,
-				1,
-				1,
-				1
-			);
+			drawSprite(sprGreenFish, 4 + frame, x - camx, y - camy, 0, flip, 1, 1, 1);
 			frame += 0.125;
-		} else
-			drawSprite(
-				sprGreenFish,
-				wrap(getFrames() / 16, 0, 3),
-				x - camx,
-				y - camy,
-				0,
-				flip,
-				1,
-				1,
-				1
-			);
+		} else drawSprite(sprGreenFish, wrap(getFrames() / 16, 0, 3), x - camx, y - camy, 0, flip, 1, 1, 1);
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (_element == "water" || _mag == 0) return;
-		if (
-			("anim" in _by &&
-				_by.anim == "slide" &&
-				_by.stats.weapon == "earth") ||
-			!_stomp ||
-			!_by.swimming
-		)
+		if (("anim" in _by && _by.anim == "slide" && _by.stats.weapon == "earth") || !_stomp || !_by.swimming)
 			hurtFire();
 	}
 
@@ -2448,14 +1991,7 @@ GreenFish <- class extends Enemy {
 		newActor(Poof, x + 8, y);
 		newActor(Poof, x - 8, y);
 		if (randInt(20) == 0) {
-			local a =
-				actor[
-					newActor(
-						game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-						x,
-						y
-					)
-				];
+			local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 			a.vspeed = -2;
 		}
 	}
@@ -2487,52 +2023,44 @@ Ouchin <- class extends Enemy {
 
 		if (gvPlayer && hitTest(shape, gvPlayer.shape)) {
 			if (x > gvPlayer.x) {
-				if (gvPlayer.placeFree(gvPlayer.x - 1, gvPlayer.y))
-					gvPlayer.x--;
+				if (gvPlayer.placeFree(gvPlayer.x - 1, gvPlayer.y)) gvPlayer.x--;
 				gvPlayer.hspeed -= 0.1;
 			}
 
 			if (x < gvPlayer.x) {
-				if (gvPlayer.placeFree(gvPlayer.x + 1, gvPlayer.y))
-					gvPlayer.x++;
+				if (gvPlayer.placeFree(gvPlayer.x + 1, gvPlayer.y)) gvPlayer.x++;
 				gvPlayer.hspeed += 0.1;
 			}
 
 			if (y > gvPlayer.y) {
-				if (gvPlayer.placeFree(gvPlayer.x, gvPlayer.y - 1))
-					gvPlayer.y--;
+				if (gvPlayer.placeFree(gvPlayer.x, gvPlayer.y - 1)) gvPlayer.y--;
 				gvPlayer.vspeed -= 0.1;
 			}
 
 			if (y < gvPlayer.y) {
-				if (gvPlayer.placeFree(gvPlayer.x, gvPlayer.y + 1))
-					gvPlayer.y++;
+				if (gvPlayer.placeFree(gvPlayer.x, gvPlayer.y + 1)) gvPlayer.y++;
 				gvPlayer.vspeed += 0.1;
 			}
 		}
 
 		if (gvPlayer2 && hitTest(shape, gvPlayer2.shape)) {
 			if (x > gvPlayer2.x) {
-				if (gvPlayer2.placeFree(gvPlayer2.x - 1, gvPlayer2.y))
-					gvPlayer2.x--;
+				if (gvPlayer2.placeFree(gvPlayer2.x - 1, gvPlayer2.y)) gvPlayer2.x--;
 				gvPlayer2.hspeed -= 0.1;
 			}
 
 			if (x < gvPlayer2.x) {
-				if (gvPlayer2.placeFree(gvPlayer2.x + 1, gvPlayer2.y))
-					gvPlayer2.x++;
+				if (gvPlayer2.placeFree(gvPlayer2.x + 1, gvPlayer2.y)) gvPlayer2.x++;
 				gvPlayer2.hspeed += 0.1;
 			}
 
 			if (y > gvPlayer2.y) {
-				if (gvPlayer2.placeFree(gvPlayer2.x, gvPlayer2.y - 1))
-					gvPlayer2.y--;
+				if (gvPlayer2.placeFree(gvPlayer2.x, gvPlayer2.y - 1)) gvPlayer2.y--;
 				gvPlayer2.vspeed -= 0.1;
 			}
 
 			if (y < gvPlayer2.y) {
-				if (gvPlayer2.placeFree(gvPlayer2.x, gvPlayer2.y + 1))
-					gvPlayer2.y++;
+				if (gvPlayer2.placeFree(gvPlayer2.x, gvPlayer2.y + 1)) gvPlayer2.y++;
 				gvPlayer2.vspeed += 0.1;
 			}
 		}
@@ -2558,24 +2086,12 @@ Ouchin <- class extends Enemy {
 	}
 
 	function draw() {
-		drawSprite(
-			sprOuchin,
-			sf + (frozen ? 0 : getFrames() / 16) * rev,
-			x - camx,
-			y - camy
-		);
+		drawSprite(sprOuchin, sf + (frozen ? 0 : getFrames() / 16) * rev, x - camx, y - camy);
 
 		base.draw();
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (_element == "fire") hurtFire();
 		if (_element == "ice") hurtIce();
 	}
@@ -2606,11 +2122,7 @@ BadCannon <- class extends Actor {
 
 		local target = null;
 		if (gvPlayer && gvPlayer2) {
-			if (
-				distance2(x, y, gvPlayer.x, gvPlayer.y) <
-				distance2(x, y, gvPlayer2.x, gvPlayer2.y)
-			)
-				target = gvPlayer;
+			if (distance2(x, y, gvPlayer.x, gvPlayer.y) < distance2(x, y, gvPlayer2.x, gvPlayer2.y)) target = gvPlayer;
 			else target = gvPlayer2;
 		} else if (gvPlayer) target = gvPlayer;
 		else if (gvPlayer2) target = gvPlayer2;
@@ -2619,11 +2131,7 @@ BadCannon <- class extends Actor {
 			if (x > target.x + 8 && frame > 0.5) frame -= 0.1;
 			if (x < target.x - 8 && frame < 4.5) frame += 0.1;
 
-			if (
-				inDistance2(x, y, target.x, target.y, 160) &&
-				timer == 0 &&
-				(frame < 1 || frame > 4)
-			) {
+			if (inDistance2(x, y, target.x, target.y, 160) && timer == 0 && (frame < 1 || frame > 4)) {
 				if (frame < 1) {
 					local c = actor[newActor(CannonBob, x - 4, y - 4)];
 					c.hspeed = (target.x - x) / 40;
@@ -2651,11 +2159,7 @@ BadCannon <- class extends Actor {
 				timer = 240;
 			}
 
-			if (
-				timer <= 60 &&
-				timer % 5 == 0 &&
-				inDistance2(x, y, target.x, target.y, 160)
-			) {
+			if (timer <= 60 && timer % 5 == 0 && inDistance2(x, y, target.x, target.y, 160)) {
 				local c = actor[newActor(PoofTiny, x + 5 - frame * 2, y - 8)];
 				c.vspeed = -1;
 				c.hspeed = (2 - frame + randFloat(1)) / 4.0;
@@ -2715,38 +2219,19 @@ CannonBob <- class extends Enemy {
 			// Create ice block
 			local canice = true;
 
-			if (gvPlayer && icebox == -1 && hitTest(shape, gvPlayer.shape))
-				canice = false;
-			if (gvPlayer2 && icebox == -1 && hitTest(shape, gvPlayer2.shape))
-				canice = false;
+			if (gvPlayer && icebox == -1 && hitTest(shape, gvPlayer.shape)) canice = false;
+			if (gvPlayer2 && icebox == -1 && hitTest(shape, gvPlayer2.shape)) canice = false;
 
 			if (canice) if (health > 0) icebox = mapNewSolid(shape);
 		}
 	}
 
 	function draw() {
-		drawSprite(
-			sprite,
-			frozen ? 0 : getFrames() / 4,
-			x - camx,
-			y - camy,
-			0,
-			int(hspeed < 0),
-			1,
-			1,
-			1
-		);
+		drawSprite(sprite, frozen ? 0 : getFrames() / 4, x - camx, y - camy, 0, int(hspeed < 0), 1, 1, 1);
 		base.draw();
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (_blast || _element == "fire") {
 			hurtBlast();
 			return;
@@ -2824,16 +2309,8 @@ Icicle <- class extends Enemy {
 		if (sprIcicle != defIcicle) element = "normal";
 
 		if (
-			(gvPlayer &&
-				abs(y - gvPlayer.y) < 128 &&
-				y < gvPlayer.y &&
-				abs(x - gvPlayer.x) < 8 &&
-				!counting) ||
-			(gvPlayer2 &&
-				abs(y - gvPlayer2.y) < 128 &&
-				y < gvPlayer2.y &&
-				abs(x - gvPlayer2.x) < 8 &&
-				!counting)
+			(gvPlayer && abs(y - gvPlayer.y) < 128 && y < gvPlayer.y && abs(x - gvPlayer.x) < 8 && !counting) ||
+			(gvPlayer2 && abs(y - gvPlayer2.y) < 128 && y < gvPlayer2.y && abs(x - gvPlayer2.x) < 8 && !counting)
 		) {
 			counting = true;
 			popSound(sndIcicle, 0);
@@ -2859,8 +2336,7 @@ Icicle <- class extends Enemy {
 			} else if (game.difficulty == 2) {
 				if (sprIcicle == defIcicle) fireWeapon(ExplodeI, x, y, 0, 0);
 				else fireWeapon(ExplodeN, x, y, 0, 0);
-			} else if (sprIcicle == defIcicle)
-				fireWeapon(ExplodeI2, x, y, 0, 0);
+			} else if (sprIcicle == defIcicle) fireWeapon(ExplodeI2, x, y, 0, 0);
 			else fireWeapon(ExplodeN3, x, y, 0, 0);
 		}
 
@@ -2874,14 +2350,7 @@ Icicle <- class extends Enemy {
 		drawSprite(sprIcicle, 0, x + (timer % 2) - camx, y - 8 - camy + dy);
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (_element == "fire") {
 			die();
 			newActor(Poof, x, y);
@@ -2919,8 +2388,7 @@ FlyAmanita <- class extends Enemy {
 		base.run();
 		if (gvPlayer && !frozen) gvPlayer.x < x ? (flip = 1) : (flip = 0);
 
-		if (inDistance2(x, y, x, ystart, 16))
-			vspeed = (1.0 / 8.0) * distance2(x, y, x, ystart) * dir;
+		if (inDistance2(x, y, x, ystart, 16)) vspeed = (1.0 / 8.0) * distance2(x, y, x, ystart) * dir;
 		else if (inDistance2(x, y, x, ystart + range, 16))
 			vspeed = (1.0 / 8.0) * distance2(x, y, x, ystart + range) * dir;
 		else vspeed = dir * 2.0;
@@ -2963,28 +2431,11 @@ FlyAmanita <- class extends Enemy {
 	}
 
 	function draw() {
-		drawSprite(
-			sprFlyAmanita,
-			frozen ? 0 : getFrames() / 4,
-			x - camx,
-			y - camy,
-			0,
-			flip,
-			1,
-			1,
-			1
-		);
+		drawSprite(sprFlyAmanita, frozen ? 0 : getFrames() / 4, x - camx, y - camy, 0, flip, 1, 1, 1);
 		base.draw();
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (_mag <= 0) return;
 
 		if (_by != 0 && hitTest(shape, _by.shape)) {
@@ -3000,11 +2451,7 @@ FlyAmanita <- class extends Enemy {
 				return;
 			}
 
-			if (
-				"playerNum" in _by &&
-				getcon("jump", "hold", false, _by.playerNum)
-			)
-				_by.vspeed = -8;
+			if ("playerNum" in _by && getcon("jump", "hold", false, _by.playerNum)) _by.vspeed = -8;
 			else _by.vspeed = -4;
 
 			if (_by.anim == "jumpT" || _by.anim == "fall") {
@@ -3067,8 +2514,7 @@ SideAmanita <- class extends Enemy {
 		base.run();
 		hspeed < 0 ? (flip = 1) : (flip = 0);
 
-		if (inDistance2(x, y, x, ystart, 16))
-			vspeed = (1.0 / 8.0) * distance2(x, y, x, ystart) * dir;
+		if (inDistance2(x, y, x, ystart, 16)) vspeed = (1.0 / 8.0) * distance2(x, y, x, ystart) * dir;
 		else if (inDistance2(x, y, x, ystart + range, 16))
 			vspeed = (1.0 / 8.0) * distance2(x, y, x, ystart + range) * dir;
 		else vspeed = dir * 2.0;
@@ -3116,28 +2562,11 @@ SideAmanita <- class extends Enemy {
 	}
 
 	function draw() {
-		drawSprite(
-			sprFlyAmanita,
-			frozen ? 0 : getFrames() / 4,
-			x - camx,
-			y - camy,
-			0,
-			flip,
-			1,
-			1,
-			1
-		);
+		drawSprite(sprFlyAmanita, frozen ? 0 : getFrames() / 4, x - camx, y - camy, 0, flip, 1, 1, 1);
 		base.draw();
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (_mag <= 0) return;
 
 		if (_by != 0 && hitTest(shape, _by.shape)) {
@@ -3153,11 +2582,7 @@ SideAmanita <- class extends Enemy {
 				return;
 			}
 
-			if (
-				"playerNum" in _by &&
-				getcon("jump", "hold", false, _by.playerNum)
-			)
-				_by.vspeed = -8;
+			if ("playerNum" in _by && getcon("jump", "hold", false, _by.playerNum)) _by.vspeed = -8;
 			else _by.vspeed = -4;
 
 			if (_by.anim == "jumpT" || _by.anim == "fall") {
@@ -3245,8 +2670,7 @@ Jumpy <- class extends Enemy {
 				// Create ice block
 				local canice = true;
 				if (gvPlayer && hitTest(shape, gvPlayer.shape)) canice = false;
-				if (gvPlayer2 && hitTest(shape, gvPlayer2.shape))
-					canice = false;
+				if (gvPlayer2 && hitTest(shape, gvPlayer2.shape)) canice = false;
 				if (icebox == -1 && canice) {
 					if (health > 0) icebox = mapNewSolid(shape);
 				}
@@ -3269,17 +2693,7 @@ Jumpy <- class extends Enemy {
 
 	function draw() {
 		if (frozen) {
-			drawSprite(
-				sprJumpy,
-				0,
-				floor(x - camx),
-				floor(y - camy),
-				0,
-				flip.tointeger(),
-				1,
-				1,
-				1
-			);
+			drawSprite(sprJumpy, 0, floor(x - camx), floor(y - camy), 0, flip.tointeger(), 1, 1, 1);
 
 			base.draw();
 		} else
@@ -3296,14 +2710,7 @@ Jumpy <- class extends Enemy {
 			);
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (_element == "fire") {
 			hurtFire();
 			return;
@@ -3351,9 +2758,8 @@ Haywire <- class extends Enemy {
 	hspeed = 0.0;
 	touchDamage = 2.0;
 	anAgro = [
-		4, 4, 4, 5, 5, 5, 5, 5, 5, 6, 5, 5, 5, 5, 7, 7, 8, 9, 8, 9, 10, 11, 10,
-		11, 10, 11, 10, 11, 10, 11, 10, 11, 10, 11, 10, 11, 10, 11, 10, 11, 10,
-		11, 10, 11
+		4, 4, 4, 5, 5, 5, 5, 5, 5, 6, 5, 5, 5, 5, 7, 7, 8, 9, 8, 9, 10, 11, 10, 11, 10, 11, 10, 11, 10, 11, 10, 11, 10,
+		11, 10, 11, 10, 11, 10, 11, 10, 11, 10, 11
 	];
 
 	constructor(_x, _y, _arr = null) {
@@ -3399,7 +2805,7 @@ Haywire <- class extends Enemy {
 						} else if (placeFree(x - mspeed, y - mspeed * 2)) {
 							x -= mspeed;
 							y -= 1.0;
-						} else if(!chasing) flip = false;
+						} else if (!chasing) flip = false;
 
 						if (placeFree(x - 8, y + 14) && !placeFree(x, y + 2)) {
 							if (!chasing) flip = false;
@@ -3416,7 +2822,7 @@ Haywire <- class extends Enemy {
 						} else if (placeFree(x + mspeed * 2, y - mspeed * 2)) {
 							x += mspeed;
 							y -= 1.0;
-						} else if(!chasing) flip = true;
+						} else if (!chasing) flip = true;
 
 						if (placeFree(x + 8, y + 14) && !placeFree(x, y + 2)) {
 							if (!chasing) flip = true;
@@ -3429,16 +2835,7 @@ Haywire <- class extends Enemy {
 
 					local target = findPlayer();
 					if (target != null)
-						if (
-							inDistance2(
-								x,
-								y,
-								target.x,
-								target.y,
-								16 + 32 * game.difficulty
-							)
-						)
-							squish = true;
+						if (inDistance2(x, y, target.x, target.y, 16 + 32 * game.difficulty)) squish = true;
 				}
 
 				local target = findPlayer();
@@ -3454,17 +2851,14 @@ Haywire <- class extends Enemy {
 							if (hspeed > 0) hspeed -= 0.05;
 						}
 
-					if (!placeFree(x, y + 1) && y > target.y + 16)
-						vspeed = -5.0;
+					if (!placeFree(x, y + 1) && y > target.y + 16) vspeed = -5.0;
 				} else hspeed = 0.0;
 
 				if (frozen) {
 					// Create ice block
 					local canice = true;
-					if (gvPlayer && hitTest(shape, gvPlayer.shape))
-						canice = false;
-					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape))
-						canice = false;
+					if (gvPlayer && hitTest(shape, gvPlayer.shape)) canice = false;
+					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape)) canice = false;
 					if (icebox == -1 && canice) {
 						if (health > 0) icebox = mapNewSolid(shape);
 					}
@@ -3483,8 +2877,7 @@ Haywire <- class extends Enemy {
 					if (chasing) {
 						if (getFrames() % 8 == 0) {
 							local c;
-							if (!flip)
-								c = actor[newActor(FlameTiny, x - 6, y - 8)];
+							if (!flip) c = actor[newActor(FlameTiny, x - 6, y - 8)];
 							else c = actor[newActor(FlameTiny, x + 6, y - 8)];
 							c.vspeed = -0.1;
 							c.hspeed = randFloat(0.2) - 0.1;
@@ -3521,30 +2914,9 @@ Haywire <- class extends Enemy {
 	}
 
 	function draw() {
-		if (frozen)
-			drawSprite(
-				sprHaywire,
-				0,
-				floor(x - camx),
-				floor(y - camy),
-				0,
-				flip.tointeger(),
-				1,
-				1,
-				1
-			);
+		if (frozen) drawSprite(sprHaywire, 0, floor(x - camx), floor(y - camy), 0, flip.tointeger(), 1, 1, 1);
 		else if (chasing)
-			drawSprite(
-				sprHaywire,
-				wrap(getFrames() / 4, 12, 15),
-				x - camx,
-				y - camy,
-				0,
-				flip.tointeger(),
-				1,
-				1,
-				1
-			);
+			drawSprite(sprHaywire, wrap(getFrames() / 4, 12, 15), x - camx, y - camy, 0, flip.tointeger(), 1, 1, 1);
 		else if (squish && !chasing)
 			drawSprite(
 				sprHaywire,
@@ -3557,30 +2929,8 @@ Haywire <- class extends Enemy {
 				1,
 				1
 			);
-		else if (squish)
-			drawSprite(
-				sprHaywire,
-				wrap(frame, 12, 15),
-				x - camx,
-				y - camy,
-				0,
-				flip.tointeger(),
-				1,
-				1,
-				1
-			);
-		else
-			drawSprite(
-				sprHaywire,
-				wrap(getFrames() / 16, 0, 3),
-				x - camx,
-				y - camy,
-				0,
-				flip.tointeger(),
-				1,
-				1,
-				1
-			);
+		else if (squish) drawSprite(sprHaywire, wrap(frame, 12, 15), x - camx, y - camy, 0, flip.tointeger(), 1, 1, 1);
+		else drawSprite(sprHaywire, wrap(getFrames() / 16, 0, 3), x - camx, y - camy, 0, flip.tointeger(), 1, 1, 1);
 
 		base.draw();
 	}
@@ -3598,21 +2948,13 @@ Haywire <- class extends Enemy {
 	}
 
 	function hurtPlayer(target) {
-		if ((target != gvPlayer && target != gvPlayer2) || target == false)
-			return;
+		if ((target != gvPlayer && target != gvPlayer2) || target == false) return;
 		if (target == 0 || target == false || target == null) return;
 		if (blinking || (squish && !chasing)) return;
 		target.hurt = touchDamage * target.damageMult[element];
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (_element == "water") {
 			squish = false;
 			squishTime = 0;
@@ -3699,13 +3041,9 @@ Goldbomb <- class extends Enemy {
 
 		local target = findPlayer();
 		if (target != null) {
-			if (
-				inDistance2(target.x, target.y, x, y, 64 + 16 * game.difficulty)
-			)
-				scared = 300;
+			if (inDistance2(target.x, target.y, x, y, 64 + 16 * game.difficulty)) scared = 300;
 
-			if (scared && fabs(hspeed) < mspeed)
-				hspeed += 0.1 * (x <=> target.x);
+			if (scared && fabs(hspeed) < mspeed) hspeed += 0.1 * (x <=> target.x);
 		}
 
 		if (frozen) {
@@ -3748,11 +3086,7 @@ Goldbomb <- class extends Enemy {
 		else if (placeFree(x + hspeed, y - 2)) {
 			x += hspeed;
 			y -= 2.0;
-		} else if (
-			(placeFree(x + hspeed, y - 16) || placeFree(x + hspeed, y - 32)) &&
-			scared
-		)
-			vspeed = -4.0;
+		} else if ((placeFree(x + hspeed, y - 16) || placeFree(x + hspeed, y - 32)) && scared) vspeed = -4.0;
 		else if (scared) hspeed /= 2.0;
 		else hspeed = -hspeed;
 
@@ -3807,14 +3141,7 @@ Goldbomb <- class extends Enemy {
 		if (health <= 0.0) die();
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (dead) return;
 
 		if (_element == "fire" || _blast) die();
@@ -3842,14 +3169,7 @@ Goldbomb <- class extends Enemy {
 	}
 
 	function draw() {
-		drawSprite(
-			sprGoldbomb,
-			an[anim][wrap(frame, 0, an[anim].len() - 1)],
-			x - camx,
-			y - camy,
-			0,
-			flip
-		);
+		drawSprite(sprGoldbomb, an[anim][wrap(frame, 0, an[anim].len() - 1)], x - camx, y - camy, 0, flip);
 		base.draw();
 	}
 
@@ -3868,10 +3188,8 @@ Sawblade <- class extends PathCrawler {
 		base.run();
 		// drawText(font, x - camx + 16, y - camy, dir.tostring())
 		shape.setPos(x, y);
-		if (gvPlayer && hitTest(shape, gvPlayer.shape))
-			gvPlayer.getHurt(2 + game.difficulty, "normal", true, false);
-		if (gvPlayer2 && hitTest(shape, gvPlayer2.shape))
-			gvPlayer2.getHurt(2 + game.difficulty, "normal", true, false);
+		if (gvPlayer && hitTest(shape, gvPlayer.shape)) gvPlayer.getHurt(2 + game.difficulty, "normal", true, false);
+		if (gvPlayer2 && hitTest(shape, gvPlayer2.shape)) gvPlayer2.getHurt(2 + game.difficulty, "normal", true, false);
 	}
 
 	function draw() {
@@ -3962,10 +3280,8 @@ Livewire <- class extends Enemy {
 				if (frozen) {
 					// Create ice block
 					local canice = true;
-					if (gvPlayer && hitTest(shape, gvPlayer.shape))
-						canice = false;
-					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape))
-						canice = false;
+					if (gvPlayer && hitTest(shape, gvPlayer.shape)) canice = false;
+					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape)) canice = false;
 					if (icebox == -1 && canice) {
 						if (health > 0) icebox = mapNewSolid(shape);
 					}
@@ -3988,17 +3304,7 @@ Livewire <- class extends Enemy {
 					local c = fireWeapon(ExplodeS2, x, y, 0, id);
 					c.power = 4.0;
 				}
-				drawSprite(
-					sprLivewire,
-					wrap(frame, 4, 7),
-					x - camx,
-					y - camy,
-					0,
-					flip.tointeger(),
-					1,
-					1,
-					1
-				);
+				drawSprite(sprLivewire, wrap(frame, 4, 7), x - camx, y - camy, 0, flip.tointeger(), 1, 1, 1);
 
 				if (frozen) {
 					squish = false;
@@ -4013,30 +3319,8 @@ Livewire <- class extends Enemy {
 	}
 
 	function draw() {
-		if (squish)
-			drawSprite(
-				sprLivewire,
-				wrap(frame, 4, 7),
-				x - camx,
-				y - camy,
-				0,
-				flip.tointeger(),
-				1,
-				1,
-				1
-			);
-		else if (frozen)
-			drawSprite(
-				sprLivewire,
-				0,
-				floor(x - camx),
-				floor(y - camy),
-				0,
-				flip.tointeger(),
-				1,
-				1,
-				1
-			);
+		if (squish) drawSprite(sprLivewire, wrap(frame, 4, 7), x - camx, y - camy, 0, flip.tointeger(), 1, 1, 1);
+		else if (frozen) drawSprite(sprLivewire, 0, floor(x - camx), floor(y - camy), 0, flip.tointeger(), 1, 1, 1);
 		else
 			drawSprite(
 				sprLivewire,
@@ -4063,14 +3347,7 @@ Livewire <- class extends Enemy {
 		squish = true;
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (squish) return;
 
 		if (_element == "ice") {
@@ -4236,27 +3513,14 @@ Blazeborn <- class extends Enemy {
 
 	function draw() {
 		if (frozen) {
-			drawSprite(
-				sprBlazeborn,
-				0,
-				floor(x - camx),
-				floor(y - camy),
-				0,
-				flip.tointeger(),
-				1,
-				1,
-				1
-			);
+			drawSprite(sprBlazeborn, 0, floor(x - camx), floor(y - camy), 0, flip.tointeger(), 1, 1, 1);
 
 			if (frozen <= 120) {
 				if (floor(frozen / 4) % 2 == 0)
 					drawSprite(
 						sprIceTrapSmall,
 						0,
-						x -
-							camx -
-							1 +
-							(floor(frozen / 4) % 4 == 0).tointeger() * 2,
+						x - camx - 1 + (floor(frozen / 4) % 4 == 0).tointeger() * 2,
 						y - camy - 1
 					);
 				else drawSprite(sprIceTrapSmall, 0, x - camx, y - camy - 1);
@@ -4286,14 +3550,7 @@ Blazeborn <- class extends Enemy {
 		);
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (_element == "ice" || _element == "water") {
 			hurtIce();
 			return;
@@ -4403,10 +3660,8 @@ Wildcap <- class extends Enemy {
 				if (frozen) {
 					// Create ice block
 					local canice = true;
-					if (gvPlayer && hitTest(shape, gvPlayer.shape))
-						canice = false;
-					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape))
-						canice = false;
+					if (gvPlayer && hitTest(shape, gvPlayer.shape)) canice = false;
+					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape)) canice = false;
 					if (icebox == -1 && canice) {
 						if (health > 0) icebox = mapNewSolid(shape);
 					}
@@ -4433,18 +3688,7 @@ Wildcap <- class extends Enemy {
 	}
 
 	function draw() {
-		if (frozen)
-			drawSprite(
-				sprWildcap,
-				0,
-				floor(x - camx),
-				floor(y - camy),
-				0,
-				flip.tointeger(),
-				1,
-				1,
-				1
-			);
+		if (frozen) drawSprite(sprWildcap, 0, floor(x - camx), floor(y - camy), 0, flip.tointeger(), 1, 1, 1);
 		else if (squish)
 			drawSprite(
 				sprWildcap,
@@ -4473,14 +3717,7 @@ Wildcap <- class extends Enemy {
 		base.draw();
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (squish) return;
 
 		if (_blast) {
@@ -4644,10 +3881,8 @@ Tallcap <- class extends Enemy {
 				if (frozen) {
 					// Create ice block
 					local canice = true;
-					if (gvPlayer && hitTest(shape, gvPlayer.shape))
-						canice = false;
-					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape))
-						canice = false;
+					if (gvPlayer && hitTest(shape, gvPlayer.shape)) canice = false;
+					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape)) canice = false;
 					if (icebox == -1 && canice) {
 						if (health > 0) icebox = mapNewSolid(shape);
 					}
@@ -4668,30 +3903,8 @@ Tallcap <- class extends Enemy {
 
 	function draw() {
 		if (frozen) {
-			if (smart)
-				drawSprite(
-					sprSmartTallCap,
-					0,
-					floor(x - camx),
-					floor(y - camy),
-					0,
-					flip.tointeger(),
-					1,
-					1,
-					1
-				);
-			else
-				drawSprite(
-					sprTallCap,
-					0,
-					floor(x - camx),
-					floor(y - camy),
-					0,
-					flip.tointeger(),
-					1,
-					1,
-					1
-				);
+			if (smart) drawSprite(sprSmartTallCap, 0, floor(x - camx), floor(y - camy), 0, flip.tointeger(), 1, 1, 1);
+			else drawSprite(sprTallCap, 0, floor(x - camx), floor(y - camy), 0, flip.tointeger(), 1, 1, 1);
 		} else if (smart)
 			drawSprite(
 				sprSmartTallCap,
@@ -4704,30 +3917,12 @@ Tallcap <- class extends Enemy {
 				1,
 				1
 			);
-		else
-			drawSprite(
-				sprTallCap,
-				getFrames() / 8,
-				floor(x - camx),
-				floor(y - camy),
-				0,
-				flip.tointeger(),
-				1,
-				1,
-				1
-			);
+		else drawSprite(sprTallCap, getFrames() / 8, floor(x - camx), floor(y - camy), 0, flip.tointeger(), 1, 1, 1);
 
 		base.draw();
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (squish || _mag <= 0) return;
 
 		if (_element == "ice") {
@@ -4760,14 +3955,7 @@ Tallcap <- class extends Enemy {
 		popSound(sndFlame, 0);
 
 		if (randInt(20) == 0) {
-			local a =
-				actor[
-					newActor(
-						game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-						x,
-						y
-					)
-				];
+			local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 			a.vspeed = -2;
 		}
 	}
@@ -4814,8 +4002,7 @@ Ivy <- class extends Enemy {
 		base.constructor(_x.tofloat(), _y.tofloat());
 		shape = Rec(x, y, 6, 6, 0);
 		if (typeof _arr == "array" && _arr.len() > 0) smart = bool(_arr[0]);
-		else if (_arr == null || ("len" in _arr && _arr.len() == 0))
-			smart = bool(_arr);
+		else if (_arr == null || ("len" in _arr && _arr.len() == 0)) smart = bool(_arr);
 		else smart = false;
 	}
 
@@ -4850,12 +4037,7 @@ Ivy <- class extends Enemy {
 							y -= 1.0;
 						} else flip = false;
 
-						if (smart)
-							if (
-								placeFree(x - 6, y + 14) &&
-								!placeFree(x, y + 2)
-							)
-								flip = false;
+						if (smart) if (placeFree(x - 6, y + 14) && !placeFree(x, y + 2)) flip = false;
 
 						if (x <= 0) flip = false;
 					} else {
@@ -4868,12 +4050,7 @@ Ivy <- class extends Enemy {
 							y -= 1.0;
 						} else flip = true;
 
-						if (smart)
-							if (
-								placeFree(x + 6, y + 14) &&
-								!placeFree(x, y + 2)
-							)
-								flip = true;
+						if (smart) if (placeFree(x + 6, y + 14) && !placeFree(x, y + 2)) flip = true;
 
 						if (x >= gvMap.w) flip = true;
 					}
@@ -4882,10 +4059,8 @@ Ivy <- class extends Enemy {
 				if (frozen) {
 					// Create ice block
 					local canice = true;
-					if (gvPlayer && hitTest(shape, gvPlayer.shape))
-						canice = false;
-					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape))
-						canice = false;
+					if (gvPlayer && hitTest(shape, gvPlayer.shape)) canice = false;
+					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape)) canice = false;
 					if (icebox == -1 && canice) {
 						if (health > 0) icebox = mapNewSolid(shape);
 					}
@@ -4916,30 +4091,8 @@ Ivy <- class extends Enemy {
 
 		if (!squish) {
 			if (frozen) {
-				if (smart)
-					drawSprite(
-						sprIvyRed,
-						0,
-						floor(x - camx),
-						floor(y - camy),
-						0,
-						flip.tointeger(),
-						1,
-						1,
-						1
-					);
-				else
-					drawSprite(
-						sprIvyGreen,
-						0,
-						floor(x - camx),
-						floor(y - camy),
-						0,
-						flip.tointeger(),
-						1,
-						1,
-						1
-					);
+				if (smart) drawSprite(sprIvyRed, 0, floor(x - camx), floor(y - camy), 0, flip.tointeger(), 1, 1, 1);
+				else drawSprite(sprIvyGreen, 0, floor(x - camx), floor(y - camy), 0, flip.tointeger(), 1, 1, 1);
 			} else {
 				if (smart) {
 					if (placeFree(x, y + 2))
@@ -5023,14 +4176,7 @@ Ivy <- class extends Enemy {
 		base.draw();
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (squish) return;
 
 		if (_element == "ice") {
@@ -5049,14 +4195,7 @@ Ivy <- class extends Enemy {
 			popSound(sndFlame, 0);
 
 			if (randInt(20) == 0) {
-				local a =
-					actor[
-						newActor(
-							game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-							x,
-							y
-						)
-					];
+				local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 				a.vspeed = -2;
 			}
 			return;
@@ -5090,14 +4229,7 @@ Ivy <- class extends Enemy {
 			popSound(sndKick, 0);
 
 			if (randInt(20) == 0) {
-				local a =
-					actor[
-						newActor(
-							game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-							x,
-							y
-						)
-					];
+				local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 				a.vspeed = -2;
 			}
 		} else popSound(sndSquish, 0);
@@ -5126,14 +4258,7 @@ Ivy <- class extends Enemy {
 		popSound(sndFlame, 0);
 
 		if (randInt(20) == 0) {
-			local a =
-				actor[
-					newActor(
-						game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-						x,
-						y
-					)
-				];
+			local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 			a.vspeed = -2;
 		}
 	}
@@ -5196,8 +4321,7 @@ Owl <- class extends Enemy {
 		if (0 in arg) {
 			if (getroottable().rawin(arg[0])) {
 				if (getroottable()[arg[0]].rawin("shape"))
-					passenger =
-						actor[newActor(getroottable()[arg[0]], x, y, narg)];
+					passenger = actor[newActor(getroottable()[arg[0]], x, y, narg)];
 				else passenger = actor[newActor(SkyDive, x, y)];
 			} else passenger = actor[newActor(SkyDive, x, y)];
 		} else passenger = actor[newActor(SkyDive, x, y)];
@@ -5436,8 +4560,7 @@ MrIceguy <- class extends Enemy {
 				}
 
 				// If no step was taken, slow down
-				if (didstep == false && fabs(hspeed) >= 1)
-					hspeed -= hspeed / fabs(hspeed);
+				if (didstep == false && fabs(hspeed) >= 1) hspeed -= hspeed / fabs(hspeed);
 				else if (didstep == false && fabs(hspeed) < 1) hspeed = 0;
 			}
 		}
@@ -5463,31 +4586,9 @@ MrIceguy <- class extends Enemy {
 
 	function draw() {
 		if (routine == ruNormal)
-			drawSpriteZ(
-				1,
-				sprMrIceguy,
-				(getFrames() / 8) % 4,
-				x - camx,
-				y - camy,
-				0,
-				flip,
-				1,
-				1,
-				1.0
-			);
+			drawSpriteZ(1, sprMrIceguy, (getFrames() / 8) % 4, x - camx, y - camy, 0, flip, 1, 1, 1.0);
 		if (routine == ruSlide)
-			drawSpriteZ(
-				1,
-				sprMrIceguy,
-				4 + (hurtTimer <= 30).tointeger(),
-				x - camx,
-				y - camy,
-				0,
-				flip,
-				1,
-				1,
-				1.0
-			);
+			drawSpriteZ(1, sprMrIceguy, 4 + (hurtTimer <= 30).tointeger(), x - camx, y - camy, 0, flip, 1, 1, 1.0);
 		if (debug) shape.draw();
 	}
 
@@ -5557,9 +4658,7 @@ MrIceguy <- class extends Enemy {
 		// Turn around
 		if (
 			!held &&
-			((!placeFree(x + hspeed, y) && !placeFree(x + hspeed, y - 4)) ||
-				x + hspeed < 0 ||
-				x + hspeed > gvMap.w)
+			((!placeFree(x + hspeed, y) && !placeFree(x + hspeed, y - 4)) || x + hspeed < 0 || x + hspeed > gvMap.w)
 		) {
 			flip = (!flip).tointeger();
 			fireWeapon(StompPoof, x + 10 * (hspeed <=> 0), y, 0, id);
@@ -5585,21 +4684,13 @@ MrIceguy <- class extends Enemy {
 		} else gravity = 0.1;
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (blinking > 0) return;
 		base.getHurt(_by, _mag, _element, _cut, _blast, _stomp);
 
 		if (routine == ruSlide) {
 			if (hspeed != 0) hspeed = 0.0;
-			else if (_by)
-				hspeed = max(4.0, fabs(_by.hspeed * 1.5)) * (x <=> _by.x);
+			else if (_by) hspeed = max(4.0, fabs(_by.hspeed * 1.5)) * (x <=> _by.x);
 			blinking = blinkMax;
 			popSound(sndKick);
 		} else {
@@ -5612,8 +4703,7 @@ MrIceguy <- class extends Enemy {
 	}
 
 	function hurtPlayer(pt) {
-		if ((target != gvPlayer && target != gvPlayer2) || target == false)
-			return;
+		if ((target != gvPlayer && target != gvPlayer2) || target == false) return;
 		if (target == 0 || target == false || target == null) return;
 		if (held) return;
 		if (slideTimer > 0 && hspeed != 0 && routine == ruSlide) return;
@@ -5621,8 +4711,7 @@ MrIceguy <- class extends Enemy {
 		if (routine == ruSlide && pt.vspeed >= 0) {
 			if (hspeed == 0 || slideTimer > 0) {
 				if (hspeed != 0) hspeed = 0.0;
-				else if (pt)
-					hspeed = max(4.0, fabs(pt.hspeed * 1.5)) * (x <=> pt.x);
+				else if (pt) hspeed = max(4.0, fabs(pt.hspeed * 1.5)) * (x <=> pt.x);
 				slideTimer = 10;
 				popSound(sndKick);
 				return;
@@ -5724,10 +4813,8 @@ SpikeCap <- class extends Enemy {
 				if (frozen) {
 					// Create ice block
 					local canice = true;
-					if (gvPlayer && hitTest(shape, gvPlayer.shape))
-						canice = false;
-					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape))
-						canice = false;
+					if (gvPlayer && hitTest(shape, gvPlayer.shape)) canice = false;
+					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape)) canice = false;
 					if (icebox == -1 && canice) {
 						if (health > 0) icebox = mapNewSolid(shape);
 					}
@@ -5753,17 +4840,7 @@ SpikeCap <- class extends Enemy {
 
 	function draw() {
 		if (frozen) {
-			drawSprite(
-				sprSpikeCap,
-				0,
-				floor(x - camx),
-				floor(y - camy),
-				0,
-				flip.tointeger(),
-				1,
-				1,
-				1
-			);
+			drawSprite(sprSpikeCap, 0, floor(x - camx), floor(y - camy), 0, flip.tointeger(), 1, 1, 1);
 		} else if (moving && getupTime <= 0)
 			drawSprite(
 				sprSpikeCap,
@@ -5776,30 +4853,12 @@ SpikeCap <- class extends Enemy {
 				1,
 				1
 			);
-		else
-			drawSprite(
-				sprSpikeCap,
-				6.0 - getupTime,
-				floor(x - camx),
-				floor(y - camy),
-				0,
-				flip.tointeger(),
-				1,
-				1,
-				1
-			);
+		else drawSprite(sprSpikeCap, 6.0 - getupTime, floor(x - camx), floor(y - camy), 0, flip.tointeger(), 1, 1, 1);
 
 		base.draw();
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (squish) return;
 
 		if (_element == "fire") {
@@ -5830,14 +4889,7 @@ SpikeCap <- class extends Enemy {
 			actor[c].flip = flip.tointeger();
 
 			if (randInt(20) == 0) {
-				local a =
-					actor[
-						newActor(
-							game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-							x,
-							y
-						)
-					];
+				local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 				a.vspeed = -2;
 			}
 			return;
@@ -5872,14 +4924,7 @@ SpikeCap <- class extends Enemy {
 			popSound(sndKick, 0);
 
 			if (randInt(20) == 0) {
-				local a =
-					actor[
-						newActor(
-							game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-							x,
-							y
-						)
-					];
+				local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 				a.vspeed = -2;
 			}
 		} else popSound(sndSquish, 0);
@@ -5912,14 +4957,7 @@ SpikeCap <- class extends Enemy {
 		actor[c].frame = 7;
 
 		if (randInt(20) == 0) {
-			local a =
-				actor[
-					newActor(
-						game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-						x,
-						y
-					)
-				];
+			local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 			a.vspeed = -2;
 		}
 	}
@@ -5980,11 +5018,7 @@ CaptainMorel <- class extends Enemy {
 							y -= 2.0;
 						} else flip = false;
 
-						if (
-							placeFree(x - 6, y + 14) &&
-							!placeFree(x + 2, y + 14)
-						)
-							vspeed = -jumpPower;
+						if (placeFree(x - 6, y + 14) && !placeFree(x + 2, y + 14)) vspeed = -jumpPower;
 
 						if (x <= 0) flip = false;
 					} else {
@@ -5997,11 +5031,7 @@ CaptainMorel <- class extends Enemy {
 							y -= 2.0;
 						} else flip = true;
 
-						if (
-							placeFree(x + 6, y + 14) &&
-							!placeFree(x - 2, y + 14)
-						)
-							vspeed = -jumpPower;
+						if (placeFree(x + 6, y + 14) && !placeFree(x - 2, y + 14)) vspeed = -jumpPower;
 
 						if (x >= gvMap.w) flip = true;
 					}
@@ -6010,10 +5040,8 @@ CaptainMorel <- class extends Enemy {
 				if (frozen) {
 					// Create ice block
 					local canice = true;
-					if (gvPlayer && hitTest(shape, gvPlayer.shape))
-						canice = false;
-					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape))
-						canice = false;
+					if (gvPlayer && hitTest(shape, gvPlayer.shape)) canice = false;
+					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape)) canice = false;
 					if (icebox == -1 && canice) {
 						if (health > 0) icebox = mapNewSolid(shape);
 					}
@@ -6090,14 +5118,7 @@ CaptainMorel <- class extends Enemy {
 		base.draw();
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (squish) return;
 
 		if (_element == "ice") {
@@ -6116,14 +5137,7 @@ CaptainMorel <- class extends Enemy {
 			popSound(sndFlame, 0);
 
 			if (randInt(20) == 0) {
-				local a =
-					actor[
-						newActor(
-							game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-							x,
-							y
-						)
-					];
+				local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 				a.vspeed = -2;
 			}
 			return;
@@ -6153,14 +5167,7 @@ CaptainMorel <- class extends Enemy {
 			popSound(sndKick, 0);
 
 			if (randInt(20) == 0) {
-				local a =
-					actor[
-						newActor(
-							game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-							x,
-							y
-						)
-					];
+				local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 				a.vspeed = -2;
 			}
 		} else popSound(sndSquish, 0);
@@ -6187,14 +5194,7 @@ CaptainMorel <- class extends Enemy {
 		popSound(sndFlame, 0);
 
 		if (randInt(20) == 0) {
-			local a =
-				actor[
-					newActor(
-						game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-						x,
-						y
-					)
-				];
+			local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 			a.vspeed = -2;
 		}
 	}
@@ -6270,8 +5270,7 @@ Crusher <- class extends Enemy {
 				])
 			];
 		platform.shape = Rec(x, y, 16, 16, 0);
-		if (_arr != null && getroottable().rawin(_arr))
-			sprite = getroottable()[_arr];
+		if (_arr != null && getroottable().rawin(_arr)) sprite = getroottable()[_arr];
 
 		if (randInt(200) == 0) sprite = sprDukeCrusher;
 
@@ -6297,14 +5296,8 @@ Crusher <- class extends Enemy {
 
 		// Detect the player underneath
 		if (
-			(gvPlayer &&
-				hitTest(gvPlayer.shape, scanShape) &&
-				gvPlayer.y > y &&
-				canFall) ||
-			(gvPlayer2 &&
-				hitTest(gvPlayer2.shape, scanShape) &&
-				gvPlayer2.y > y &&
-				canFall)
+			(gvPlayer && hitTest(gvPlayer.shape, scanShape) && gvPlayer.y > y && canFall) ||
+			(gvPlayer2 && hitTest(gvPlayer2.shape, scanShape) && gvPlayer2.y > y && canFall)
 		) {
 			gravity = 0.25;
 			vspeed = 1.0;
@@ -6336,11 +5329,9 @@ Crusher <- class extends Enemy {
 		platform.y = y;
 		touchDamage = max(0, min(4, vspeed));
 		if (vspeed == 0) {
-			if (gvPlayer && y > gvPlayer.y && hitTest(shape, gvPlayer.shape))
-				gvPlayer.y = y + 1;
+			if (gvPlayer && y > gvPlayer.y && hitTest(shape, gvPlayer.shape)) gvPlayer.y = y + 1;
 
-			if (gvPlayer2 && y > gvPlayer2.y && hitTest(shape, gvPlayer2.shape))
-				gvPlayer2.y = y + 1;
+			if (gvPlayer2 && y > gvPlayer2.y && hitTest(shape, gvPlayer2.shape)) gvPlayer2.y = y + 1;
 		}
 
 		// Speed limit
@@ -6349,22 +5340,8 @@ Crusher <- class extends Enemy {
 	}
 
 	function draw() {
-		if (sprite)
-			drawSpriteZ(
-				6,
-				sprite,
-				(vspeed > 0).tointeger(),
-				x - camx,
-				y - camy
-			);
-		else
-			drawSpriteZ(
-				6,
-				sprBearyl,
-				(vspeed > 0).tointeger(),
-				x - camx,
-				y - camy
-			);
+		if (sprite) drawSpriteZ(6, sprite, (vspeed > 0).tointeger(), x - camx, y - camy);
+		else drawSpriteZ(6, sprBearyl, (vspeed > 0).tointeger(), x - camx, y - camy);
 		if (debug) {
 			setDrawColor(0xff0000ff);
 			shape.draw();
@@ -6373,14 +5350,7 @@ Crusher <- class extends Enemy {
 
 	function hurtInvinc() {}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {}
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {}
 
 	function _typeof() {
 		return "Crusher";
@@ -6460,8 +5430,7 @@ SideCrusher <- class extends Enemy {
 				])
 			];
 		platform.shape = Rec(x, y, 16, 16, 0);
-		if (_arr != null && getroottable().rawin(_arr))
-			sprite = getroottable()[_arr];
+		if (_arr != null && getroottable().rawin(_arr)) sprite = getroottable()[_arr];
 
 		if (randInt(200) == 0) sprite = sprDukeCrusher;
 
@@ -6554,35 +5523,16 @@ SideCrusher <- class extends Enemy {
 		// Speed limit
 		if (hspeed > 8) hspeed = 8.0;
 		if (hspeed < -8) hspeed = -8.0;
-		if (abs(hspeed) > 4)
-			newActor(AfterImage, x, y, [sprite, 1, 0, 0, 0, 1, 1]);
+		if (abs(hspeed) > 4) newActor(AfterImage, x, y, [sprite, 1, 0, 0, 0, 1, 1]);
 
 		// Set damage value
 		touchDamage = 0;
-		if (
-			(hspeed > 0 && !placeFree(x + 1, y)) ||
-			(hspeed < 0 && !placeFree(x - 1, y))
-		)
-			touchDamage = 4;
+		if ((hspeed > 0 && !placeFree(x + 1, y)) || (hspeed < 0 && !placeFree(x - 1, y))) touchDamage = 4;
 	}
 
 	function draw() {
-		if (sprite)
-			drawSpriteZ(
-				6,
-				sprite,
-				(vspeed > 0).tointeger(),
-				x - camx,
-				y - camy
-			);
-		else
-			drawSpriteZ(
-				6,
-				sprBearyl,
-				(vspeed > 0).tointeger(),
-				x - camx,
-				y - camy
-			);
+		if (sprite) drawSpriteZ(6, sprite, (vspeed > 0).tointeger(), x - camx, y - camy);
+		else drawSpriteZ(6, sprBearyl, (vspeed > 0).tointeger(), x - camx, y - camy);
 		if (debug) {
 			setDrawColor(0xff0000ff);
 			shape.draw();
@@ -6590,47 +5540,22 @@ SideCrusher <- class extends Enemy {
 			scanShapeR.draw();
 
 			if (gvPlayer && inDistance2(x, y, gvPlayer.x, gvPlayer.y, 128)) {
-				local tx = clamp(
-					x,
-					gvPlayer.shape.x - gvPlayer.shape.w,
-					gvPlayer.shape.x + gvPlayer.shape.w
-				);
-				local ty = clamp(
-					y,
-					gvPlayer.shape.y - gvPlayer.shape.h,
-					gvPlayer.shape.y + gvPlayer.shape.h
-				);
+				local tx = clamp(x, gvPlayer.shape.x - gvPlayer.shape.w, gvPlayer.shape.x + gvPlayer.shape.w);
+				local ty = clamp(y, gvPlayer.shape.y - gvPlayer.shape.h, gvPlayer.shape.y + gvPlayer.shape.h);
 
 				drawCircle(tx - camx, ty - camy, 2, true);
 
 				local slopeA = pointAngle(0, 0, fabs(x - tx), fabs(y - ty));
-				local slopeB = pointAngle(
-					0,
-					0,
-					platform.shape.w,
-					platform.shape.h
-				);
+				local slopeB = pointAngle(0, 0, platform.shape.w, platform.shape.h);
 
-				drawText(
-					font,
-					x - 16 - camx,
-					y - 64 - camy,
-					str(round(slopeA)) + "\n" + str(round(slopeB))
-				);
+				drawText(font, x - 16 - camx, y - 64 - camy, str(round(slopeA)) + "\n" + str(round(slopeB)));
 			}
 		}
 	}
 
 	function hurtInvinc() {}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {}
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {}
 
 	function _typeof() {
 		return "Crusher";
@@ -6680,11 +5605,7 @@ Wheeler <- class extends Enemy {
 		if (!active) return;
 
 		local target = findPlayer();
-		if (target != null)
-			bladesOut =
-				(
-					gvPlayer && inDistance2(x, y, gvPlayer.x, gvPlayer.y, 64)
-				).tointeger() * 4;
+		if (target != null) bladesOut = (gvPlayer && inDistance2(x, y, gvPlayer.x, gvPlayer.y, 64)).tointeger() * 4;
 		else bladesOut = 0;
 
 		if (target != null) {
@@ -6699,11 +5620,7 @@ Wheeler <- class extends Enemy {
 			}
 
 			// Turning animation trigger
-			if (
-				turning < 3 &&
-				((flip == 1 && hspeed > 0) || (flip == 0 && hspeed < 0))
-			)
-				turning = 4.0;
+			if (turning < 3 && ((flip == 1 && hspeed > 0) || (flip == 0 && hspeed < 0))) turning = 4.0;
 		}
 
 		if (frozen) {
@@ -6741,42 +5658,13 @@ Wheeler <- class extends Enemy {
 	}
 
 	function draw() {
-		if (turning > 0)
-			drawSprite(
-				sprWheelerHamster,
-				8.0 + (4.0 - turning),
-				x - camx,
-				y - camy,
-				0,
-				flip,
-				1,
-				1,
-				1
-			);
-		else
-			drawSprite(
-				sprWheelerHamster,
-				wrap(frame, 0, 3) + bladesOut,
-				x - camx,
-				y - camy,
-				0,
-				flip,
-				1,
-				1,
-				1
-			);
+		if (turning > 0) drawSprite(sprWheelerHamster, 8.0 + (4.0 - turning), x - camx, y - camy, 0, flip, 1, 1, 1);
+		else drawSprite(sprWheelerHamster, wrap(frame, 0, 3) + bladesOut, x - camx, y - camy, 0, flip, 1, 1, 1);
 
 		base.draw();
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (_element == "ice") {
 			frozen = 600;
 			return;
@@ -6828,8 +5716,7 @@ Wheeler <- class extends Enemy {
 				}
 
 				// If no step was taken, slow down
-				if (didstep == false && fabs(hspeed) >= 1)
-					hspeed -= hspeed / fabs(hspeed);
+				if (didstep == false && fabs(hspeed) >= 1) hspeed -= hspeed / fabs(hspeed);
 				else if (didstep == false && fabs(hspeed) < 1) hspeed = 0;
 			}
 		}
@@ -6935,23 +5822,8 @@ SkyDive <- class extends Enemy {
 
 	function draw() {
 		if (!placeFree(x, y + 4) && !held && !frozen)
-			drawSprite(
-				sprSkyDive,
-				wrap(getFrames() / 4, 3, 6),
-				x - camx,
-				y - camy,
-				0,
-				flip
-			);
-		else
-			drawSprite(
-				sprSkyDive,
-				min(abs(vspeed), 2),
-				x - camx,
-				y - camy,
-				0,
-				flip
-			);
+			drawSprite(sprSkyDive, wrap(getFrames() / 4, 3, 6), x - camx, y - camy, 0, flip);
+		else drawSprite(sprSkyDive, min(abs(vspeed), 2), x - camx, y - camy, 0, flip);
 
 		base.draw();
 
@@ -7059,10 +5931,7 @@ Puffranah <- class extends Enemy {
 					swimTimer = randInt(480) + 120;
 				}
 
-				if (
-					target != null &&
-					inDistance2(x, y, target.x, target.y, searchRadius)
-				) {
+				if (target != null && inDistance2(x, y, target.x, target.y, searchRadius)) {
 					if (target.x > x) hspeed += 0.1;
 					if (target.x < x) hspeed -= 0.1;
 
@@ -7098,10 +5967,7 @@ Puffranah <- class extends Enemy {
 					if (getFrames() % 4 == 0)
 						fireWeapon(
 							DragBubble,
-							x +
-								randInt(16) -
-								8 +
-								randInt(32) * (flip == 0 ? 2 : -2),
+							x + randInt(16) - 8 + randInt(32) * (flip == 0 ? 2 : -2),
 							y + randInt(16) - 8,
 							2,
 							id
@@ -7131,10 +5997,7 @@ Puffranah <- class extends Enemy {
 					anim = "full";
 				}
 
-				if (
-					target == null ||
-					!inDistance2(x, y, target.x, target.y, 64)
-				) {
+				if (target == null || !inDistance2(x, y, target.x, target.y, 64)) {
 					frame = 4.0;
 					anim = "burp";
 				}
@@ -7252,12 +6115,7 @@ Puffranah <- class extends Enemy {
 		);
 
 		if (debug) {
-			drawText(
-				font,
-				x - camx,
-				y + 24 - camy,
-				anim + "\n" + frame.tostring() + "\n" + health.tostring()
-			);
+			drawText(font, x - camx, y + 24 - camy, anim + "\n" + frame.tostring() + "\n" + health.tostring());
 
 			setDrawColor(0xf80000ff);
 			drawCircle(x - camx, y - camy, searchRadius, false);
@@ -7267,14 +6125,7 @@ Puffranah <- class extends Enemy {
 		base.draw();
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (_element == "water" || _mag == 0) return;
 		base.getHurt(_by, _mag, _element, _cut, _blast, _stomp);
 	}
@@ -7285,14 +6136,7 @@ Puffranah <- class extends Enemy {
 		newActor(Poof, x + 8, y);
 		newActor(Poof, x - 8, y);
 		if (randInt(20) == 0) {
-			local a =
-				actor[
-					newActor(
-						game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-						x,
-						y
-					)
-				];
+			local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 			a.vspeed = -2;
 		}
 	}
@@ -7313,14 +6157,7 @@ Puffranah <- class extends Enemy {
 		newActor(Poof, x + 8, y);
 		newActor(Poof, x - 8, y);
 		if (randInt(20) == 0) {
-			local a =
-				actor[
-					newActor(
-						game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-						x,
-						y
-					)
-				];
+			local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 			a.vspeed = -2;
 		}
 	}
@@ -7384,8 +6221,7 @@ Struffle <- class extends Enemy {
 						walkTimer = 600;
 
 						if (gvPlayer) hspeed = 1.5 * (gvPlayer.x > x ? 1 : -1);
-						else if (gvPlayer2)
-							hspeed = 1.5 * (gvPlayer2.x > x ? 1 : -1);
+						else if (gvPlayer2) hspeed = 1.5 * (gvPlayer2.x > x ? 1 : -1);
 						else hspeed = choose(1.5, -1.5);
 					}
 
@@ -7427,27 +6263,20 @@ Struffle <- class extends Enemy {
 			if (hspeed < 0) flip = 1;
 
 			if (!placeFree(x, y + 2) || onPlatform()) {
-				if (placeFree(x + 6, y + 16) && !onPlatform(12, 2))
-					hspeed = -hspeed;
-				if (placeFree(x - 6, y + 16) && !onPlatform(-12, 2))
-					hspeed = -hspeed;
+				if (placeFree(x + 6, y + 16) && !onPlatform(12, 2)) hspeed = -hspeed;
+				if (placeFree(x - 6, y + 16) && !onPlatform(-12, 2)) hspeed = -hspeed;
 			}
 
 			if (!placeFree(x + hspeed, y - 10)) hspeed = -hspeed;
 			shape.setPos(x, y);
 
 			if (isOnScreen() && randInt(1000) == 1) popSound(sndPigSnort);
+
+			if (y > gvMap.h) die();
 		}
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (gvPlayer) flip = int(x > gvPlayer.x);
 		anim = "hurt";
 		frame = 0.0;
@@ -7502,10 +6331,8 @@ Struffle <- class extends Enemy {
 	function physics() {
 		handleConveyor();
 
-		if (placeFree(x, y + gravity) && !phantom && !onPlatform())
-			vspeed += gravity;
-		if (placeFree(x, y + vspeed) && !(onPlatform() && vspeed >= 0))
-			y += vspeed;
+		if (placeFree(x, y + gravity) && !phantom && !onPlatform()) vspeed += gravity;
+		if (placeFree(x, y + vspeed) && !(onPlatform() && vspeed >= 0)) y += vspeed;
 		else if (!(onPlatform() && vspeed >= 0)) {
 			for (local i = 2; i < 8; i++) {
 				if (placeFree(x, y + vspeed / i)) {
@@ -7548,8 +6375,7 @@ Struffle <- class extends Enemy {
 				}
 
 				// If no step was taken, slow down
-				if (didstep == false && fabs(hspeed) >= 1)
-					hspeed -= hspeed / fabs(hspeed);
+				if (didstep == false && fabs(hspeed) >= 1) hspeed -= hspeed / fabs(hspeed);
 				else if (didstep == false && fabs(hspeed) < 1) hspeed = 0;
 			}
 		}
@@ -7568,8 +6394,7 @@ Struffle <- class extends Enemy {
 	function draw() {
 		drawSprite(
 			sprStruffle,
-			(frozen ? 0 : an[anim][wrap(frame, 0, an[anim].len() - 1)]) +
-				uncapped,
+			(frozen ? 0 : an[anim][wrap(frame, 0, an[anim].len() - 1)]) + uncapped,
 			x - camx,
 			y - camy,
 			0,
@@ -7597,14 +6422,7 @@ Struffle <- class extends Enemy {
 		else actor[c].spin = -0.5;
 		popSound(sndKick, 0);
 		if (randInt(20) == 0) {
-			local a =
-				actor[
-					newActor(
-						game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-						x,
-						y
-					)
-				];
+			local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 			a.vspeed = -2;
 		}
 	}
@@ -7682,13 +6500,7 @@ Crystallo <- class extends Enemy {
 				frame += 0.1;
 				walkTimer--;
 
-				if (
-					target &&
-					mode == 1 &&
-					fabs(x - target.x) < 16 &&
-					y < target.y &&
-					fabs(y - target.y) < 128
-				) {
+				if (target && mode == 1 && fabs(x - target.x) < 16 && y < target.y && fabs(y - target.y) < 128) {
 					frame = 0.0;
 					anim = "drop";
 				}
@@ -7696,8 +6508,7 @@ Crystallo <- class extends Enemy {
 
 			case "sleep":
 				gravity = 0.0;
-				if (target && inDistance2(target.x, target.y, x, y, 64))
-					waking = true;
+				if (target && inDistance2(target.x, target.y, x, y, 64)) waking = true;
 				if (waking) frame += 0.2;
 				if (frame > an[anim].len() - 2) {
 					vspeed = -3.0;
@@ -7763,10 +6574,8 @@ Crystallo <- class extends Enemy {
 		}
 
 		if (
-			(!placeFree(x, y + 1 * (gravity <=> 0)) &&
-				placeFree(x + hspeed * 4, y + 8 * (gravity <=> 0))) ||
-			(!placeFree(x + hspeed * 2, y) &&
-				!placeFree(x + hspeed * 2, y - 8 * (gravity <=> 0)))
+			(!placeFree(x, y + 1 * (gravity <=> 0)) && placeFree(x + hspeed * 4, y + 8 * (gravity <=> 0))) ||
+			(!placeFree(x + hspeed * 2, y) && !placeFree(x + hspeed * 2, y - 8 * (gravity <=> 0)))
 		) {
 			hspeed = -hspeed;
 			accel = -accel;
@@ -7791,8 +6600,7 @@ Crystallo <- class extends Enemy {
 		handleConveyor();
 
 		if (placeFree(x, y + gravity) && !phantom) vspeed += gravity;
-		if (placeFree(x, y + vspeed) && !(onPlatform() && vspeed >= 0))
-			y += vspeed;
+		if (placeFree(x, y + vspeed) && !(onPlatform() && vspeed >= 0)) y += vspeed;
 		else if (!(onPlatform() && vspeed >= 0)) {
 			for (local i = 2; i < 8; i++) {
 				if (placeFree(x, y + vspeed / i)) {
@@ -7835,8 +6643,7 @@ Crystallo <- class extends Enemy {
 				}
 
 				// If no step was taken, slow down
-				if (didstep == false && fabs(hspeed) >= 1)
-					hspeed -= hspeed / fabs(hspeed);
+				if (didstep == false && fabs(hspeed) >= 1) hspeed -= hspeed / fabs(hspeed);
 				else if (didstep == false && fabs(hspeed) < 1) hspeed = 0;
 			}
 		}
@@ -7914,22 +6721,11 @@ Crystallo <- class extends Enemy {
 		}
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (blinking > 0) return;
 		if (anim == "squish") return;
 
-		local damage =
-			_mag *
-			(_element in damageMult
-				? damageMult[_element]
-				: damageMult["normal"]);
+		local damage = _mag * (_element in damageMult ? damageMult[_element] : damageMult["normal"]);
 		if (_cut) damage *= damageMult["cut"];
 		if (_blast) damage *= damageMult["blast"];
 		if (_stomp) damage *= damageMult["stomp"];
@@ -7946,8 +6742,7 @@ Crystallo <- class extends Enemy {
 			if (!_stomp) shootBullets();
 			return;
 		}
-		if (_element == "ice")
-			frozen = minFreezeTime + freezeTime * damageMult["ice"];
+		if (_element == "ice") frozen = minFreezeTime + freezeTime * damageMult["ice"];
 		if (_element == "fire") {
 			newActor(Flame, x, y);
 			popSound(sndFlame, 0);
@@ -8028,10 +6823,7 @@ WaspyBoi <- class extends Enemy {
 						else hspeed *= 1.0 / fabs(hspeed);
 					}
 
-					if (
-						target &&
-						inDistance2(x, y, target.x, target.y, pursuitRange)
-					) {
+					if (target && inDistance2(x, y, target.x, target.y, pursuitRange)) {
 						mode = "revup";
 						timer = 60;
 					} else {
@@ -8057,11 +6849,7 @@ WaspyBoi <- class extends Enemy {
 						flip = int(x > target.x);
 					}
 					if (timer % 10 == 0) {
-						local c = newActor(
-							PoofTiny,
-							x + (flip == 0 ? 8 : -8),
-							y - 8
-						);
+						local c = newActor(PoofTiny, x + (flip == 0 ? 8 : -8), y - 8);
 						actor[c].hspeed = 0.5 - randFloat(1.0);
 						actor[c].vspeed = -0.5;
 					}
@@ -8085,15 +6873,7 @@ WaspyBoi <- class extends Enemy {
 					}
 
 					if (getFrames() % 2 == 0) {
-						newActor(AfterImage, x, y, [
-							sprWaspyBoi,
-							getFrames() / 4,
-							0,
-							flip,
-							0,
-							1,
-							1
-						]);
+						newActor(AfterImage, x, y, [sprWaspyBoi, getFrames() / 4, 0, flip, 0, 1, 1]);
 					}
 					break;
 
@@ -8130,14 +6910,7 @@ WaspyBoi <- class extends Enemy {
 		base.draw();
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		base.getHurt(_by, _mag, _element, _cut, _blast, _stomp);
 	}
 
@@ -8147,14 +6920,7 @@ WaspyBoi <- class extends Enemy {
 		newActor(Poof, x + 8, y);
 		newActor(Poof, x - 8, y);
 		if (randInt(20) == 0) {
-			local a =
-				actor[
-					newActor(
-						game.difficulty >= 3 ? MuffinEvil : MuffinBlue,
-						x,
-						y
-					)
-				];
+			local a = actor[newActor(game.difficulty >= 3 ? MuffinEvil : MuffinBlue, x, y)];
 			a.vspeed = -2;
 		}
 	}
@@ -8204,19 +6970,10 @@ Devine <- class extends Enemy {
 		shape.oy = -height * 8 + 8;
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		base.getHurt(_by, _mag, _element, _cut, _blast, _stomp);
-		if (_element == "fire")
-			for (local i = 0; i < height; i++) newActor(Flame, x, y - 16 * i);
-		else if (health <= 0)
-			for (local i = 0; i < height; i++) newActor(Poof, x, y - 16 * i);
+		if (_element == "fire") for (local i = 0; i < height; i++) newActor(Flame, x, y - 16 * i);
+		else if (health <= 0) for (local i = 0; i < height; i++) newActor(Poof, x, y - 16 * i);
 	}
 
 	function run() {
@@ -8224,28 +6981,24 @@ Devine <- class extends Enemy {
 
 		if (gvPlayer && hitTest(shape, gvPlayer.shape)) {
 			if (x > gvPlayer.x) {
-				if (gvPlayer.placeFree(gvPlayer.x - 2, gvPlayer.y))
-					gvPlayer.x -= 2;
+				if (gvPlayer.placeFree(gvPlayer.x - 2, gvPlayer.y)) gvPlayer.x -= 2;
 				gvPlayer.hspeed -= 0.2;
 			}
 
 			if (x < gvPlayer.x) {
-				if (gvPlayer.placeFree(gvPlayer.x + 2, gvPlayer.y))
-					gvPlayer.x += 2;
+				if (gvPlayer.placeFree(gvPlayer.x + 2, gvPlayer.y)) gvPlayer.x += 2;
 				gvPlayer.hspeed += 0.2;
 			}
 		}
 
 		if (gvPlayer2 && hitTest(shape, gvPlayer2.shape)) {
 			if (x > gvPlayer2.x) {
-				if (gvPlayer2.placeFree(gvPlayer2.x - 2, gvPlayer2.y))
-					gvPlayer2.x -= 2;
+				if (gvPlayer2.placeFree(gvPlayer2.x - 2, gvPlayer2.y)) gvPlayer2.x -= 2;
 				gvPlayer2.hspeed -= 0.2;
 			}
 
 			if (x < gvPlayer2.x) {
-				if (gvPlayer2.placeFree(gvPlayer2.x + 2, gvPlayer2.y))
-					gvPlayer2.x += 2;
+				if (gvPlayer2.placeFree(gvPlayer2.x + 2, gvPlayer2.y)) gvPlayer2.x += 2;
 				gvPlayer2.hspeed += 0.2;
 			}
 		}
@@ -8261,11 +7014,7 @@ Devine <- class extends Enemy {
 			drawSprite(
 				sprDevine,
 				frame,
-				x -
-					camx +
-					(frozen
-						? 0
-						: (frame == 2 ? 0 : sin(getFrames() / 10.0 + i)) + 0.5),
+				x - camx + (frozen ? 0 : (frame == 2 ? 0 : sin(getFrames() / 10.0 + i)) + 0.5),
 				y - camy - i * 16,
 				0,
 				0,
@@ -8434,22 +7183,9 @@ Gooey <- class extends Enemy {
 	function draw() {
 		if (!active) return;
 
-		drawSprite(
-			sprite,
-			an[anim][wrap(floor(frame), 0, an[anim].len() - 1)] + 6 * flip,
-			x - camx,
-			y - camy,
-			0,
-			flip
-		);
+		drawSprite(sprite, an[anim][wrap(floor(frame), 0, an[anim].len() - 1)] + 6 * flip, x - camx, y - camy, 0, flip);
 
-		if (debug)
-			drawText(
-				font,
-				x - camx + 16,
-				y - 8 - camy,
-				anim + "(" + vspeed + ")"
-			);
+		if (debug) drawText(font, x - camx + 16, y - 8 - camy, anim + "(" + vspeed + ")");
 	}
 
 	function physics() {
@@ -8492,14 +7228,7 @@ Gooey <- class extends Enemy {
 		shape.setPos(x, y);
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (_blast && _by) {
 			local angle = pointAngle(_by.x, _by.y, x, y);
 			hspeed = lendirX(_mag + 1.0, angle);
@@ -8642,13 +7371,7 @@ Snippin <- class extends Enemy {
 	function physics() {
 		handleConveyor();
 
-		if (
-			rolling ||
-			(placeFree(x + 2, y) &&
-				placeFree(x - 2, y) &&
-				placeFree(x, y + 2) &&
-				placeFree(x, y - 2))
-		) {
+		if (rolling || (placeFree(x + 2, y) && placeFree(x - 2, y) && placeFree(x, y + 2) && placeFree(x, y - 2))) {
 			gravity = 0.2;
 			direction = flip == 0 ? 0 : 180;
 		} else gravity = 0.0;
@@ -8657,8 +7380,7 @@ Snippin <- class extends Enemy {
 			hspeed += lendirX(gravity, direction + (flip == 0 ? 90 : -90));
 			vspeed += lendirY(gravity, direction + (flip == 0 ? 90 : -90));
 
-			if (abs(vspeed) > 1 || abs(hspeed) > 1)
-				direction = flip == 0 ? 0 : 180;
+			if (abs(vspeed) > 1 || abs(hspeed) > 1) direction = flip == 0 ? 0 : 180;
 
 			if (placeFree(x + hspeed, y + vspeed)) {
 				y += vspeed;
@@ -8673,33 +7395,18 @@ Snippin <- class extends Enemy {
 			local mspeed = 0.5 + mode * 0.5;
 
 			for (local i = 0; i <= 6; i++) {
-				if (
-					placeFree(
-						x + lendirX(1, direction),
-						y + lendirY(1, direction)
-					)
-				) {
+				if (placeFree(x + lendirX(1, direction), y + lendirY(1, direction))) {
 					x += lendirX(mspeed, direction);
 					y += lendirY(mspeed, direction);
 					didMove = true;
 					break;
-				} else if (
-					placeFree(
-						x + lendirX(1, direction + 15 * i),
-						y + lendirY(1, direction + 15 * i)
-					)
-				) {
+				} else if (placeFree(x + lendirX(1, direction + 15 * i), y + lendirY(1, direction + 15 * i))) {
 					x += lendirX(mspeed, direction + 15 * i);
 					y += lendirY(mspeed, direction + 15 * i);
 					direction += 15 * i;
 					didMove = true;
 					break;
-				} else if (
-					placeFree(
-						x + lendirX(1, direction - 15 * i),
-						y + lendirY(1, direction - 15 * i)
-					)
-				) {
+				} else if (placeFree(x + lendirX(1, direction - 15 * i), y + lendirY(1, direction - 15 * i))) {
 					x += lendirX(mspeed, direction - 15 * i);
 					y += lendirY(mspeed, direction - 15 * i);
 					direction -= 15 * i;
@@ -8709,27 +7416,9 @@ Snippin <- class extends Enemy {
 			}
 
 			if (!didMove) {
-				if (
-					placeFree(
-						x + lendirX(2, direction + 90),
-						y + lendirY(2, direction + 90)
-					)
-				)
-					direction += 90;
-				else if (
-					placeFree(
-						x + lendirX(2, direction - 90),
-						y + lendirY(2, direction - 90)
-					)
-				)
-					direction -= 90;
-				else if (
-					placeFree(
-						x + lendirX(2, direction - 180),
-						y + lendirY(2, direction - 180)
-					)
-				)
-					direction -= 180;
+				if (placeFree(x + lendirX(2, direction + 90), y + lendirY(2, direction + 90))) direction += 90;
+				else if (placeFree(x + lendirX(2, direction - 90), y + lendirY(2, direction - 90))) direction -= 90;
+				else if (placeFree(x + lendirX(2, direction - 180), y + lendirY(2, direction - 180))) direction -= 180;
 			}
 
 			if (hspeed > 0) fliph = 0;
@@ -8744,11 +7433,7 @@ Snippin <- class extends Enemy {
 			if (sidecounts == 1) direction = round(direction / 90.0) * 90;
 
 			// Coming around corner
-			if (
-				(direction == 0 || direction == 180) &&
-				placeFree(x, y + 2) &&
-				placeFree(x, y - 2)
-			) {
+			if ((direction == 0 || direction == 180) && placeFree(x, y + 2) && placeFree(x, y - 2)) {
 				// Horizontal
 				if (!placeFree(x + 2, y + 2)) {
 					direction = 90;
@@ -8840,23 +7525,9 @@ Snippin <- class extends Enemy {
 				}
 			}
 
-			if (
-				flip == 2 &&
-				!placeFree(
-					x - lendirX(1, direction - 90),
-					y - lendirY(1, direction - 90)
-				)
-			)
-				flip = 0;
+			if (flip == 2 && !placeFree(x - lendirX(1, direction - 90), y - lendirY(1, direction - 90))) flip = 0;
 
-			if (
-				flip == 0 &&
-				!placeFree(
-					x - lendirX(1, direction + 90),
-					y - lendirY(1, direction + 90)
-				)
-			)
-				flip = 2;
+			if (flip == 0 && !placeFree(x - lendirX(1, direction + 90), y - lendirY(1, direction + 90))) flip = 2;
 
 			shape.setPos(x, y);
 
@@ -8919,9 +7590,7 @@ Snippin <- class extends Enemy {
 		// Turn around
 		if (
 			!held &&
-			((!placeFree(x + hspeed, y) && !placeFree(x + hspeed, y - 4)) ||
-				x + hspeed < 0 ||
-				x + hspeed > gvMap.w)
+			((!placeFree(x + hspeed, y) && !placeFree(x + hspeed, y - 4)) || x + hspeed < 0 || x + hspeed > gvMap.w)
 		) {
 			flip = (!flip).tointeger();
 			fireWeapon(StompPoof, x + 10 * (hspeed <=> 0), y, 0, id);
@@ -8953,21 +7622,13 @@ Snippin <- class extends Enemy {
 		touchDamage = int(!rolling || abs(hspeed) >= 2) * (1 + game.difficulty);
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {
 		if (blinking > 0) return;
 		base.getHurt(_by, _mag, _element, _cut, _blast, _stomp);
 
 		if (rolling && hspeed == 0) {
 			if (hspeed != 0) hspeed = 0.0;
-			else if (_by)
-				hspeed = max(4.0, fabs(_by.hspeed * 1.5)) * (x <=> _by.x);
+			else if (_by) hspeed = max(4.0, fabs(_by.hspeed * 1.5)) * (x <=> _by.x);
 			blinking = blinkMax;
 			popSound(sndKick);
 		} else {
@@ -9042,15 +7703,10 @@ PeterFlower <- class extends PhysAct {
 					if (isOnScreen() && anim == "idle") popSound(sndGulp);
 				} else
 					foreach (k, i in gvEnemies) {
-						if (
-							checkActor(k) &&
-							actor[k] instanceof Enemy &&
-							hitTest(shape, actor[k].shape)
-						) {
+						if (checkActor(k) && actor[k] instanceof Enemy && hitTest(shape, actor[k].shape)) {
 							hasPlayer = 3;
 							target = actor[k].id;
-							if (isOnScreen() && anim == "idle")
-								popSound(sndGulp);
+							if (isOnScreen() && anim == "idle") popSound(sndGulp);
 						}
 					}
 
@@ -9303,12 +7959,7 @@ Granito <- class extends Enemy {
 							y -= 1.0;
 						} else flip = false;
 
-						if (smart)
-							if (
-								placeFree(x - 6, y + 14) &&
-								!placeFree(x + 2, y + 14)
-							)
-								flip = false;
+						if (smart) if (placeFree(x - 6, y + 14) && !placeFree(x + 2, y + 14)) flip = false;
 
 						if (x <= 0) flip = false;
 						hspeed = -1.0;
@@ -9322,12 +7973,7 @@ Granito <- class extends Enemy {
 							y -= 1.0;
 						} else flip = true;
 
-						if (smart)
-							if (
-								placeFree(x + 6, y + 14) &&
-								!placeFree(x - 2, y + 14)
-							)
-								flip = true;
+						if (smart) if (placeFree(x + 6, y + 14) && !placeFree(x - 2, y + 14)) flip = true;
 
 						if (x >= gvMap.w) flip = true;
 						hspeed = 1.0;
@@ -9337,10 +7983,8 @@ Granito <- class extends Enemy {
 				if (frozen) {
 					// Create ice block
 					local canice = true;
-					if (gvPlayer && hitTest(shape, gvPlayer.shape))
-						canice = false;
-					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape))
-						canice = false;
+					if (gvPlayer && hitTest(shape, gvPlayer.shape)) canice = false;
+					if (gvPlayer2 && hitTest(shape, gvPlayer2.shape)) canice = false;
 					if (icebox == -1 && canice) {
 						if (health > 0) icebox = mapNewSolid(shape);
 					}
@@ -9371,30 +8015,8 @@ Granito <- class extends Enemy {
 
 		if (!squish) {
 			if (frozen) {
-				if (smart)
-					drawSprite(
-						sprGranito,
-						0,
-						floor(x - camx),
-						floor(y - camy),
-						0,
-						flip.tointeger(),
-						1,
-						1,
-						1
-					);
-				else
-					drawSprite(
-						sprGranito,
-						0,
-						floor(x - camx),
-						floor(y - camy),
-						0,
-						flip.tointeger(),
-						1,
-						1,
-						1
-					);
+				if (smart) drawSprite(sprGranito, 0, floor(x - camx), floor(y - camy), 0, flip.tointeger(), 1, 1, 1);
+				else drawSprite(sprGranito, 0, floor(x - camx), floor(y - camy), 0, flip.tointeger(), 1, 1, 1);
 			} else {
 				if (smart)
 					drawSprite(
@@ -9451,14 +8073,7 @@ Granito <- class extends Enemy {
 		base.draw();
 	}
 
-	function getHurt(
-		_by = 0,
-		_mag = 1,
-		_element = "normal",
-		_cut = false,
-		_blast = false,
-		_stomp = false
-	) {}
+	function getHurt(_by = 0, _mag = 1, _element = "normal", _cut = false, _blast = false, _stomp = false) {}
 
 	function hurtblast() {}
 
