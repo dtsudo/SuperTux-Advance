@@ -296,6 +296,7 @@ Midi <- class extends Player {
 	}
 
 	function physics() {
+		swimming = nowInWater && anim != "ball";
 		if (vspeed > 0) didJump = false;
 		if (nowInWater) gravity = 0.12;
 		else gravity = 0.25;
@@ -1081,10 +1082,14 @@ Midi <- class extends Player {
 		if (firetime <= 0 && stats.energy < stats.maxEnergy) stats.energy += 1.0 / 30.0;
 
 		if (
-			anim != "parkour" &&
-			anim != "jump" &&
-			anim != "fall" &&
-			anim != "jumpT" &&
+			((anim != "parkour" &&
+				anim != "jump" &&
+				anim != "fall" &&
+				anim != "jumpT" &&
+				anim != "morphIn" &&
+				anim != "morphOut" &&
+				anim != "ball") ||
+				!freeDown) &&
 			stats.stamina < stats.maxStamina
 		)
 			stats.stamina += 0.5;
@@ -1499,7 +1504,7 @@ Midi <- class extends Player {
 						flip = 1;
 					} else if (anim != "ledge") {
 						if (vspeed > 0.5) {
-							vspeed -= 0.4;
+							vspeed -= 0.5;
 							if (vspeed < 0.5) vspeed = 0.5;
 						}
 						if (getFrames() % 8 == 0) newActor(PoofTiny, x - 4 + 2 - randInt(4), y + 12 - randInt(2));
@@ -1518,7 +1523,7 @@ Midi <- class extends Player {
 						flip = 0;
 					} else if (anim != "ledge") {
 						if (vspeed > 0.5) {
-							vspeed -= 0.4;
+							vspeed -= 0.5;
 							if (vspeed < 0.5) vspeed = 0.5;
 						}
 						if (getFrames() % 8 == 0) newActor(PoofTiny, x + 4 + 2 - randInt(4), y + 12 - randInt(2));

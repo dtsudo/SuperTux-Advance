@@ -1030,7 +1030,7 @@ MagnetChain <- class extends Actor {
 			gvPlayer.x = px;
 			gvPlayer.y = py;
 			gvPlayer.hspeed = 0;
-			gvPlayer.vspeed = 0;
+			gvPlayer.vspeed = 1.0;
 
 			if (getcon("jump", "press", true, 1)) {
 				gvPlayer.held = 0;
@@ -1045,7 +1045,7 @@ MagnetChain <- class extends Actor {
 			gvPlayer2.x = px;
 			gvPlayer2.y = py;
 			gvPlayer2.hspeed = 0;
-			gvPlayer2.vspeed = 0;
+			gvPlayer2.vspeed = 1.0;
 
 			if (getcon("jump", "press", true, 2)) {
 				gvPlayer2.held = 0;

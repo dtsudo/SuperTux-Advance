@@ -96,9 +96,8 @@ Cyra <- class extends Player {
 	anim = []; // Animation frame delimiters: [start, end, speed]
 	an = {
 		stand = [
-			0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 95, 94, 94, 94, 95,
-			94, 94, 94, 95, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 96,
-			97, 98, 99, 98, 99, 98, 99, 98, 99, 98, 97, 96
+			0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 95, 94, 94, 94, 95, 94, 94, 94, 95, 0, 1, 2, 3, 0, 1, 2, 3,
+			0, 1, 2, 3, 0, 1, 2, 3, 96, 97, 98, 99, 98, 99, 98, 99, 98, 99, 98, 97, 96
 		],
 		standN = [0, 1, 2, 3],
 		standW = [90, 90, 91, 91, 92, 92, 93, 93],
@@ -314,8 +313,7 @@ Cyra <- class extends Player {
 		shapeStand.setPos(x, y);
 		if (shape == shapeStand && !placeFree(x, y)) {
 			shape = shapeSlide;
-			if (anim == "stand" || anim == "walk" || anim == "run")
-				anim = "crawl";
+			if (anim == "stand" || anim == "walk" || anim == "run") anim = "crawl";
 		}
 		freeDown = placeFree(x, y + 1);
 		local freeDown2 = placeFree(x, y + 2);
@@ -329,18 +327,13 @@ Cyra <- class extends Player {
 		// times per frame.
 
 		// Recharge
-		if (
-			firetime > 0 &&
-			stats.weapon != "air" &&
-			(stats.weapon != "earth" || anim != "statue")
-		) {
+		if (firetime > 0 && stats.weapon != "air" && (stats.weapon != "earth" || anim != "statue")) {
 			firetime--;
 		}
 
 		if (guardtime > 0 && anim != "statue") guardtime--;
 
-		if (firetime <= 0 && stats.energy < stats.maxEnergy)
-			stats.energy += 1.0 / 60.0;
+		if (firetime <= 0 && stats.energy < stats.maxEnergy) stats.energy += 1.0 / 60.0;
 
 		if (slashing) slashTimer += 0.2;
 		if (slashTimer >= 3) {
@@ -362,10 +355,8 @@ Cyra <- class extends Player {
 			animOffset = 0.0;
 			switch (anim) {
 				case "stand":
-					if (stats.weapon == "ice" && floor(frame) == 0)
-						frame += 0.01;
-					else if (stats.weapon == "ice" || stats.weapon == "fire")
-						frame += 0.1;
+					if (stats.weapon == "ice" && floor(frame) == 0) frame += 0.01;
+					else if (stats.weapon == "ice" || stats.weapon == "fire") frame += 0.1;
 					else if (stats.weapon == "air") frame += 0.05;
 					else frame += 0.05;
 
@@ -374,11 +365,7 @@ Cyra <- class extends Player {
 						frame = 0.0;
 					}
 
-					if (
-						placeFree(x, y + 8) &&
-						!onPlatform() &&
-						fabs(vspeed) >= 1
-					) {
+					if (placeFree(x, y + 8) && !onPlatform() && fabs(vspeed) >= 1) {
 						if (vspeed >= 0) anim = "fall";
 						else anim = "jumpU";
 						frame = 0.0;
@@ -410,15 +397,10 @@ Cyra <- class extends Player {
 
 				case "walk":
 					frame += abs(rspeed) / 10;
-					if (abs(rspeed) <= 0.1 || fabs(hspeed) <= 0.1)
-						anim = "stand";
+					if (abs(rspeed) <= 0.1 || fabs(hspeed) <= 0.1) anim = "stand";
 					if (abs(rspeed) > 2.4) anim = "run";
 
-					if (
-						placeFree(x, y + 8) &&
-						!onPlatform() &&
-						fabs(vspeed) >= 1
-					) {
+					if (placeFree(x, y + 8) && !onPlatform() && fabs(vspeed) >= 1) {
 						if (vspeed >= 0) anim = "fall";
 						else anim = "jumpU";
 						frame = 0.0;
@@ -447,11 +429,7 @@ Cyra <- class extends Player {
 					else frame += abs(rspeed) / 10;
 					if (abs(rspeed) < 2 && anim != "skid") anim = "walk";
 
-					if (
-						placeFree(x, y + 8) &&
-						!onPlatform() &&
-						fabs(vspeed) >= 1
-					) {
+					if (placeFree(x, y + 8) && !onPlatform() && fabs(vspeed) >= 1) {
 						if (vspeed >= 0) anim = "fall";
 						else anim = "jumpU";
 						frame = 0.0;
@@ -515,8 +493,7 @@ Cyra <- class extends Player {
 
 					if (slashing) {
 						frame = 0;
-						if (an["fall"] == an["fallW"])
-							animOffset = 116 - 53 + floor(slashTimer);
+						if (an["fall"] == an["fallW"]) animOffset = 116 - 53 + floor(slashTimer);
 						else animOffset = 61 - 36 + slashTimer;
 					}
 					break;
@@ -553,8 +530,7 @@ Cyra <- class extends Player {
 					frame += 0.25;
 
 					if (floor(frame) > an[anim].len() - 1) {
-						if (getcon("spec2", "hold", true, playerNum))
-							anim = "slide";
+						if (getcon("spec2", "hold", true, playerNum)) anim = "slide";
 						else anim = "crawl";
 						shape = shapeSlide;
 					}
@@ -570,28 +546,14 @@ Cyra <- class extends Player {
 					break;
 
 				case "slide":
-					if (stats.weapon == "earth")
-						slideframe += abs(hspeed / 8.0);
+					if (stats.weapon == "earth") slideframe += abs(hspeed / 8.0);
 					else slideframe += abs(hspeed / 16.0);
 					frame = slideframe;
 
 					if (!freeDown && hspeed != 0)
-						if (
-							floor((getFrames() % 8) - fabs(hspeed)) == 0 ||
-							fabs(hspeed) > 8
-						) {
-							if (stats.weapon == "fire")
-								newActor(
-									FlameTiny,
-									x - 8 * (hspeed / fabs(hspeed)),
-									y + 10
-								);
-							if (stats.weapon == "ice")
-								newActor(
-									Glimmer,
-									x - 12 * (hspeed / fabs(hspeed)),
-									y + 10
-								);
+						if (floor((getFrames() % 8) - fabs(hspeed)) == 0 || fabs(hspeed) > 8) {
+							if (stats.weapon == "fire") newActor(FlameTiny, x - 8 * (hspeed / fabs(hspeed)), y + 10);
+							if (stats.weapon == "ice") newActor(Glimmer, x - 12 * (hspeed / fabs(hspeed)), y + 10);
 						}
 					break;
 
@@ -613,8 +575,7 @@ Cyra <- class extends Player {
 					anim = "jumpU";
 					frame = 0.0;
 					vspeed -= 1;
-					if (getcon("jump", "hold", true, playerNum) && vspeed > -4)
-						vspeed = -6;
+					if (getcon("jump", "hold", true, playerNum) && vspeed > -4) vspeed = -6;
 					break;
 
 				case "swimDF":
@@ -632,36 +593,25 @@ Cyra <- class extends Player {
 					break;
 			}
 
-			if (anim != "climb")
-				frame = wrap(abs(frame), 0.0, an[anim].len() - 1);
+			if (anim != "climb") frame = wrap(abs(frame), 0.0, an[anim].len() - 1);
 			onWall = anim == "wall" || an[anim] == an["fallW"];
 
 			// Sliding acceleration
 			if (anim == "slide" || onIce()) {
-				if (
-					!placeFree(x, y + 8) &&
-					(fabs(hspeed) < 8 ||
-						(fabs(hspeed) < 12 && stats.weapon == "ice"))
-				) {
+				if (!placeFree(x, y + 8) && (fabs(hspeed) < 8 || (fabs(hspeed) < 12 && stats.weapon == "ice"))) {
 					if (placeFree(x + 4, y + 1)) hspeed += accel * 1.1;
 					if (placeFree(x - 4, y + 1)) hspeed -= accel * 1.1;
 					if (freeDown2) vspeed += 1.0;
 					// if(!placeFree(x + hspeed, y) && placeFree(x + hspeed, y - abs(hspeed / 2)) && anim == "slide") vspeed -= 0.25
-				} else if (
-					!placeFree(x, y + 8) &&
-					(fabs(hspeed) < 8 || (fabs(hspeed) < 12 && vspeed > 0))
-				)
+				} else if (!placeFree(x, y + 8) && (fabs(hspeed) < 8 || (fabs(hspeed) < 12 && vspeed > 0)))
 					vspeed += 0.2;
 
 				if (
-					((!getcon("spec2", "hold", true, playerNum) ||
-						fabs(hspeed) < 0.05) &&
+					((!getcon("spec2", "hold", true, playerNum) || fabs(hspeed) < 0.05) &&
 						!freeDown &&
 						stats.weapon != "earth") ||
-					(fabs(hspeed) < 0.05 &&
-						!getcon("spec2", "hold", true, playerNum)) ||
-					(!getcon("spec2", "hold", true, playerNum) &&
-						!getcon("down", "hold", true, playerNum))
+					(fabs(hspeed) < 0.05 && !getcon("spec2", "hold", true, playerNum)) ||
+					(!getcon("spec2", "hold", true, playerNum) && !getcon("down", "hold", true, playerNum))
 				)
 					if (anim == "slide" || anim == "dive") anim = "walk";
 			}
@@ -685,30 +635,20 @@ Cyra <- class extends Player {
 					flip = 1;
 			}
 
-			if (
-				stats.weapon != "air" &&
-				stats.stamina < stats.maxStamina &&
-				blinking == 0.0 &&
-				guardtime <= 0
-			)
+			if (stats.weapon != "air" && stats.stamina < stats.maxStamina && blinking == 0.0 && guardtime <= 0)
 				stats.stamina += 0.05;
 
 			// Controls
 			if (
-				(!placeFree(x - hspeed, y + 2) ||
-					!placeFree(x, y + 2) ||
-					anim == "climb" ||
-					onPlatform()) &&
+				(!placeFree(x - hspeed, y + 2) || !placeFree(x, y + 2) || anim == "climb" || onPlatform()) &&
 				!onWall &&
 				vspeed >= 0
 			) {
 				canJump = 16;
-				if (stats.weapon == "air" && stats.stamina < stats.maxStamina)
-					stats.stamina += 0.2;
+				if (stats.weapon == "air" && stats.stamina < stats.maxStamina) stats.stamina += 0.2;
 			} else {
 				if (canJump > 0) canJump--;
-				if (stats.weapon == "air" && stats.stamina < 1)
-					stats.stamina += 0.02;
+				if (stats.weapon == "air" && stats.stamina < 1) stats.stamina += 0.02;
 			}
 			if (canMove) {
 				accel = 0.2;
@@ -716,9 +656,7 @@ Cyra <- class extends Player {
 				else mspeed = 3.0;
 				if (
 					(getcon("run", "hold", true, playerNum) ||
-						((abs(joyX(0)) >= js_max * 0.9 ||
-							abs(joyY(0)) >= js_max * 0.9) &&
-							config.stickspeed)) &&
+						((abs(joyX(0)) >= js_max * 0.9 || abs(joyY(0)) >= js_max * 0.9) && config.stickspeed)) &&
 					anim != "crawl"
 				) {
 					if (stats.weapon == "ice") mspeed = 3.5;
@@ -821,29 +759,17 @@ Cyra <- class extends Player {
 							y = round(y);
 						}
 
-					if (
-						getcon("left", "hold", true, playerNum) &&
-						atCrossLadder()
-					)
+					if (getcon("left", "hold", true, playerNum) && atCrossLadder())
 						if (placeFree(x - 2, y)) {
-							if (
-								!getcon("up", "hold", true, playerNum) &&
-								!getcon("down", "hold", true, playerNum)
-							)
+							if (!getcon("up", "hold", true, playerNum) && !getcon("down", "hold", true, playerNum))
 								frame -= climbdir / 8;
 							x -= 1;
 							x = round(x);
 						}
 
-					if (
-						getcon("right", "hold", true, playerNum) &&
-						atCrossLadder()
-					)
+					if (getcon("right", "hold", true, playerNum) && atCrossLadder())
 						if (placeFree(x + 2, y)) {
-							if (
-								!getcon("up", "hold", true, playerNum) &&
-								!getcon("down", "hold", true, playerNum)
-							)
+							if (!getcon("up", "hold", true, playerNum) && !getcon("down", "hold", true, playerNum))
 								frame += climbdir / 8;
 							x += 1;
 							x = round(x);
@@ -855,18 +781,15 @@ Cyra <- class extends Player {
 					if (felloff) {
 						anim = "fall";
 						frame = 0.0;
-						if (getcon("up", "hold", true, playerNum))
-							vspeed = -2.5;
+						if (getcon("up", "hold", true, playerNum)) vspeed = -2.5;
 					} else if (!atCrossLadder()) {
 						x -= x % 16 <=> 8;
 						x = round(x);
 					}
 
 					// Change direction
-					if (getcon("right", "press", true, playerNum) && canMove)
-						flip = 0;
-					if (getcon("left", "press", true, playerNum) && canMove)
-						flip = 1;
+					if (getcon("right", "press", true, playerNum) && canMove) flip = 0;
+					if (getcon("left", "press", true, playerNum) && canMove) flip = 1;
 
 					if (slashing) {
 						frame = 0;
@@ -878,14 +801,11 @@ Cyra <- class extends Player {
 
 				// Get on ladder
 				if (
-					((getcon("down", "hold", true, playerNum) &&
-						placeFree(x, y + 2)) ||
+					((getcon("down", "hold", true, playerNum) && placeFree(x, y + 2)) ||
 						getcon("up", "hold", true, playerNum)) &&
 					anim != "hurt" &&
 					anim != "climb" &&
-					(vspeed >= 0 ||
-						getcon("down", "press", true, playerNum) ||
-						getcon("up", "press", true, playerNum))
+					(vspeed >= 0 || getcon("down", "press", true, playerNum) || getcon("up", "press", true, playerNum))
 				) {
 					if (atLadder() || atCrossLadder()) {
 						anim = "climb";
@@ -897,10 +817,7 @@ Cyra <- class extends Player {
 				}
 
 				// Jumping
-				if (
-					getcon("jump", "press", true, playerNum) ||
-					jumpBuffer > 0
-				) {
+				if (getcon("jump", "press", true, playerNum) || jumpBuffer > 0) {
 					if (
 						onPlatform() &&
 						!placeFree(x, y + 2) &&
@@ -913,26 +830,19 @@ Cyra <- class extends Player {
 					} else if (canJump > 0 && placeFree(x, y, shapeStand)) {
 						jumpBuffer = 0;
 						if (anim == "climb") vspeed = -5;
-						else if (stats.weapon == "air" || nowInWater)
-							vspeed = -5.0;
+						else if (stats.weapon == "air" || nowInWater) vspeed = -5.0;
 						else vspeed = -5.8;
 						didJump = true;
 						if (stats.weapon != "air") canJump = 0;
-						if (
-							anim != "hurt" &&
-							anim != "dive" &&
-							(stats.weapon != "earth" || anim != "slide")
-						) {
+						if (anim != "hurt" && anim != "dive" && (stats.weapon != "earth" || anim != "slide")) {
 							anim = "jumpU";
 							frame = 0.0;
 						}
 						if (!freeDown2 || (freeRight && freeLeft)) {
-							if (stats.weapon != "air" || !freeDown2)
-								popSound(sndJump);
+							if (stats.weapon != "air" || !freeDown2) popSound(sndJump);
 							else {
 								popSound(sndFlap);
-								if (useJumpFlash)
-									newActor(MagicJumpFlash, x, y + 12);
+								if (useJumpFlash) newActor(MagicJumpFlash, x, y + 12);
 							}
 						}
 					} else if (
@@ -980,8 +890,7 @@ Cyra <- class extends Player {
 							popSound(sndJump);
 						} else {
 							popSound(sndFlap);
-							if (useJumpFlash)
-								newActor(MagicJumpFlash, x, y + 12);
+							if (useJumpFlash) newActor(MagicJumpFlash, x, y + 12);
 						}
 						stats.stamina--;
 					}
@@ -991,26 +900,23 @@ Cyra <- class extends Player {
 				if (
 					anim == "fall" &&
 					((getcon("left", "hold", true, playerNum) && !freeLeft) ||
-						(getcon("right", "hold", true, playerNum) &&
-							!freeRight))
+						(getcon("right", "hold", true, playerNum) && !freeRight))
 				) {
-					if (
-						!freeLeft &&
-						!(onIce(x - 8, y) || onIce(x - 8, y - 16))
-					) {
-						if (vspeed > 0.5) vspeed = 0.5;
-						if ((getFrames() / 4) % 4 == 0)
-							newActor(PoofTiny, x - 4, y + 12);
+					if (!freeLeft && !(onIce(x - 8, y) || onIce(x - 8, y - 16))) {
+						if (vspeed > 0.5) {
+							vspeed -= 0.5;
+							if (vspeed < 0.5) vspeed = 0.5;
+						}
+						if (getFrames() % 8 == 0) newActor(PoofTiny, x - 4 + 2 - randInt(4), y + 12 - randInt(2));
 						an["fall"] = an["fallW"];
 						flip = 0;
 					}
-					if (
-						!freeRight &&
-						!(onIce(x + 8, y) || onIce(x + 8, y - 16))
-					) {
-						if (vspeed > 0.5) vspeed = 0.5;
-						if ((getFrames() / 4) % 4 == 0)
-							newActor(PoofTiny, x + 4, y + 12);
+					if (!freeRight && !(onIce(x + 8, y) || onIce(x + 8, y - 16))) {
+						if (vspeed > 0.5) {
+							vspeed -= 0.5;
+							if (vspeed < 0.5) vspeed = 0.5;
+						}
+						if (getFrames() % 8 == 0) newActor(PoofTiny, x + 4 + 2 - randInt(4), y + 12 - randInt(2));
 						an["fall"] = an["fallW"];
 						flip = 1;
 					}
@@ -1027,11 +933,7 @@ Cyra <- class extends Player {
 					jumpBuffer = config.jumpBuffer;
 				if (jumpBuffer > 0) jumpBuffer--;
 
-				if (
-					getcon("jump", "release", true, playerNum) &&
-					vspeed < 0 &&
-					didJump
-				) {
+				if (getcon("jump", "release", true, playerNum) && vspeed < 0 && didJump) {
 					didJump = false;
 					vspeed /= 2.5;
 				}
@@ -1085,11 +987,7 @@ Cyra <- class extends Player {
 				}
 
 				if (anim == "crawl") {
-					if (
-						!getcon("down", "hold", true, playerNum) &&
-						placeFree(x, y, shapeStand)
-					)
-						anim = "stand";
+					if (!getcon("down", "hold", true, playerNum) && placeFree(x, y, shapeStand)) anim = "stand";
 					else {
 						// Ping pong animation
 						frame += hspeed / 8.0;
@@ -1105,33 +1003,17 @@ Cyra <- class extends Player {
 					if (hspeed < 0) hspeed += friction / 1.5;
 				} else {
 					if (hspeed > 0) {
-						if (
-							!(
-								mspeed > 2 &&
-								getcon("right", "hold", true, playerNum)
-							) ||
-							anim == "crawl" ||
-							!canMove
-						)
+						if (!(mspeed > 2 && getcon("right", "hold", true, playerNum)) || anim == "crawl" || !canMove)
 							hspeed -= friction;
 					}
 					if (hspeed < 0) {
-						if (
-							!(
-								mspeed > 2 &&
-								getcon("left", "hold", true, playerNum)
-							) ||
-							anim == "crawl" ||
-							!canMove
-						)
+						if (!(mspeed > 2 && getcon("left", "hold", true, playerNum)) || anim == "crawl" || !canMove)
 							hspeed += friction;
 					}
 				}
 			} else if (anim != "slide") {
-				if (hspeed > 0 && !getcon("right", "hold", true, playerNum))
-					hspeed -= friction / 3.0;
-				if (hspeed < 0 && !getcon("left", "hold", true, playerNum))
-					hspeed += friction / 3.0;
+				if (hspeed > 0 && !getcon("right", "hold", true, playerNum)) hspeed -= friction / 3.0;
+				if (hspeed < 0 && !getcon("left", "hold", true, playerNum)) hspeed += friction / 3.0;
 			}
 
 			if (fabs(hspeed) < friction) hspeed = 0.0;
@@ -1139,8 +1021,7 @@ Cyra <- class extends Player {
 				(placeFree(x, y + 2) || vspeed < 0) &&
 				(vspeed < 2 ||
 					(vspeed < 16 &&
-						(stats.weapon != "air" ||
-							getcon("down", "hold", true, playerNum)) &&
+						(stats.weapon != "air" || getcon("down", "hold", true, playerNum)) &&
 						!nowInWater) ||
 					(anim == "stomp" && vspeed < 8)) &&
 				antigrav <= 0
@@ -1221,13 +1102,7 @@ Cyra <- class extends Player {
 							if (anim == "crouch") fy = 6;
 							if (anim == "crawl") fy = 10;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(
-								SwordWaveCS,
-								x + fx,
-								y - 4 + fy,
-								1,
-								id
-							);
+							local c = fireWeapon(SwordWaveCS, x + fx, y - 4 + fy, 1, id);
 							if (!flip) c.hspeed = 8;
 							else c.hspeed = -8;
 							c.vspeed = 0;
@@ -1257,13 +1132,7 @@ Cyra <- class extends Player {
 							if (anim == "crouch") fy = 6;
 							if (anim == "crawl") fy = 10;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(
-								FireballCS,
-								x + fx,
-								y - 4 + fy,
-								1,
-								id
-							);
+							local c = fireWeapon(FireballCS, x + fx, y - 4 + fy, 1, id);
 							if (!flip) c.hspeed = 8;
 							else c.hspeed = -8;
 							c.vspeed = 0;
@@ -1295,13 +1164,7 @@ Cyra <- class extends Player {
 							if (anim == "crouch") fy = 6;
 							if (anim == "crawl") fy = 10;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(
-								FreezeWaveCS,
-								x + fx,
-								y - 4 + fy,
-								1,
-								id
-							);
+							local c = fireWeapon(FreezeWaveCS, x + fx, y - 4 + fy, 1, id);
 							if (!flip) c.hspeed = 8;
 							else c.hspeed = -8;
 							c.vspeed = 0;
@@ -1332,13 +1195,7 @@ Cyra <- class extends Player {
 							if (anim == "crouch") fy = 6;
 							if (anim == "crawl") fy = 10;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(
-								AirWaveCS,
-								x + fx,
-								y - 4 + fy,
-								1,
-								id
-							);
+							local c = fireWeapon(AirWaveCS, x + fx, y - 4 + fy, 1, id);
 							if (!flip) c.hspeed = 4;
 							else c.hspeed = -4;
 							c.vspeed = 0;
@@ -1355,10 +1212,7 @@ Cyra <- class extends Player {
 						break;
 
 					case "earth":
-						if (
-							getcon("spec2", "press", true, playerNum) &&
-							anim != "hurt"
-						) {
+						if (getcon("spec2", "press", true, playerNum) && anim != "hurt") {
 							anim = "dive";
 							frame = 0.0;
 							playSoundChannel(sndSlide, 0, 0);
@@ -1377,13 +1231,7 @@ Cyra <- class extends Player {
 							if (anim == "crouch") fy = 6;
 							if (anim == "crawl") fy = 10;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(
-								SwordWaveCS,
-								x + fx,
-								y - 4 + fy,
-								1,
-								id
-							);
+							local c = fireWeapon(SwordWaveCS, x + fx, y - 4 + fy, 1, id);
 							if (!flip) c.hspeed = 8;
 							else c.hspeed = -8;
 							c.vspeed = 0;
@@ -1413,13 +1261,7 @@ Cyra <- class extends Player {
 							if (anim == "crouch") fy = 6;
 							if (anim == "crawl") fy = 10;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(
-								ElectricWaveCS,
-								x + fx,
-								y - 4 + fy,
-								1,
-								id
-							);
+							local c = fireWeapon(ElectricWaveCS, x + fx, y - 4 + fy, 1, id);
 							if (!flip) c.hspeed = 5;
 							else c.hspeed = -5;
 							c.hspeed += hspeed;
@@ -1451,13 +1293,7 @@ Cyra <- class extends Player {
 							if (anim == "crouch") fy = 6;
 							if (anim == "crawl") fy = 10;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(
-								WaterCrescent,
-								x + fx,
-								y - 4 + fy,
-								1,
-								id
-							);
+							local c = fireWeapon(WaterCrescent, x + fx, y - 4 + fy, 1, id);
 							if (!flip) c.hspeed = 8;
 							else c.hspeed = -8;
 							c.vspeed = 0;
@@ -1506,13 +1342,7 @@ Cyra <- class extends Player {
 							if (anim == "crouch") fy = 6;
 							if (anim == "crawl") fy = 10;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(
-								SwordWaveCS,
-								x + fx,
-								y - 4 + fy,
-								1,
-								id
-							);
+							local c = fireWeapon(SwordWaveCS, x + fx, y - 4 + fy, 1, id);
 							if (!flip) c.hspeed = 8;
 							else c.hspeed = -8;
 							c.vspeed = 0;
@@ -1542,13 +1372,7 @@ Cyra <- class extends Player {
 							if (anim == "crouch") fy = 6;
 							if (anim == "crawl") fy = 10;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(
-								FireballCS,
-								x + fx,
-								y - 4 + fy,
-								1,
-								id
-							);
+							local c = fireWeapon(FireballCS, x + fx, y - 4 + fy, 1, id);
 							if (!flip) c.hspeed = 8;
 							else c.hspeed = -8;
 							c.vspeed = 0;
@@ -1580,13 +1404,7 @@ Cyra <- class extends Player {
 							if (anim == "crouch") fy = 6;
 							if (anim == "crawl") fy = 10;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(
-								FreezeWaveCS,
-								x + fx,
-								y - 4 + fy,
-								1,
-								id
-							);
+							local c = fireWeapon(FreezeWaveCS, x + fx, y - 4 + fy, 1, id);
 							if (!flip) c.hspeed = 8;
 							else c.hspeed = -8;
 							c.vspeed = 0;
@@ -1617,13 +1435,7 @@ Cyra <- class extends Player {
 							if (anim == "crouch") fy = 6;
 							if (anim == "crawl") fy = 10;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(
-								AirWaveCS,
-								x + fx,
-								y - 4 + fy,
-								1,
-								id
-							);
+							local c = fireWeapon(AirWaveCS, x + fx, y - 4 + fy, 1, id);
 							if (!flip) c.hspeed = 4;
 							else c.hspeed = -4;
 							c.vspeed = 0;
@@ -1640,10 +1452,7 @@ Cyra <- class extends Player {
 						break;
 
 					case "earth":
-						if (
-							getcon("spec2", "press", true, playerNum) &&
-							anim != "hurt"
-						) {
+						if (getcon("spec2", "press", true, playerNum) && anim != "hurt") {
 							anim = "dive";
 							frame = 0.0;
 							playSoundChannel(sndSlide, 0, 0);
@@ -1662,13 +1471,7 @@ Cyra <- class extends Player {
 							if (anim == "crouch") fy = 6;
 							if (anim == "crawl") fy = 10;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(
-								SwordWaveCS,
-								x + fx,
-								y - 4 + fy,
-								1,
-								id
-							);
+							local c = fireWeapon(SwordWaveCS, x + fx, y - 4 + fy, 1, id);
 							if (!flip) c.hspeed = 8;
 							else c.hspeed = -8;
 							c.vspeed = 0;
@@ -1698,13 +1501,7 @@ Cyra <- class extends Player {
 							if (anim == "crouch") fy = 6;
 							if (anim == "crawl") fy = 10;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(
-								ElectricWaveCS,
-								x + fx,
-								y - 4 + fy,
-								1,
-								id
-							);
+							local c = fireWeapon(ElectricWaveCS, x + fx, y - 4 + fy, 1, id);
 							if (!flip) c.hspeed = 5;
 							else c.hspeed = -5;
 							c.hspeed += hspeed;
@@ -1736,13 +1533,7 @@ Cyra <- class extends Player {
 							if (anim == "crouch") fy = 6;
 							if (anim == "crawl") fy = 10;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(
-								WaterCrescent,
-								x + fx,
-								y - 4 + fy,
-								1,
-								id
-							);
+							local c = fireWeapon(WaterCrescent, x + fx, y - 4 + fy, 1, id);
 							if (!flip) c.hspeed = 8;
 							else c.hspeed = -8;
 							c.vspeed = 0;
@@ -1777,8 +1568,7 @@ Cyra <- class extends Player {
 		else {
 			swimming = true;
 			shapeStand.h = 6.0;
-			if (stats.weapon == "air" && stats.stamina < 4)
-				stats.stamina += 0.1;
+			if (stats.weapon == "air" && stats.stamina < 4) stats.stamina += 0.1;
 			if (!wasInWater) {
 				wasInWater = true;
 				vspeed /= 2.0;
@@ -1794,8 +1584,7 @@ Cyra <- class extends Player {
 				case "swimD":
 				case "swimUF":
 				case "swimDF":
-					frame +=
-						sqrt(abs(hspeed * hspeed) + abs(vspeed * vspeed)) / 12;
+					frame += sqrt(abs(hspeed * hspeed) + abs(vspeed * vspeed)) / 12;
 					break;
 				case "hurt":
 					frame += 0.2;
@@ -1884,12 +1673,7 @@ Cyra <- class extends Player {
 			}
 
 			// Attacks
-			if (
-				canMove &&
-				anim != "hurt" &&
-				getcon("shoot", "press", true, playerNum) &&
-				!slashing
-			) {
+			if (canMove && anim != "hurt" && getcon("shoot", "press", true, playerNum) && !slashing) {
 				slashing = true;
 				hspeed /= 2.0;
 				vspeed /= 2.0;
@@ -1899,12 +1683,7 @@ Cyra <- class extends Player {
 				slashTimer = 0.0;
 				firetime = 60;
 			}
-			if (
-				canMove &&
-				anim != "hurt" &&
-				getcon("spec1", "press", true, playerNum) &&
-				!slashing
-			) {
+			if (canMove && anim != "hurt" && getcon("spec1", "press", true, playerNum) && !slashing) {
 				slashing = true;
 				hspeed /= 2.0;
 				vspeed /= 2.0;
@@ -1927,18 +1706,17 @@ Cyra <- class extends Player {
 
 		if (placeFree(x, y + vspeed)) y += vspeed;
 		else {
-			local didstep = false
+			local didstep = false;
 
 			//Move side-to-side underwater
-			if(nowInWater) {
-				for(local i = 1; i <= 4; i++) {
-					if(placeFree(x + i, y + vspeed)) {
+			if (nowInWater) {
+				for (local i = 1; i <= 4; i++) {
+					if (placeFree(x + i, y + vspeed)) {
 						x += i;
 						y += vspeed;
 						didstep = true;
 						break;
-					}
-					else if(placeFree(x - i, y + vspeed)) {
+					} else if (placeFree(x - i, y + vspeed)) {
 						x -= i;
 						y += vspeed;
 						didstep = true;
@@ -1947,7 +1725,7 @@ Cyra <- class extends Player {
 				}
 			}
 
-			if(!didstep) {
+			if (!didstep) {
 				vspeed /= 2;
 				if (fabs(vspeed) < 0.01) vspeed = 0;
 				// if(fabs(vspeed) > 1) vspeed -= vspeed / fabs(vspeed)
@@ -1964,10 +1742,7 @@ Cyra <- class extends Player {
 				if (wasOnGround)
 					for (local i = 0; i < min(max(8, abs(hspeed * 3)), 12); i++)
 						if (
-							!placeFree(
-								x,
-								y + min(max(8, abs(hspeed * 3)), 12) - i
-							) &&
+							!placeFree(x, y + min(max(8, abs(hspeed * 3)), 12) - i) &&
 							placeFree(x, y + 1) &&
 							!swimming &&
 							vspeed >= 0 &&
@@ -1989,8 +1764,7 @@ Cyra <- class extends Player {
 						}
 						didstep = true;
 						break;
-					}
-					else if(nowInWater && placeFree(x + hspeed, y + i)) {
+					} else if (nowInWater && placeFree(x + hspeed, y + i)) {
 						x += hspeed;
 						y += i;
 						if (i > 2) {
@@ -2004,8 +1778,7 @@ Cyra <- class extends Player {
 				}
 
 				// If no step was taken, slow down
-				if (didstep == false && fabs(hspeed) >= 1)
-					hspeed -= hspeed / fabs(hspeed);
+				if (didstep == false && fabs(hspeed) >= 1) hspeed -= hspeed / fabs(hspeed);
 				else if (didstep == false && fabs(hspeed) < 1) hspeed = 0;
 			}
 		}
@@ -2033,11 +1806,7 @@ Cyra <- class extends Player {
 			if (blinking == 0) {
 				blinking = 60;
 				popSound(sndHurt, 0);
-				if (
-					stats.weapon == "earth" &&
-					anim == "slide" &&
-					stats.stamina > 0
-				) {
+				if (stats.weapon == "earth" && anim == "slide" && stats.stamina > 0) {
 					stats.stamina -= hurt;
 					guardtime = 180;
 					blinking = 120;
@@ -2128,10 +1897,7 @@ Cyra <- class extends Player {
 					1,
 					blinking ? wrap(blinking, 0, 10).tofloat() / 10.0 : 1
 				);
-				if (
-					(slashing || animOffset > 0) &&
-					(anim == "walk" || anim == "run")
-				)
+				if ((slashing || animOffset > 0) && (anim == "walk" || anim == "run"))
 					drawSpriteZ(
 						2,
 						sprite,
@@ -2152,15 +1918,7 @@ Cyra <- class extends Player {
 
 			// After image
 			if ((zoomies > 0 || anim == "stomp") && getFrames() % 2 == 0)
-				newActor(AfterImage, x, y, [
-					sprite,
-					an[anim][frame] + animOffset,
-					0,
-					flip,
-					0,
-					1,
-					1
-				]);
+				newActor(AfterImage, x, y, [sprite, an[anim][frame] + animOffset, 0, flip, 0, 1, 1]);
 		}
 
 		drawLight(sprLightBasic, 0, x - camx, y - camy);
@@ -2168,8 +1926,7 @@ Cyra <- class extends Player {
 		// Transformation flash
 		if (tftime != -1) {
 			if (tftime < 4) {
-				if (!hidden)
-					drawSpriteZ(2, sprTFflash, tftime, x - camx, y - camy - 4);
+				if (!hidden) drawSpriteZ(2, sprTFflash, tftime, x - camx, y - camy - 4);
 				tftime += 0.25;
 			} else tftime = -1;
 		}
@@ -2177,23 +1934,14 @@ Cyra <- class extends Player {
 
 	function atLadder() {
 		// Save current location and move
-		local ns = Rec(
-			x + shape.ox,
-			y + shape.oy,
-			shape.w,
-			shape.h,
-			shape.kind
-		);
+		local ns = Rec(x + shape.ox, y + shape.oy, shape.w, shape.h, shape.kind);
 		local cx = floor(x / 16);
 		local cy = floor(y / 16);
 
 		// Check that the solid layer exists
 		local wl = null; // Working layer
 		for (local i = 0; i < gvMap.data.layers.len(); i++) {
-			if (
-				gvMap.data.layers[i].type == "tilelayer" &&
-				gvMap.data.layers[i].name == "solid"
-			) {
+			if (gvMap.data.layers[i].type == "tilelayer" && gvMap.data.layers[i].name == "solid") {
 				wl = gvMap.data.layers[i];
 				break;
 			}
@@ -2203,10 +1951,7 @@ Cyra <- class extends Player {
 		if (wl != null) {
 			local tile = cx + cy * wl.width;
 			if (tile >= 0 && tile < wl.data.len())
-				if (
-					wl.data[tile] - gvMap.solidfid == 29 ||
-					wl.data[tile] - gvMap.solidfid == 50
-				) {
+				if (wl.data[tile] - gvMap.solidfid == 29 || wl.data[tile] - gvMap.solidfid == 50) {
 					gvMap.shape.setPos(cx * 16 + 8, cy * 16 + 8);
 					gvMap.shape.kind = 0;
 					gvMap.shape.w = 1.0;
@@ -2283,12 +2028,7 @@ DeadCyra <- class extends Actor {
 	}
 
 	function draw() {
-		drawSprite(
-			sprite,
-			anim[wrap(getFrames() / 15, 0, anim.len() - 1)],
-			floor(x - camx),
-			floor(y - camy)
-		);
+		drawSprite(sprite, anim[wrap(getFrames() / 15, 0, anim.len() - 1)], floor(x - camx), floor(y - camy));
 		drawLight(sprLightBasic, 0, x - camx, y - camy);
 	}
 
@@ -2336,27 +2076,8 @@ SwordWaveCS <- class extends WeaponEffect {
 		shape.setPos(x, y);
 	}
 	function draw() {
-		drawSprite(
-			sprCyraSwordWave,
-			floor(frame),
-			x - camx,
-			y - camy,
-			angle,
-			0,
-			1,
-			1,
-			1
-		);
-		drawLight(
-			sprLightFire,
-			0,
-			x - camx,
-			y - camy,
-			0,
-			0,
-			2.0 / 8.0,
-			2.0 / 8.0
-		);
+		drawSprite(sprCyraSwordWave, floor(frame), x - camx, y - camy, angle, 0, 1, 1, 1);
+		drawLight(sprLightFire, 0, x - camx, y - camy, 0, 0, 2.0 / 8.0, 2.0 / 8.0);
 	}
 
 	function destructor() {
@@ -2400,27 +2121,8 @@ AirWaveCS <- class extends WeaponEffect {
 		shape.setPos(x, y);
 	}
 	function draw() {
-		drawSprite(
-			sprExplodeA,
-			getFrames(),
-			x - camx,
-			y - camy,
-			angle - 90,
-			0,
-			1,
-			1,
-			1
-		);
-		drawLight(
-			sprLightFire,
-			0,
-			x - camx,
-			y - camy,
-			0,
-			0,
-			2.0 / 8.0,
-			2.0 / 8.0
-		);
+		drawSprite(sprExplodeA, getFrames(), x - camx, y - camy, angle - 90, 0, 1, 1, 1);
+		drawLight(sprLightFire, 0, x - camx, y - camy, 0, 0, 2.0 / 8.0, 2.0 / 8.0);
 	}
 
 	function destructor() {
@@ -2448,10 +2150,7 @@ FireballCS <- class extends WeaponEffect {
 		if (timer == 0) deleteActor(id);
 
 		if (getFrames() % 3 == 0) {
-			local c =
-				actor[
-					newActor(FlameTiny, x - 4 + randInt(8), y - 4 + randInt(8))
-				];
+			local c = actor[newActor(FlameTiny, x - 4 + randInt(8), y - 4 + randInt(8))];
 			c.frame = 4;
 		}
 		x += hspeed;
@@ -2470,27 +2169,8 @@ FireballCS <- class extends WeaponEffect {
 		shape.setPos(x, y);
 	}
 	function draw() {
-		drawSprite(
-			sprCyraFireWave,
-			getFrames() / 2,
-			x - camx,
-			y - camy,
-			angle,
-			0,
-			1,
-			1,
-			1
-		);
-		drawLight(
-			sprLightFire,
-			0,
-			x - camx,
-			y - camy,
-			0,
-			0,
-			2.0 / 8.0,
-			2.0 / 8.0
-		);
+		drawSprite(sprCyraFireWave, getFrames() / 2, x - camx, y - camy, angle, 0, 1, 1, 1);
+		drawLight(sprLightFire, 0, x - camx, y - camy, 0, 0, 2.0 / 8.0, 2.0 / 8.0);
 	}
 
 	function destructor() {
@@ -2516,8 +2196,7 @@ FreezeWaveCS <- class extends WeaponEffect {
 		timer--;
 		if (timer == 0) deleteActor(id);
 
-		if (getFrames() % 5 == 0)
-			newActor(Glimmer, x - 4 + randInt(8), y - 4 + randInt(8));
+		if (getFrames() % 5 == 0) newActor(Glimmer, x - 4 + randInt(8), y - 4 + randInt(8));
 
 		x += hspeed;
 		y += vspeed;
@@ -2535,27 +2214,8 @@ FreezeWaveCS <- class extends WeaponEffect {
 		shape.setPos(x, y);
 	}
 	function draw() {
-		drawSprite(
-			sprCyraFreezeWave,
-			getFrames() / 2,
-			x - camx,
-			y - camy,
-			angle,
-			0,
-			1,
-			1,
-			1
-		);
-		drawLight(
-			sprLightIce,
-			0,
-			x - camx,
-			y - camy,
-			0,
-			0,
-			2.0 / 8.0,
-			2.0 / 8.0
-		);
+		drawSprite(sprCyraFreezeWave, getFrames() / 2, x - camx, y - camy, angle, 0, 1, 1, 1);
+		drawLight(sprLightIce, 0, x - camx, y - camy, 0, 0, 2.0 / 8.0, 2.0 / 8.0);
 	}
 
 	function destructor() {
@@ -2618,27 +2278,8 @@ ElectricWaveCS <- class extends WeaponEffect {
 	}
 
 	function draw() {
-		drawSprite(
-			sprCyraElectricWave,
-			getFrames() / 2,
-			x - camx,
-			y - camy,
-			angle,
-			0,
-			1,
-			1,
-			1
-		);
-		drawLight(
-			sprLightFire,
-			0,
-			x - camx,
-			y - camy,
-			0,
-			0,
-			1.0 / 8.0,
-			1.0 / 8.0
-		);
+		drawSprite(sprCyraElectricWave, getFrames() / 2, x - camx, y - camy, angle, 0, 1, 1, 1);
+		drawLight(sprLightFire, 0, x - camx, y - camy, 0, 0, 1.0 / 8.0, 1.0 / 8.0);
 	}
 
 	function animation() {}
@@ -2686,27 +2327,8 @@ WaterCrescent <- class extends WeaponEffect {
 		shape.setPos(x, y);
 	}
 	function draw() {
-		drawSprite(
-			sprWaterCrescent,
-			getFrames() / 1,
-			x - camx,
-			y - camy,
-			angle,
-			0,
-			1,
-			1,
-			1
-		);
-		drawLight(
-			sprLightFire,
-			0,
-			x - camx,
-			y - camy,
-			0,
-			0,
-			2.0 / 8.0,
-			2.0 / 8.0
-		);
+		drawSprite(sprWaterCrescent, getFrames() / 1, x - camx, y - camy, angle, 0, 1, 1, 1);
+		drawLight(sprLightFire, 0, x - camx, y - camy, 0, 0, 2.0 / 8.0, 2.0 / 8.0);
 	}
 
 	function destructor() {

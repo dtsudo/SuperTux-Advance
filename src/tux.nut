@@ -41,13 +41,10 @@ Tux <- class extends Player {
 	an = {
 		stand = [0],
 		standN = [
-			0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2,
-			3, 0, 1, 2, 3, 0, 1, 2, 3, 76, 77, 78, 79, 78, 79, 78, 79, 78, 79,
-			78, 77, 76
+			0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 76, 77, 78,
+			79, 78, 79, 78, 79, 78, 79, 78, 77, 76
 		],
-		standF = [
-			0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 76, 77, 78, 79
-		],
+		standF = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 76, 77, 78, 79],
 		standI = [0, 1, 2, 3],
 		standA = [0, 1, 2, 3],
 		standE = [0, 1, 2, 3],
@@ -256,8 +253,7 @@ Tux <- class extends Player {
 		shapeStand.setPos(x, y);
 		if (shape == shapeStand && !placeFree(x, y)) {
 			shape = shapeSlide;
-			if (anim == "stand" || anim == "walk" || anim == "run")
-				anim = "crawl";
+			if (anim == "stand" || anim == "walk" || anim == "run") anim = "crawl";
 		}
 
 		magnetic = stats.weapon == "shock";
@@ -279,8 +275,7 @@ Tux <- class extends Player {
 
 		if (guardtime > 0 && anim != "slide") guardtime--;
 
-		if (firetime <= 0 && stats.energy < stats.maxEnergy)
-			stats.energy += 1.0 / 60.0;
+		if (firetime <= 0 && stats.energy < stats.maxEnergy) stats.energy += 1.0 / 60.0;
 
 		/////////////
 		// ON LAND //
@@ -293,10 +288,8 @@ Tux <- class extends Player {
 			// Animation states
 			switch (anim) {
 				case "stand":
-					if (stats.weapon == "ice" && floor(frame) == 0)
-						frame += 0.01;
-					else if (stats.weapon == "ice" || stats.weapon == "fire")
-						frame += 0.1;
+					if (stats.weapon == "ice" && floor(frame) == 0) frame += 0.01;
+					else if (stats.weapon == "ice" || stats.weapon == "fire") frame += 0.1;
 					else if (stats.weapon == "air") frame += 0.05;
 					else frame += 0.05;
 
@@ -305,11 +298,7 @@ Tux <- class extends Player {
 						frame = 0.0;
 					}
 
-					if (
-						placeFree(x, y + 8) &&
-						!onPlatform() &&
-						fabs(vspeed) >= 1
-					) {
+					if (placeFree(x, y + 8) && !onPlatform() && fabs(vspeed) >= 1) {
 						if (vspeed >= 0) anim = "fall";
 						else anim = "jumpU";
 						frame = 0.0;
@@ -318,15 +307,10 @@ Tux <- class extends Player {
 
 				case "walk":
 					frame += abs(rspeed) / 8;
-					if (abs(rspeed) <= 0.1 || fabs(hspeed) <= 0.1)
-						anim = "stand";
+					if (abs(rspeed) <= 0.1 || fabs(hspeed) <= 0.1) anim = "stand";
 					if (abs(rspeed) > 2.4) anim = "run";
 
-					if (
-						placeFree(x, y + 8) &&
-						!onPlatform() &&
-						fabs(vspeed) >= 1
-					) {
+					if (placeFree(x, y + 8) && !onPlatform() && fabs(vspeed) >= 1) {
 						if (vspeed >= 0) anim = "fall";
 						else anim = "jumpU";
 						frame = 0.0;
@@ -348,11 +332,7 @@ Tux <- class extends Player {
 					else frame += abs(rspeed) / 8;
 					if (abs(rspeed) < 2 && anim != "skid") anim = "walk";
 
-					if (
-						placeFree(x, y + 8) &&
-						!onPlatform() &&
-						fabs(vspeed) >= 1
-					) {
+					if (placeFree(x, y + 8) && !onPlatform() && fabs(vspeed) >= 1) {
 						if (vspeed >= 0) anim = "fall";
 						else anim = "jumpU";
 						frame = 0.0;
@@ -420,36 +400,21 @@ Tux <- class extends Player {
 					frame += 0.25;
 
 					if (floor(frame) > 1) {
-						if (fabs(hspeed) <= 0.5 && stats.weapon != "earth")
-							anim = "crawl";
+						if (fabs(hspeed) <= 0.5 && stats.weapon != "earth") anim = "crawl";
 						else anim = "slide";
 						shape = shapeSlide;
 					}
 					break;
 
 				case "slide":
-					if (stats.weapon == "earth")
-						slideframe += abs(hspeed / rollspeed);
+					if (stats.weapon == "earth") slideframe += abs(hspeed / rollspeed);
 					else slideframe += abs(hspeed / 24.0);
 					frame = slideframe;
 
 					if (!freeDown && hspeed != 0)
-						if (
-							floor((getFrames() % 8) - fabs(hspeed)) == 0 ||
-							fabs(hspeed) > 8
-						) {
-							if (stats.weapon == "fire")
-								newActor(
-									FlameTiny,
-									x - 8 * (hspeed / fabs(hspeed)),
-									y + 10
-								);
-							if (stats.weapon == "ice")
-								newActor(
-									Glimmer,
-									x - 12 * (hspeed / fabs(hspeed)),
-									y + 10
-								);
+						if (floor((getFrames() % 8) - fabs(hspeed)) == 0 || fabs(hspeed) > 8) {
+							if (stats.weapon == "fire") newActor(FlameTiny, x - 8 * (hspeed / fabs(hspeed)), y + 10);
+							if (stats.weapon == "ice") newActor(Glimmer, x - 12 * (hspeed / fabs(hspeed)), y + 10);
 						}
 					break;
 
@@ -472,8 +437,7 @@ Tux <- class extends Player {
 					else anim = "jumpU";
 					frame = 0.0;
 					vspeed -= 1;
-					if (getcon("jump", "hold", true, playerNum) && vspeed > -4)
-						vspeed = -6;
+					if (getcon("jump", "hold", true, playerNum) && vspeed > -4) vspeed = -6;
 					break;
 
 				case "swimDF":
@@ -484,8 +448,7 @@ Tux <- class extends Player {
 			}
 
 			if (anim == "stand" && zoomies) frame += 0.1;
-			if (anim in an && an[anim] != null && anim != "hurt")
-				frame = wrap(frame, 0, an[anim].len() - 1);
+			if (anim in an && an[anim] != null && anim != "hurt") frame = wrap(frame, 0, an[anim].len() - 1);
 
 			if (endMode && hspeed == 0) anim = "win";
 			else if (anim == "win") anim = "stand";
@@ -497,18 +460,13 @@ Tux <- class extends Player {
 				if (
 					!placeFree(x, y + 8) &&
 					(fabs(hspeed) < 8 ||
-						(fabs(hspeed) < 12 &&
-							(stats.weapon == "ice" ||
-								(stats.weapon == "earth" && anim == "slide"))))
+						(fabs(hspeed) < 12 && (stats.weapon == "ice" || (stats.weapon == "earth" && anim == "slide"))))
 				) {
 					if (placeFree(x + 4, y + 1)) hspeed += 0.3;
 					if (placeFree(x - 4, y + 1)) hspeed -= 0.3;
 					if (freeDown2 && vspeed >= 0) vspeed += 1.0;
 					// if(!placeFree(x + hspeed, y) && placeFree(x + hspeed, y - abs(hspeed / 2)) && anim == "slide") vspeed -= 0.25
-				} else if (
-					!placeFree(x, y + 8) &&
-					(fabs(hspeed) < 8 || (fabs(hspeed) < 12 && vspeed > 0))
-				)
+				} else if (!placeFree(x, y + 8) && (fabs(hspeed) < 8 || (fabs(hspeed) < 12 && vspeed > 0)))
 					vspeed += 0.2;
 
 				if (
@@ -516,9 +474,7 @@ Tux <- class extends Player {
 						stats.weapon != "air" &&
 						stats.weapon != "earth" &&
 						!getcon("spec2", "hold", true, playerNum)) ||
-					(fabs(hspeed) < 0.05 &&
-						!placeFree(x, y + 2) &&
-						stats.weapon != "earth") ||
+					(fabs(hspeed) < 0.05 && !placeFree(x, y + 2) && stats.weapon != "earth") ||
 					(fabs(hspeed) < 0.05 &&
 						(stats.weapon != "air" || stats.weapon == "earth") &&
 						!getcon("spec2", "hold", true, playerNum)) ||
@@ -527,22 +483,14 @@ Tux <- class extends Player {
 						!getcon("down", "hold", true, playerNum))
 				) {
 					if (anim == "slide" || anim == "crawl") {
-						if (
-							!getcon("down", "hold", true, playerNum) &&
-							placeFree(x, y - 8, shapeStand)
-						)
-							anim = "walk";
+						if (!getcon("down", "hold", true, playerNum) && placeFree(x, y - 8, shapeStand)) anim = "walk";
 						else anim = "crawl";
 					}
 				}
 
-				if (
-					getcon("jump", "press", true, playerNum) ||
-					getcon("up", "press", true, playerNum)
-				)
+				if (getcon("jump", "press", true, playerNum) || getcon("up", "press", true, playerNum))
 					if (!getcon("spec2", "hold", true, playerNum))
-						if (placeFree(x, y + 2) && placeFree(x, y - 2))
-							anim = "fall";
+						if (placeFree(x, y + 2) && placeFree(x, y - 2)) anim = "fall";
 			}
 
 			if (anim != "climb" && anim != "wall") {
@@ -564,12 +512,7 @@ Tux <- class extends Player {
 					flip = 1;
 			}
 
-			if (
-				stats.weapon != "air" &&
-				stats.stamina < stats.maxStamina &&
-				blinking == 0.0 &&
-				guardtime <= 0
-			)
+			if (stats.weapon != "air" && stats.stamina < stats.maxStamina && blinking == 0.0 && guardtime <= 0)
 				stats.stamina += 0.05;
 
 			// Controls
@@ -582,12 +525,10 @@ Tux <- class extends Player {
 				vspeed >= 0
 			) {
 				canJump = 16;
-				if (stats.weapon == "air" && stats.stamina < stats.maxStamina)
-					stats.stamina += 0.2;
+				if (stats.weapon == "air" && stats.stamina < stats.maxStamina) stats.stamina += 0.2;
 			} else {
 				if (canJump > 0) canJump--;
-				if (stats.weapon == "air" && stats.stamina < 1)
-					stats.stamina += 0.02;
+				if (stats.weapon == "air" && stats.stamina < 1) stats.stamina += 0.02;
 			}
 			if (canMove) {
 				mspeed = 3.0;
@@ -595,8 +536,7 @@ Tux <- class extends Player {
 					local j = null;
 					if (playerNum == 1) j = config.joy;
 					if (playerNum == 2) j = config.joy2;
-					if (abs(joyX(j.index)) > js_max * 0.1)
-						mspeed = (3.0 * abs(joyX(j.index))) / float(js_max);
+					if (abs(joyX(j.index)) > js_max * 0.1) mspeed = (3.0 * abs(joyX(j.index))) / float(js_max);
 				}
 
 				if (stats.weapon == "ice") mspeed += 0.5;
@@ -607,7 +547,7 @@ Tux <- class extends Player {
 
 				// Moving left and right
 				if (zoomies > 0) accel = 0.4;
-				else if (freeDown2) accel = 0.15
+				else if (freeDown2) accel = 0.15;
 				else accel = 0.2;
 
 				if (
@@ -682,14 +622,7 @@ Tux <- class extends Player {
 				if (anim == "slide" && stats.weapon == "fire") {
 					rspeed = hspeed;
 					if (fabs(hspeed) > 4) {
-						if (getFrames() % 4 == 0)
-							fireWeapon(
-								DashFlame,
-								x + hspeed * 2,
-								y + 4 + vspeed,
-								1,
-								id
-							);
+						if (getFrames() % 4 == 0) fireWeapon(DashFlame, x + hspeed * 2, y + 4 + vspeed, 1, id);
 						damageMultF.fire = 0.0;
 					}
 				} else damageMultF.fire = 0.5;
@@ -713,29 +646,17 @@ Tux <- class extends Player {
 							y = round(y);
 						}
 
-					if (
-						getcon("left", "hold", true, playerNum) &&
-						atCrossLadder()
-					)
+					if (getcon("left", "hold", true, playerNum) && atCrossLadder())
 						if (placeFree(x - 2, y)) {
-							if (
-								!getcon("up", "hold", true, playerNum) &&
-								!getcon("down", "hold", true, playerNum)
-							)
+							if (!getcon("up", "hold", true, playerNum) && !getcon("down", "hold", true, playerNum))
 								frame -= climbdir / 8;
 							x -= 1;
 							x = round(x);
 						}
 
-					if (
-						getcon("right", "hold", true, playerNum) &&
-						atCrossLadder()
-					)
+					if (getcon("right", "hold", true, playerNum) && atCrossLadder())
 						if (placeFree(x + 2, y)) {
-							if (
-								!getcon("up", "hold", true, playerNum) &&
-								!getcon("down", "hold", true, playerNum)
-							)
+							if (!getcon("up", "hold", true, playerNum) && !getcon("down", "hold", true, playerNum))
 								frame += climbdir / 8;
 							x += 1;
 							x = round(x);
@@ -747,30 +668,24 @@ Tux <- class extends Player {
 					if (felloff) {
 						anim = "fall";
 						frame = 0.0;
-						if (getcon("up", "hold", true, playerNum))
-							vspeed = -2.5;
+						if (getcon("up", "hold", true, playerNum)) vspeed = -2.5;
 					} else if (!atCrossLadder()) {
 						x -= x % 16 <=> 8;
 						x = round(x);
 					}
 
 					// Change direction
-					if (getcon("right", "press", true, playerNum) && canMove)
-						flip = 0;
-					if (getcon("left", "press", true, playerNum) && canMove)
-						flip = 1;
+					if (getcon("right", "press", true, playerNum) && canMove) flip = 0;
+					if (getcon("left", "press", true, playerNum) && canMove) flip = 1;
 				}
 
 				// Get on ladder
 				if (
-					((getcon("down", "hold", true, playerNum) &&
-						placeFree(x, y + 2)) ||
+					((getcon("down", "hold", true, playerNum) && placeFree(x, y + 2)) ||
 						getcon("up", "hold", true, playerNum)) &&
 					anim != "hurt" &&
 					anim != "climb" &&
-					(vspeed >= 0 ||
-						getcon("down", "press", true, playerNum) ||
-						getcon("up", "press", true, playerNum))
+					(vspeed >= 0 || getcon("down", "press", true, playerNum) || getcon("up", "press", true, playerNum))
 				) {
 					if (atLadder() || atCrossLadder()) {
 						anim = "climb";
@@ -782,10 +697,7 @@ Tux <- class extends Player {
 				}
 
 				// Jumping
-				if (
-					getcon("jump", "press", true, playerNum) ||
-					jumpBuffer > 0
-				) {
+				if (getcon("jump", "press", true, playerNum) || jumpBuffer > 0) {
 					if (
 						onPlatform() &&
 						!placeFree(x, y + 2) &&
@@ -795,36 +707,24 @@ Tux <- class extends Player {
 						y++;
 						canJump = 32;
 						if (!placeFree(x, y) && !placeFree(x, y - 1)) y--;
-					} else if (
-						canJump > 0 &&
-						((anim != "crawl" && anim != "slide") ||
-							placeFree(x, y, shapeStand))
-					) {
+					} else if (canJump > 0 && ((anim != "crawl" && anim != "slide") || placeFree(x, y, shapeStand))) {
 						jumpBuffer = 0;
 						if (anim == "climb") {
 							vspeed = -5;
-							if (getcon("left", "hold", true, playerNum))
-								hspeed = -2;
-							if (getcon("right", "hold", true, playerNum))
-								hspeed = 2;
-						} else if (stats.weapon == "air" || nowInWater)
-							vspeed = -5.0;
+							if (getcon("left", "hold", true, playerNum)) hspeed = -2;
+							if (getcon("right", "hold", true, playerNum)) hspeed = 2;
+						} else if (stats.weapon == "air" || nowInWater) vspeed = -5.0;
 						else vspeed = -5.8;
 						didJump = true;
 						if (stats.weapon != "air") canJump = 0;
-						if (
-							anim != "hurt" &&
-							anim != "dive" &&
-							(stats.weapon != "earth" || anim != "slide")
-						) {
+						if (anim != "hurt" && anim != "dive" && (stats.weapon != "earth" || anim != "slide")) {
 							anim = "jumpU";
 							frame = 0.0;
 						}
 						if (!freeDown2 || (freeRight && freeLeft)) {
 							if (stats.weapon != "air") popSound(sndJump);
 							else {
-								if (useJumpFlash)
-									newActor(MagicJumpFlash, x, y + 12);
+								if (useJumpFlash) newActor(MagicJumpFlash, x, y + 12);
 								popSound(sndFlap);
 							}
 						}
@@ -873,8 +773,7 @@ Tux <- class extends Player {
 							stopSound(sndJump);
 							playSound(sndJump, 0);
 						} else {
-							if (useJumpFlash)
-								newActor(MagicJumpFlash, x, y + 12);
+							if (useJumpFlash) newActor(MagicJumpFlash, x, y + 12);
 							popSound(sndFlap);
 						}
 						stats.stamina--;
@@ -885,27 +784,24 @@ Tux <- class extends Player {
 				if (
 					anim == "fall" &&
 					((getcon("left", "hold", true, playerNum) && !freeLeft) ||
-						(getcon("right", "hold", true, playerNum) &&
-							!freeRight))
+						(getcon("right", "hold", true, playerNum) && !freeRight))
 				) {
-					if (
-						!freeLeft &&
-						!(onIce(x - 8, y) || onIce(x - 8, y - 16))
-					) {
-						if (vspeed > 0.5) vspeed = 0.5;
-						if ((getFrames() / 4) % 4 == 0)
-							newActor(PoofTiny, x - 4, y + 12);
+					if (!freeLeft && !(onIce(x - 8, y) || onIce(x - 8, y - 16))) {
+						if (vspeed > 0.5) {
+							vspeed -= 0.5;
+							if (vspeed < 0.5) vspeed = 0.5;
+						}
+						if (getFrames() % 8 == 0) newActor(PoofTiny, x - 4 + 2 - randInt(4), y + 12 - randInt(2));
 						an["fall"] = an["fallW"];
 						anim = "fall";
 						flip = 0;
 					}
-					if (
-						!freeRight &&
-						!(onIce(x + 8, y) || onIce(x + 8, y - 16))
-					) {
-						if (vspeed > 0.5) vspeed = 0.5;
-						if ((getFrames() / 4) % 4 == 0)
-							newActor(PoofTiny, x + 4, y + 12);
+					if (!freeRight && !(onIce(x + 8, y) || onIce(x + 8, y - 16))) {
+						if (vspeed > 0.5) {
+							vspeed -= 0.5;
+							if (vspeed < 0.5) vspeed = 0.5;
+						}
+						if (getFrames() % 8 == 0) newActor(PoofTiny, x + 4 + 2 - randInt(4), y + 12 - randInt(2));
 						an["fall"] = an["fallW"];
 						anim = "fall";
 						flip = 1;
@@ -921,21 +817,15 @@ Tux <- class extends Player {
 					jumpBuffer = config.jumpBuffer;
 				if (jumpBuffer > 0) jumpBuffer--;
 
-				if (
-					getcon("jump", "release", true, playerNum) &&
-					vspeed < 0 &&
-					didJump
-				) {
+				if (getcon("jump", "release", true, playerNum) && vspeed < 0 && didJump) {
 					didJump = false;
 					vspeed /= 2.5;
 				}
 
 				// Going into slide
 				if (
-					(((!freeDown2 || onPlatform()) &&
-						getcon("down", "hold", true, playerNum)) ||
-						(getcon("spec2", "hold", true, playerNum) &&
-							stats.weapon == "earth")) &&
+					(((!freeDown2 || onPlatform()) && getcon("down", "hold", true, playerNum)) ||
+						(getcon("spec2", "hold", true, playerNum) && stats.weapon == "earth")) &&
 					anim != "dive" &&
 					anim != "slide" &&
 					anim != "jumpU" &&
@@ -945,18 +835,12 @@ Tux <- class extends Player {
 					anim != "wall" &&
 					anim != "crawl"
 				) {
-					if (
-						(placeFree(x + 2, y + 1) && !onPlatform()) ||
-						hspeed >= 1.5
-					) {
+					if ((placeFree(x + 2, y + 1) && !onPlatform()) || hspeed >= 1.5) {
 						anim = "dive";
 						frame = 0.0;
 						flip = 0;
 						popSound(sndSlide, 0);
-					} else if (
-						(placeFree(x - 2, y + 1) && !onPlatform()) ||
-						hspeed <= -1.5
-					) {
+					} else if ((placeFree(x - 2, y + 1) && !onPlatform()) || hspeed <= -1.5) {
 						anim = "dive";
 						frame = 0.0;
 						flip = 1;
@@ -968,22 +852,14 @@ Tux <- class extends Player {
 				}
 
 				if (anim == "crawl") {
-					if (
-						!getcon("down", "hold", true, playerNum) &&
-						placeFree(x, y - 6, shapeStand)
-					)
-						anim = "stand";
+					if (!getcon("down", "hold", true, playerNum) && placeFree(x, y - 6, shapeStand)) anim = "stand";
 					else {
 						// Ping pong animation
 						frame += hspeed / 8.0;
 						shape = shapeSlide;
 					}
 
-					if (
-						(placeFree(x + 2, y + 1) || placeFree(x - 2, y + 1)) &&
-						!onPlatform()
-					)
-						anim = "slide";
+					if ((placeFree(x + 2, y + 1) || placeFree(x - 2, y + 1)) && !onPlatform()) anim = "slide";
 				}
 			} else rspeed = min(rspeed, abs(hspeed));
 
@@ -996,33 +872,17 @@ Tux <- class extends Player {
 					}
 				} else {
 					if (hspeed > 0) {
-						if (
-							!(
-								mspeed > 2 &&
-								getcon("right", "hold", true, playerNum)
-							) ||
-							anim == "crawl" ||
-							!canMove
-						)
+						if (!(mspeed > 2 && getcon("right", "hold", true, playerNum)) || anim == "crawl" || !canMove)
 							hspeed -= friction;
 					}
 					if (hspeed < 0) {
-						if (
-							!(
-								mspeed > 2 &&
-								getcon("left", "hold", true, playerNum)
-							) ||
-							anim == "crawl" ||
-							!canMove
-						)
+						if (!(mspeed > 2 && getcon("left", "hold", true, playerNum)) || anim == "crawl" || !canMove)
 							hspeed += friction;
 					}
 				}
 			} else if (anim != "slide" && anim != "dive") {
-				if (hspeed > 0 && !getcon("right", "hold", true, playerNum))
-					hspeed -= friction / 3.0;
-				if (hspeed < 0 && !getcon("left", "hold", true, playerNum))
-					hspeed += friction / 3.0;
+				if (hspeed > 0 && !getcon("right", "hold", true, playerNum)) hspeed -= friction / 3.0;
+				if (hspeed < 0 && !getcon("left", "hold", true, playerNum)) hspeed += friction / 3.0;
 			}
 
 			if (fabs(hspeed) < friction) hspeed = 0.0;
@@ -1030,8 +890,7 @@ Tux <- class extends Player {
 				(placeFree(x, y + 2) || vspeed < 0) &&
 				(vspeed < 2 ||
 					(vspeed < 16 &&
-						(stats.weapon != "air" ||
-							getcon("down", "hold", true, playerNum)) &&
+						(stats.weapon != "air" || getcon("down", "hold", true, playerNum)) &&
 						!nowInWater)) &&
 				antigrav <= 0
 			)
@@ -1040,23 +899,12 @@ Tux <- class extends Player {
 			if (!freeUp && vspeed < 0) vspeed = 0.0; // If Tux bumped his head
 
 			// Landing while sliding
-			if (
-				anim == "slide" &&
-				!placeFree(x, y + 1) &&
-				vspeed >= 2 &&
-				placeFree(x + hspeed, y) &&
-				!onPlatform()
-			) {
+			if (anim == "slide" && !placeFree(x, y + 1) && vspeed >= 2 && placeFree(x + hspeed, y) && !onPlatform()) {
 				if (flip) hspeed -= vspeed / 2.5;
 				else hspeed += vspeed / 2.5;
 				vspeed /= 2;
 			}
-			if (
-				anim == "dive" &&
-				vspeed >= 2 &&
-				!placeFree(x, y + 1) &&
-				stats.weapon == "earth"
-			) {
+			if (anim == "dive" && vspeed >= 2 && !placeFree(x, y + 1) && stats.weapon == "earth") {
 				hspeed *= 2.0;
 				vspeed /= 2;
 			}
@@ -1067,14 +915,12 @@ Tux <- class extends Player {
 				if (stats.weapon == "ice") {
 					if (anim == "slide") speedLimit = 8.0;
 					else speedLimit = 8.0;
-				} else if (stats.weapon == "earth" && anim == "slide")
-					speedLimit = 8.0;
+				} else if (stats.weapon == "earth" && anim == "slide") speedLimit = 8.0;
 				else {
 					if (slippery) speedLimit = 7.0;
 				}
 				if (hspeed > speedLimit) hspeed = max(speedLimit, hspeed * 0.9);
-				if (hspeed < -speedLimit)
-					hspeed = -max(speedLimit, hspeed * 0.9);
+				if (hspeed < -speedLimit) hspeed = -max(speedLimit, hspeed * 0.9);
 			}
 
 			// Gravity cases
@@ -1094,13 +940,7 @@ Tux <- class extends Player {
 						) {
 							local fx = 6;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(
-								Fireball,
-								x + fx,
-								y - 4,
-								1,
-								id
-							);
+							local c = fireWeapon(Fireball, x + fx, y - 4, 1, id);
 							if (!flip) c.hspeed = 5;
 							else c.hspeed = -5;
 							c.hspeed += hspeed + ehspeed;
@@ -1156,13 +996,7 @@ Tux <- class extends Player {
 						) {
 							local fx = 6;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(
-								Earthball,
-								x + fx,
-								y - 4,
-								1,
-								id
-							);
+							local c = fireWeapon(Earthball, x + fx, y - 4, 1, id);
 							if (!flip) c.hspeed = 5;
 							else c.hspeed = -5;
 							c.hspeed += hspeed + ehspeed;
@@ -1220,13 +1054,7 @@ Tux <- class extends Player {
 						) {
 							local fx = 6;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(
-								Waterball,
-								x + fx,
-								y - 4,
-								1,
-								id
-							);
+							local c = fireWeapon(Waterball, x + fx, y - 4, 1, id);
 							if (!flip) c.hspeed = 5;
 							else c.hspeed = -5;
 							c.hspeed += hspeed + ehspeed;
@@ -1237,10 +1065,7 @@ Tux <- class extends Player {
 								c.vspeed = -2.5;
 								c.hspeed /= 1.5;
 							}
-							if (
-								getcon("down", "hold", true, playerNum) &&
-								freeDown2
-							) {
+							if (getcon("down", "hold", true, playerNum) && freeDown2) {
 								c.vspeed = 2;
 								c.hspeed /= 1.5;
 							}
@@ -1346,13 +1171,7 @@ Tux <- class extends Player {
 						) {
 							local fx = 6;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(
-								Earthball,
-								x + fx,
-								y - 4,
-								1,
-								id
-							);
+							local c = fireWeapon(Earthball, x + fx, y - 4, 1, id);
 							if (!flip) c.hspeed = 5;
 							else c.hspeed = -5;
 							c.hspeed += hspeed + ehspeed;
@@ -1410,13 +1229,7 @@ Tux <- class extends Player {
 						) {
 							local fx = 6;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(
-								Waterball,
-								x + fx,
-								y - 4,
-								1,
-								id
-							);
+							local c = fireWeapon(Waterball, x + fx, y - 4, 1, id);
 							if (!flip) c.hspeed = 5;
 							else c.hspeed = -5;
 							c.hspeed += hspeed + ehspeed;
@@ -1427,10 +1240,7 @@ Tux <- class extends Player {
 								c.vspeed = -2.5;
 								c.hspeed /= 1.5;
 							}
-							if (
-								getcon("down", "hold", true, playerNum) &&
-								freeDown2
-							) {
+							if (getcon("down", "hold", true, playerNum) && freeDown2) {
 								c.vspeed = 2;
 								c.hspeed /= 1.5;
 							}
@@ -1478,18 +1288,12 @@ Tux <- class extends Player {
 							playSound(sndSlide, 0);
 							if (flip == 0 && hspeed < 2) hspeed = 2;
 							if (flip == 1 && hspeed > -2) hspeed = -2;
-						}
-						else popSound(noot);
+						} else popSound(noot);
 						break;
 
 					case "air":
 					case "ice":
-						if (
-							(anim == "jumpT" ||
-								anim == "jumpU" ||
-								anim == "fall") &&
-							anim != "hurt"
-						) {
+						if ((anim == "jumpT" || anim == "jumpU" || anim == "fall") && anim != "hurt") {
 							anim = "dive";
 							frame = 0.0;
 							playSound(sndSlide, 0);
@@ -1497,8 +1301,7 @@ Tux <- class extends Player {
 								if (flip == 0 && hspeed < 2) hspeed = 2;
 								if (flip == 1 && hspeed > -2) hspeed = -2;
 							}
-						}
-						else popSound(noot);
+						} else popSound(noot);
 						break;
 
 					default:
@@ -1529,8 +1332,7 @@ Tux <- class extends Player {
 				case "swimD":
 				case "swimUF":
 				case "swimDF":
-					frame +=
-						sqrt(abs(hspeed * hspeed) + abs(vspeed * vspeed)) / 12;
+					frame += sqrt(abs(hspeed * hspeed) + abs(vspeed * vspeed)) / 12;
 					break;
 				case "hurt":
 					frame += 0.1;
@@ -1544,8 +1346,7 @@ Tux <- class extends Player {
 					break;
 			}
 
-			if (anim in an && an[anim] != null && anim != "hurt")
-				frame = wrap(abs(frame), 0, an[anim].len() - 1);
+			if (anim in an && an[anim] != null && anim != "hurt") frame = wrap(abs(frame), 0, an[anim].len() - 1);
 
 			// Swich swim directions
 			if (anim != "hurt") {
@@ -1564,12 +1365,8 @@ Tux <- class extends Player {
 					local j = null;
 					if (playerNum == 1) j = config.joy;
 					if (playerNum == 2) j = config.joy2;
-					if (abs(joyX(j.index)) > js_max * 0.1)
-						mspeed = (3.0 * abs(joyX(j.index))) / float(js_max);
-					if (
-						abs(joyY(j.index)) > abs(joyX(j.index)) &&
-						abs(joyY(j.index)) > js_max * 0.1
-					)
+					if (abs(joyX(j.index)) > js_max * 0.1) mspeed = (3.0 * abs(joyX(j.index))) / float(js_max);
+					if (abs(joyY(j.index)) > abs(joyX(j.index)) && abs(joyY(j.index)) > js_max * 0.1)
 						mspeed = (3.0 / float(js_max)) * abs(joyY(j.index));
 				}
 
@@ -1613,29 +1410,20 @@ Tux <- class extends Player {
 				)
 					vspeed -= accel;
 
-				if (
-					stats.stamina >= (stats.weapon == "water" ? 0.5 : 1) &&
-					getcon("spec2", "press", true, playerNum)
-				) {
+				if (stats.stamina >= (stats.weapon == "water" ? 0.5 : 1) && getcon("spec2", "press", true, playerNum)) {
 					local dashdir = 0;
 					local dashspd = max(6, distance2(0, 0, hspeed, vspeed));
 
 					if (getcon("left", "hold", true, playerNum)) {
-						if (getcon("up", "hold", true, playerNum))
-							dashdir = 225;
-						else if (getcon("down", "hold", true, playerNum))
-							dashdir = 135;
+						if (getcon("up", "hold", true, playerNum)) dashdir = 225;
+						else if (getcon("down", "hold", true, playerNum)) dashdir = 135;
 						else dashdir = 180;
 					} else if (getcon("right", "hold", true, playerNum)) {
-						if (getcon("up", "hold", true, playerNum))
-							dashdir = -45;
-						else if (getcon("down", "hold", true, playerNum))
-							dashdir = 45;
+						if (getcon("up", "hold", true, playerNum)) dashdir = -45;
+						else if (getcon("down", "hold", true, playerNum)) dashdir = 45;
 						else dashdir = 0;
-					} else if (getcon("up", "hold", true, playerNum))
-						dashdir = -90;
-					else if (getcon("down", "hold", true, playerNum))
-						dashdir = 90;
+					} else if (getcon("up", "hold", true, playerNum)) dashdir = -90;
+					else if (getcon("down", "hold", true, playerNum)) dashdir = 90;
 					else dashdir = flip == 0 ? 0 : 180;
 
 					hspeed = lendirX(dashspd, dashdir);
@@ -2127,18 +1915,17 @@ Tux <- class extends Player {
 
 		if (placeFree(x, y + vspeed)) y += vspeed;
 		else {
-			local didstep = false
+			local didstep = false;
 
 			//Move side-to-side underwater
-			if(nowInWater) {
-				for(local i = 1; i <= 4; i++) {
-					if(placeFree(x + i, y + vspeed)) {
+			if (nowInWater) {
+				for (local i = 1; i <= 4; i++) {
+					if (placeFree(x + i, y + vspeed)) {
 						x += i;
 						y += vspeed;
 						didstep = true;
 						break;
-					}
-					else if(placeFree(x - i, y + vspeed)) {
+					} else if (placeFree(x - i, y + vspeed)) {
 						x -= i;
 						y += vspeed;
 						didstep = true;
@@ -2147,7 +1934,7 @@ Tux <- class extends Player {
 				}
 			}
 
-			if(!didstep) {
+			if (!didstep) {
 				vspeed /= 2;
 				if (fabs(vspeed) < 0.01) vspeed = 0;
 				// if(fabs(vspeed) > 1) vspeed -= vspeed / fabs(vspeed)
@@ -2164,10 +1951,7 @@ Tux <- class extends Player {
 				if (wasOnGround)
 					for (local i = 0; i < min(max(8, abs(hspeed * 3)), 12); i++)
 						if (
-							!placeFree(
-								x,
-								y + min(max(8, abs(hspeed * 3)), 12) - i
-							) &&
+							!placeFree(x, y + min(max(8, abs(hspeed * 3)), 12) - i) &&
 							placeFree(x, y + 1) &&
 							!swimming &&
 							vspeed >= 0 &&
@@ -2190,8 +1974,7 @@ Tux <- class extends Player {
 						didstep = true;
 						// if(slippery && !swimming && !placeFree(xprev, yprev + 2)) vspeed -= 2.0
 						break;
-					}
-					else if(nowInWater && placeFree(x + hspeed, y + i)) {
+					} else if (nowInWater && placeFree(x + hspeed, y + i)) {
 						x += hspeed;
 						y += i;
 						if (i > 2) {
@@ -2205,8 +1988,7 @@ Tux <- class extends Player {
 				}
 
 				// If no step was taken, slow down
-				if (didstep == false && fabs(hspeed) >= 1)
-					hspeed -= hspeed / fabs(hspeed);
+				if (didstep == false && fabs(hspeed) >= 1) hspeed -= hspeed / fabs(hspeed);
 				else if (didstep == false && fabs(hspeed) < 1) hspeed = 0;
 			}
 		}
@@ -2234,11 +2016,7 @@ Tux <- class extends Player {
 			if (blinking == 0) {
 				blinking = 60;
 				playSound(sndHurt, 0);
-				if (
-					stats.weapon == "earth" &&
-					anim == "slide" &&
-					stats.stamina > 0
-				) {
+				if (stats.weapon == "earth" && anim == "slide" && stats.stamina > 0) {
 					stats.stamina -= hurt;
 					guardtime = 180;
 					newActor(Spark, x, y);
@@ -2266,19 +2044,9 @@ Tux <- class extends Player {
 
 		// After image
 		if (zoomies > 0 && getFrames() % 2 == 0)
-			newActor(AfterImage, x, y, [
-				sprite,
-				an[anim][wrap(floor(frame), 0, an[anim].len() - 1)],
-				0,
-				flip,
-				0,
-				1,
-				1
-			]);
+			newActor(AfterImage, x, y, [sprite, an[anim][wrap(floor(frame), 0, an[anim].len() - 1)], 0, flip, 0, 1, 1]);
 
-		inMelee =
-			["slide", "drill"].find(anim) != null ||
-			(swimming && guardtime > 100);
+		inMelee = ["slide", "drill"].find(anim) != null || (swimming && guardtime > 100);
 	}
 
 	function draw() {
@@ -2339,18 +2107,7 @@ Tux <- class extends Player {
 			if (anim in an && an[anim] != null) {
 				frame = wrap(frame, 0, an[anim].len() - 1);
 				if (blinking == 0 || anim == "hurt") {
-					drawSpriteZ(
-						2,
-						sprite,
-						an[anim][floor(frame)] + animOffset,
-						x - camx,
-						y - camy,
-						0,
-						flip,
-						1,
-						1,
-						1
-					);
+					drawSpriteZ(2, sprite, an[anim][floor(frame)] + animOffset, x - camx, y - camy, 0, flip, 1, 1, 1);
 				}
 				drawSpriteZ(
 					2,
@@ -2375,8 +2132,7 @@ Tux <- class extends Player {
 		// Transformation flash
 		if (tftime != -1) {
 			if (tftime < 4) {
-				if (!hidden)
-					drawSpriteZ(3, sprTFflash, tftime, x - camx, y - camy);
+				if (!hidden) drawSpriteZ(3, sprTFflash, tftime, x - camx, y - camy);
 				tftime += 0.25;
 			} else tftime = -1;
 		}
@@ -2386,23 +2142,14 @@ Tux <- class extends Player {
 
 	function atLadder() {
 		// Save current location and move
-		local ns = Rec(
-			x + shape.ox,
-			y + shape.oy,
-			shape.w,
-			shape.h,
-			shape.kind
-		);
+		local ns = Rec(x + shape.ox, y + shape.oy, shape.w, shape.h, shape.kind);
 		local cx = floor(x / 16);
 		local cy = floor(y / 16);
 
 		// Check that the solid layer exists
 		local wl = null; // Working layer
 		for (local i = 0; i < gvMap.data.layers.len(); i++) {
-			if (
-				gvMap.data.layers[i].type == "tilelayer" &&
-				gvMap.data.layers[i].name == "solid"
-			) {
+			if (gvMap.data.layers[i].type == "tilelayer" && gvMap.data.layers[i].name == "solid") {
 				wl = gvMap.data.layers[i];
 				break;
 			}
@@ -2412,10 +2159,7 @@ Tux <- class extends Player {
 		if (wl != null) {
 			local tile = cx + cy * wl.width;
 			if (tile >= 0 && tile < wl.data.len())
-				if (
-					wl.data[tile] - gvMap.solidfid == 29 ||
-					wl.data[tile] - gvMap.solidfid == 50
-				) {
+				if (wl.data[tile] - gvMap.solidfid == 29 || wl.data[tile] - gvMap.solidfid == 50) {
 					gvMap.shape.setPos(cx * 16 + 8, cy * 16 + 8);
 					gvMap.shape.kind = 0;
 					gvMap.shape.w = 1.0;
@@ -2536,8 +2280,7 @@ Lutris <- class extends Tux {
 				drawSpriteZ(
 					2,
 					myAura,
-					an[anim][wrap(floor(frame), 0, an[anim].len() - 1)] +
-						animOffset,
+					an[anim][wrap(floor(frame), 0, an[anim].len() - 1)] + animOffset,
 					x - camx + 1,
 					y - camy,
 					0,
@@ -2550,8 +2293,7 @@ Lutris <- class extends Tux {
 				drawSpriteZ(
 					2,
 					myAura,
-					an[anim][wrap(floor(frame), 0, an[anim].len() - 1)] +
-						animOffset,
+					an[anim][wrap(floor(frame), 0, an[anim].len() - 1)] + animOffset,
 					x - camx,
 					y - camy + 1,
 					0,
@@ -2564,8 +2306,7 @@ Lutris <- class extends Tux {
 				drawSpriteZ(
 					2,
 					myAura,
-					an[anim][wrap(floor(frame), 0, an[anim].len() - 1)] +
-						animOffset,
+					an[anim][wrap(floor(frame), 0, an[anim].len() - 1)] + animOffset,
 					x - camx - 1,
 					y - camy,
 					0,
@@ -2578,8 +2319,7 @@ Lutris <- class extends Tux {
 				drawSpriteZ(
 					2,
 					myAura,
-					an[anim][wrap(floor(frame), 0, an[anim].len() - 1)] +
-						animOffset,
+					an[anim][wrap(floor(frame), 0, an[anim].len() - 1)] + animOffset,
 					x - camx,
 					y - camy - 1,
 					0,

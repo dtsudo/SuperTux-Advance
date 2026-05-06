@@ -40,6 +40,7 @@ Surge <- class extends Player {
 	dirAngle = 0.0;
 	didAirSpecial = false;
 	homingTarget = null;
+	homingSpeed = 0.0;
 	shockEffect = null;
 	sideRunning = false;
 	tricking = false;
@@ -50,8 +51,8 @@ Surge <- class extends Player {
 
 	an = {
 		stand = [
-			0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 6, 6, 6, 6, 6, 6, 6,
-			6, 48, 49, 48, 49, 48, 49, 48, 49, 50, 51, 51, 51, 51, 50, 48
+			0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 6, 6, 6, 6, 6, 6, 6, 6, 48, 49, 48, 49, 48, 49, 48, 49, 50,
+			51, 51, 51, 51, 50, 48
 		],
 		skid = [4, 5],
 		crouch = [7],
@@ -249,15 +250,9 @@ Surge <- class extends Player {
 
 		base.run();
 
-		if (firetime <= 0 && stats.energy < stats.maxEnergy)
-			stats.energy += 1.0 / 30.0;
+		if (firetime <= 0 && stats.energy < stats.maxEnergy) stats.energy += 1.0 / 30.0;
 
-		if (
-			!freeDown2 &&
-			stats.stamina < stats.maxStamina &&
-			(stats.weapon != "earth" || !blinking) &&
-			anim != "ball"
-		)
+		if (!freeDown2 && stats.stamina < stats.maxStamina && (stats.weapon != "earth" || !blinking) && anim != "ball")
 			stats.stamina += 0.25;
 
 		if (getcon("swap", "press", true, playerNum)) swapitem();
@@ -280,28 +275,18 @@ Surge <- class extends Player {
 			antigrav <= 0 &&
 			!sideRunning
 		)
-			vspeed +=
-				vspeed > 5 && anim != "stomp" ? gravity / vspeed : gravity;
+			vspeed += vspeed > 5 && anim != "stomp" ? gravity / vspeed : gravity;
 		else if (antigrav > 0) antigrav--;
 		if (!placeFree(x, y - 1) && vspeed < 0) vspeed = 0.0;
 
 		// Rolling
 		slippery = anim == "ball" || onIce();
 		if (slippery) {
-			if (
-				(!placeFree(x, y + 8) || !placeFree(x - hspeed * 2, y + 8)) &&
-				fabs(hspeed) < 12
-			) {
-				if (
-					placeFree(x + max(4, hspeed), y + 1) &&
-					!onPlatform(hspeed)
-				) {
+			if ((!placeFree(x, y + 8) || !placeFree(x - hspeed * 2, y + 8)) && fabs(hspeed) < 12) {
+				if (placeFree(x + max(4, hspeed), y + 1) && !onPlatform(hspeed)) {
 					hspeed += 0.1;
 				}
-				if (
-					placeFree(x + min(-4, hspeed), y + 1) &&
-					!onPlatform(hspeed)
-				) {
+				if (placeFree(x + min(-4, hspeed), y + 1) && !onPlatform(hspeed)) {
 					hspeed -= 0.1;
 				}
 			}
@@ -319,16 +304,10 @@ Surge <- class extends Player {
 				break;
 				break;
 			case "ball":
-				if (
-					hspeed == 0 ||
-					(getcon("up", "hold", true, playerNum) &&
-						placeFree(x, y - 4))
-				)
-					anim = "stand";
+				if (hspeed == 0 || (getcon("up", "hold", true, playerNum) && placeFree(x, y - 4))) anim = "stand";
 				break;
 			case "fly":
-				if (vspeed > (getcon("down", "hold", true, playerNum) ? 4 : 2))
-					vspeed -= 0.2;
+				if (vspeed > (getcon("down", "hold", true, playerNum) ? 4 : 2)) vspeed -= 0.2;
 
 				if (getcon("spec2", "press", true, playerNum)) {
 					anim = "jumpR";
@@ -347,8 +326,7 @@ Surge <- class extends Player {
 					anim = "jumpR";
 					didAirSpecial = false;
 					vspeed = -6.0 - stompCount;
-					if (stompCount < 8)
-						stompCount++;
+					if (stompCount < 8) stompCount++;
 					if (getcon("down", "hold", true, playerNum)) {
 						vspeed = -4.0;
 						stompCount = 0;
@@ -360,10 +338,7 @@ Surge <- class extends Player {
 		// Hydroplane
 		hydroplaning = false;
 		shapeHydro.setPos(x + hspeed, y + vspeed);
-		if (
-			(fabs(hspeed) > 6.2 || fabs(hspeed) + fabs(ehspeed) > 6.2) &&
-			abs(vspeed) < 4
-		) {
+		if ((fabs(hspeed) > 6.2 || fabs(hspeed) + fabs(ehspeed) > 6.2) && abs(vspeed) < 4) {
 			local oldShape = shape;
 			shape = shapeHydro;
 			local liquidBody = inWater(x, y + 6);
@@ -379,10 +354,8 @@ Surge <- class extends Player {
 					}
 					vspeed = 0.0;
 					canJump = 4;
-					if (anim == "jumpR" || anim == "jumpT" || anim == "fall")
-						anim = "stand";
-					if (getFrames() % 4 == 0)
-						newActor(Splash, x, liquidBody.y, liquidBody.substance);
+					if (anim == "jumpR" || anim == "jumpT" || anim == "fall") anim = "stand";
+					if (getFrames() % 4 == 0) newActor(Splash, x, liquidBody.y, liquidBody.substance);
 				}
 			}
 			shape = oldShape;
@@ -430,8 +403,7 @@ Surge <- class extends Player {
 		}
 
 		if (hspeed != 0) {
-			wasOnGround =
-				(!placeFree(x, y + 2) || onPlatform()) && !hydroplaning;
+			wasOnGround = (!placeFree(x, y + 2) || onPlatform()) && !hydroplaning;
 
 			if (placeFree(x + hspeed, y)) {
 				// Try to move straight
@@ -439,10 +411,7 @@ Surge <- class extends Player {
 				if (wasOnGround)
 					for (local i = 0; i < min(max(8, abs(hspeed * 3)), 12); i++)
 						if (
-							!placeFree(
-								x,
-								y + min(max(8, abs(hspeed * 3)), 12) - i
-							) &&
+							!placeFree(x, y + min(max(8, abs(hspeed * 3)), 12) - i) &&
 							placeFree(x, y + 1) &&
 							!swimming &&
 							vspeed >= 0 &&
@@ -465,8 +434,7 @@ Surge <- class extends Player {
 						didstep = true;
 						// if(slippery && !swimming && !placeFree(xprev, yprev + 2) && fabs(hspeed) > 4.0) vspeed -= 2.0
 						break;
-					}
-					else if(nowInWater && placeFree(x + hspeed, y + i)) {
+					} else if (nowInWater && placeFree(x + hspeed, y + i)) {
 						x += hspeed;
 						y += i;
 						if (i > 2) {
@@ -490,20 +458,13 @@ Surge <- class extends Player {
 					vspeed -= 1.0;
 
 				// If no step was taken, slow down
-				if (didstep == false && fabs(hspeed) >= 1)
-					hspeed -= hspeed / fabs(hspeed) / 2.0;
+				if (didstep == false && fabs(hspeed) >= 1) hspeed -= hspeed / fabs(hspeed) / 2.0;
 				else if (didstep == false && fabs(hspeed) < 1) hspeed = 0;
 			}
 		}
 
 		shape = shapeStand;
-		if (
-			anim == "ball" ||
-			!placeFree(x, y) ||
-			anim == "charge" ||
-			anim == "crawl" ||
-			anim == "crouch"
-		)
+		if (anim == "ball" || !placeFree(x, y) || anim == "charge" || anim == "crawl" || anim == "crouch")
 			shape = shapeSlide;
 
 		shapeStand.setPos(x, y);
@@ -535,41 +496,17 @@ Surge <- class extends Player {
 				if (hspeed < 0) hspeed += friction / 2.0;
 			} else {
 				if (hspeed > 0) {
-					if (
-						!(
-							mspeed > 2 &&
-							getcon("right", "hold", true, playerNum)
-						) ||
-						anim == "hurt" ||
-						!canMove
-					)
+					if (!(mspeed > 2 && getcon("right", "hold", true, playerNum)) || anim == "hurt" || !canMove)
 						hspeed -= friction;
 				}
 				if (hspeed < 0) {
-					if (
-						!(
-							mspeed > 2 &&
-							getcon("left", "hold", true, playerNum)
-						) ||
-						anim == "hurt" ||
-						!canMove
-					)
+					if (!(mspeed > 2 && getcon("left", "hold", true, playerNum)) || anim == "hurt" || !canMove)
 						hspeed += friction;
 				}
 			}
 		} else {
-			if (
-				hspeed > 0 &&
-				!getcon("right", "hold", true, playerNum) &&
-				anim != "ball"
-			)
-				hspeed -= friction / 3.0;
-			if (
-				hspeed < 0 &&
-				!getcon("left", "hold", true, playerNum) &&
-				anim != "ball"
-			)
-				hspeed += friction / 3.0;
+			if (hspeed > 0 && !getcon("right", "hold", true, playerNum) && anim != "ball") hspeed -= friction / 3.0;
+			if (hspeed < 0 && !getcon("left", "hold", true, playerNum) && anim != "ball") hspeed += friction / 3.0;
 		}
 
 		// Rotation
@@ -594,8 +531,7 @@ Surge <- class extends Player {
 	function animation() {
 		animOffset = 0.0;
 
-		if (anim != "stomp" && anim != "jumpR")
-			stompCount = 0;
+		if (anim != "stomp" && anim != "jumpR") stompCount = 0;
 
 		switch (anim) {
 			case "stand":
@@ -612,28 +548,15 @@ Surge <- class extends Player {
 				} else if (flip == 1 && hspeed > 0 && !endMode) {
 					hspeed -= 0.1;
 					anim = "skid";
-				} else if ((anim == "crouch" || anim == "crawl") && hspeed != 0)
-					anim = "crawl";
+				} else if ((anim == "crouch" || anim == "crawl") && hspeed != 0) anim = "crawl";
 				else anim = "walk";
 
 				if (anim == "walk" || anim == "crawl") {
 					// Offset frame based on movement speed
 					if (sideRunning) rspeed = fabs(vspeed);
-					if (
-						abs(rspeed) <= 0.1 &&
-						(fabs(hspeed) <= 0.1 || slippery) &&
-						anim != "crawl"
-					)
-						anim = "stand";
-					else if (
-						fabs(rspeed) <
-							max(fabs(hspeed), fabs(hspeed) + fabs(ehspeed)) &&
-						!slippery
-					)
-						rspeed = max(
-							fabs(hspeed),
-							fabs(hspeed) + fabs(ehspeed)
-						);
+					if (abs(rspeed) <= 0.1 && (fabs(hspeed) <= 0.1 || slippery) && anim != "crawl") anim = "stand";
+					else if (fabs(rspeed) < max(fabs(hspeed), fabs(hspeed) + fabs(ehspeed)) && !slippery)
+						rspeed = max(fabs(hspeed), fabs(hspeed) + fabs(ehspeed));
 
 					if (!placeFree(x, y, shapeStand)) anim = "crawl";
 				}
@@ -651,32 +574,13 @@ Surge <- class extends Player {
 					frame = 0.0;
 				}
 
-				if (
-					sideRunning
-						? -vspeed
-						: max(fabs(hspeed), fabs(hspeed) + fabs(ehspeed)) > 2
-				)
-					animOffset = 8.0;
-				if (
-					sideRunning
-						? -vspeed
-						: max(fabs(hspeed), fabs(hspeed) + fabs(ehspeed)) > 4
-				)
-					animOffset = 16.0;
-				if (
-					sideRunning
-						? -vspeed
-						: max(fabs(hspeed), fabs(hspeed) + fabs(ehspeed)) > 6.2
-				)
-					animOffset = 24.0;
+				if (sideRunning ? -vspeed : max(fabs(hspeed), fabs(hspeed) + fabs(ehspeed)) > 2) animOffset = 8.0;
+				if (sideRunning ? -vspeed : max(fabs(hspeed), fabs(hspeed) + fabs(ehspeed)) > 4) animOffset = 16.0;
+				if (sideRunning ? -vspeed : max(fabs(hspeed), fabs(hspeed) + fabs(ehspeed)) > 6.2) animOffset = 24.0;
 
 				if (anim == "skid") animOffset = 0.0;
 
-				if (
-					(anim == "stand" || fabs(hspeed) <= 0.2) &&
-					getcon("spec2", "hold", true, playerNum) &&
-					canMove
-				) {
+				if ((anim == "stand" || fabs(hspeed) <= 0.2) && getcon("spec2", "hold", true, playerNum) && canMove) {
 					frame = 0.0;
 					animOffset = 0.0;
 					anim = "charge";
@@ -684,10 +588,7 @@ Surge <- class extends Player {
 				}
 
 				if (anim == "crawl" || anim == "crouch") {
-					if (
-						!getcon("down", "hold", true, playerNum) &&
-						placeFree(x, y, shapeStand)
-					) {
+					if (!getcon("down", "hold", true, playerNum) && placeFree(x, y, shapeStand)) {
 						anim = "stand";
 						frame = 0.0;
 					}
@@ -699,8 +600,7 @@ Surge <- class extends Player {
 				}
 				if (
 					anim == "stand" &&
-					((getcon("down", "hold", true, playerNum) && canMove) ||
-						!placeFree(x, y, shapeStand))
+					((getcon("down", "hold", true, playerNum) && canMove) || !placeFree(x, y, shapeStand))
 				) {
 					anim = "crouch";
 				}
@@ -714,10 +614,7 @@ Surge <- class extends Player {
 				frame += 0.25;
 				if (anim == "jumpR") {
 					frame += 0.25;
-					if (
-						getcon("up", "hold", true, playerNum) &&
-						(!freeLeft || !freeRight)
-					) {
+					if (getcon("up", "hold", true, playerNum) && (!freeLeft || !freeRight)) {
 						anim = "walk";
 						sideRunning = true;
 						vspeed = min(-4.0, max(-8.0, vspeed * 2.0));
@@ -726,9 +623,7 @@ Surge <- class extends Player {
 				} else if (!freeLeft || !freeRight) anim = "walk";
 
 				if (
-					(!placeFree(x, y + 4) ||
-						!placeFree(x - hspeed * 2, y + 4) ||
-						onPlatform()) &&
+					(!placeFree(x, y + 4) || !placeFree(x - hspeed * 2, y + 4) || onPlatform()) &&
 					vspeed >= 0 &&
 					!antigrav
 				) {
@@ -747,9 +642,7 @@ Surge <- class extends Player {
 			case "jumpT":
 				frame += 0.2;
 				if (
-					(!placeFree(x, y + 4) ||
-						!placeFree(x - hspeed * 2, y + 4) ||
-						onPlatform()) &&
+					(!placeFree(x, y + 4) || !placeFree(x - hspeed * 2, y + 4) || onPlatform()) &&
 					vspeed >= 0 &&
 					!antigrav
 				) {
@@ -768,9 +661,7 @@ Surge <- class extends Player {
 			case "fall":
 				frame += 0.25;
 				if (
-					(!placeFree(x, y + 4) ||
-						!placeFree(x - hspeed * 2, y + 4) ||
-						onPlatform()) &&
+					(!placeFree(x, y + 4) || !placeFree(x - hspeed * 2, y + 4) || onPlatform()) &&
 					vspeed >= 0 &&
 					!antigrav
 				) {
@@ -819,13 +710,7 @@ Surge <- class extends Player {
 			case "charge":
 				local chargeThreshold = max(2, ceil(chargeTimer));
 
-				if (config.rumble)
-					joyRumble(
-						playerNum - 1,
-						chargeTimer / 10,
-						chargeTimer / 10,
-						16
-					);
+				if (config.rumble) joyRumble(playerNum - 1, chargeTimer / 10, chargeTimer / 10, 16);
 
 				if (chargeTimer < 10) {
 					if (
@@ -840,8 +725,7 @@ Surge <- class extends Player {
 				}
 
 				if (chargeTimer > chargeThreshold) {
-					for (local i = 0; i <= 10; i++)
-						stopSound(sndSurgeCharge[i]);
+					for (local i = 0; i <= 10; i++) stopSound(sndSurgeCharge[i]);
 					popSound(sndSurgeCharge[floor(chargeTimer)]);
 				}
 
@@ -875,8 +759,7 @@ Surge <- class extends Player {
 				// }
 
 				if (
-					(!getcon("spec2", "hold", true, playerNum) &&
-						!didAirSpecial) ||
+					(!getcon("spec2", "hold", true, playerNum) && !didAirSpecial) ||
 					(stats.weapon == "earth" && didAirSpecial && !freeDown)
 				) {
 					anim = "ball";
@@ -898,10 +781,7 @@ Surge <- class extends Player {
 				if (stats.stamina > 0) {
 					frame += 0.5;
 					stats.stamina -= 0.01 * (1 + game.difficulty);
-					if (
-						getcon("jump", "hold", true, playerNum) ||
-						getcon("up", "hold", true, playerNum)
-					) {
+					if (getcon("jump", "hold", true, playerNum) || getcon("up", "hold", true, playerNum)) {
 						vspeed = max(-2, vspeed - 0.2);
 						stats.stamina -= 0.01 * (1 + game.difficulty);
 					}
@@ -917,8 +797,7 @@ Surge <- class extends Player {
 		if (endMode && hspeed == 0) anim = "win";
 		else if (anim == "win") anim = "stand";
 
-		if (anim in an && an[anim] != null && anim != "hurt")
-			frame = wrap(abs(frame), 0, an[anim].len() - 1);
+		if (anim in an && an[anim] != null && anim != "hurt") frame = wrap(abs(frame), 0, an[anim].len() - 1);
 
 		if (!wasInWater && nowInWater) vspeed /= 8.0;
 		if (wasInWater && !nowInWater) vspeed *= 2.0;
@@ -936,8 +815,7 @@ Surge <- class extends Player {
 				actor[
 					newActor(AfterImage, x, y, [
 						sprite,
-						an[anim][wrap(floor(frame), 0, an[anim].len() - 1)] +
-							animOffset,
+						an[anim][wrap(floor(frame), 0, an[anim].len() - 1)] + animOffset,
 						0,
 						flip,
 						0,
@@ -980,8 +858,7 @@ Surge <- class extends Player {
 				local j = null;
 				if (playerNum == 1) j = config.joy;
 				if (playerNum == 2) j = config.joy2;
-				if (abs(joyX(j.index)) > js_max * 0.1)
-					mspeed = (3.0 * abs(joyX(j.index))) / float(js_max);
+				if (abs(joyX(j.index)) > js_max * 0.1) mspeed = (3.0 * abs(joyX(j.index))) / float(js_max);
 			}
 
 			if (invincible) mspeed += 0.4;
@@ -993,12 +870,7 @@ Surge <- class extends Player {
 			else accel = 0.1;
 			if (anim == "charge") accel = 0.0;
 
-			if (
-				!placeFree(x - hspeed, y + 2) &&
-				placeFree(x + hspeed, y + 2) &&
-				hspeed != 0 &&
-				fabs(hspeed) < 16
-			) {
+			if (!placeFree(x - hspeed, y + 2) && placeFree(x + hspeed, y + 2) && hspeed != 0 && fabs(hspeed) < 16) {
 				mspeed *= 1.5;
 				accel *= 2.0;
 			}
@@ -1056,10 +928,8 @@ Surge <- class extends Player {
 			}
 
 			if (resTime) {
-				if (getcon("up", "hold", true, playerNum) && vspeed > -2)
-					vspeed -= 0.2;
-				if (getcon("down", "hold", true, playerNum) && vspeed < 2)
-					vspeed += 0.2;
+				if (getcon("up", "hold", true, playerNum) && vspeed > -2) vspeed -= 0.2;
+				if (getcon("down", "hold", true, playerNum) && vspeed < 2) vspeed += 0.2;
 				anim = "jumpR";
 			}
 
@@ -1121,10 +991,7 @@ Surge <- class extends Player {
 
 				if (getcon("left", "hold", true, playerNum) && atCrossLadder())
 					if (placeFree(x - 2, y)) {
-						if (
-							!getcon("up", "hold", true, playerNum) &&
-							!getcon("down", "hold", true, playerNum)
-						)
+						if (!getcon("up", "hold", true, playerNum) && !getcon("down", "hold", true, playerNum))
 							frame -= climbdir / 8;
 						x -= 1;
 						x = round(x);
@@ -1132,10 +999,7 @@ Surge <- class extends Player {
 
 				if (getcon("right", "hold", true, playerNum) && atCrossLadder())
 					if (placeFree(x + 2, y)) {
-						if (
-							!getcon("up", "hold", true, playerNum) &&
-							!getcon("down", "hold", true, playerNum)
-						)
+						if (!getcon("up", "hold", true, playerNum) && !getcon("down", "hold", true, playerNum))
 							frame += climbdir / 8;
 						x += 1;
 						x = round(x);
@@ -1154,22 +1018,17 @@ Surge <- class extends Player {
 				}
 
 				// Change direction
-				if (getcon("right", "press", true, playerNum) && canMove)
-					flip = 0;
-				if (getcon("left", "press", true, playerNum) && canMove)
-					flip = 1;
+				if (getcon("right", "press", true, playerNum) && canMove) flip = 0;
+				if (getcon("left", "press", true, playerNum) && canMove) flip = 1;
 			}
 
 			// Get on ladder
 			if (
-				((getcon("down", "hold", true, playerNum) &&
-					placeFree(x, y + 2)) ||
+				((getcon("down", "hold", true, playerNum) && placeFree(x, y + 2)) ||
 					getcon("up", "hold", true, playerNum)) &&
 				anim != "hurt" &&
 				anim != "climb" &&
-				(vspeed >= 0 ||
-					getcon("down", "press", true, playerNum) ||
-					getcon("up", "press", true, playerNum))
+				(vspeed >= 0 || getcon("down", "press", true, playerNum) || getcon("up", "press", true, playerNum))
 			) {
 				if (atLadder() || atCrossLadder()) {
 					anim = "climb";
@@ -1192,29 +1051,19 @@ Surge <- class extends Player {
 			if (jumpBuffer > 0) jumpBuffer--;
 
 			if (getcon("jump", "press", true, playerNum) || jumpBuffer > 0) {
-				if (
-					onPlatform() &&
-					!placeFree(x, y + 2) &&
-					getcon("down", "hold", true, playerNum) &&
-					vspeed >= 0
-				) {
+				if (onPlatform() && !placeFree(x, y + 2) && getcon("down", "hold", true, playerNum) && vspeed >= 0) {
 					y++;
 					canJump = 32;
 					if (!placeFree(x, y) && !placeFree(x, y - 1)) y--;
 					if (anim == "stand" || anim == "walk") anim = "jumpT";
-				} else if (
-					(canJump > 0 && placeFree(x, y, shapeStand)) ||
-					nowInWater
-				) {
+				} else if ((canJump > 0 && placeFree(x, y, shapeStand)) || nowInWater) {
 					jumpBuffer = 0;
 					if (anim == "climb" || nowInWater) {
 						vspeed = -3;
 						if (anim == "climb") {
 							vspeed = -5;
-							if (getcon("left", "hold", true, playerNum))
-								hspeed = -2;
-							if (getcon("right", "hold", true, playerNum))
-								hspeed = 2;
+							if (getcon("left", "hold", true, playerNum)) hspeed = -2;
+							if (getcon("right", "hold", true, playerNum)) hspeed = 2;
 						}
 					} else vspeed = -(6.0 + min(fabs(hspeed) / 6.0, 4.0));
 					didJump = true;
@@ -1225,8 +1074,7 @@ Surge <- class extends Player {
 						else anim = "jumpR";
 						frame = 0.0;
 					}
-					if (!freeDown2 || (freeRight && freeLeft && !nowInWater))
-						popSound(sndSurgeJump, 0);
+					if (!freeDown2 || (freeRight && freeLeft && !nowInWater)) popSound(sndSurgeJump, 0);
 				} else if (
 					freeDown &&
 					anim != "climb" &&
@@ -1272,28 +1120,28 @@ Surge <- class extends Player {
 					(getcon("right", "hold", true, playerNum) && !freeRight))
 			) {
 				if (!freeLeft && !(onIce(x - 8, y) || onIce(x - 8, y - 16))) {
-					if (vspeed > 0.5) vspeed = 0.5;
-					if ((getFrames() / 4) % 4 == 0)
-						newActor(PoofTiny, x - 4, y + 12);
+					if (vspeed > 0.5) {
+						vspeed -= 0.5;
+						if (vspeed < 0.5) vspeed = 0.5;
+					}
+					if (getFrames() % 8 == 0) newActor(PoofTiny, x - 4 + 2 - randInt(4), y + 12 - randInt(2));
 					an["fall"] = an["fallW"];
 					anim = "fall";
 					flip = 0;
 				}
 				if (!freeRight && !(onIce(x + 8, y) || onIce(x + 8, y - 16))) {
-					if (vspeed > 0.5) vspeed = 0.5;
-					if ((getFrames() / 4) % 4 == 0)
-						newActor(PoofTiny, x + 4, y + 12);
+					if (vspeed > 0.5) {
+						vspeed -= 0.5;
+						if (vspeed < 0.5) vspeed = 0.5;
+					}
+					if (getFrames() % 8 == 0) newActor(PoofTiny, x + 4 + 2 - randInt(4), y + 12 - randInt(2));
 					an["fall"] = an["fallW"];
 					anim = "fall";
 					flip = 1;
 				}
 			} else an["fall"] = an["fallN"];
 
-			if (
-				!getcon("jump", "hold", true, playerNum) &&
-				(vspeed < 0 || anim == "fall") &&
-				didJump
-			) {
+			if (!getcon("jump", "hold", true, playerNum) && (vspeed < 0 || anim == "fall") && didJump) {
 				didJump = false;
 				vspeed /= 2.5;
 			}
@@ -1312,11 +1160,7 @@ Surge <- class extends Player {
 			}
 		} else rspeed = min(rspeed, abs(hspeed));
 
-		if (
-			anim != "ledge" &&
-			anim != "wall" &&
-			!(anim == "fall" && an.fall == an.fallW)
-		) {
+		if (anim != "ledge" && anim != "wall" && !(anim == "fall" && an.fall == an.fallW)) {
 			if (
 				(getcon("right", "hold", true, playerNum) &&
 					!getcon("left", "hold", true, playerNum) &&
@@ -1341,11 +1185,7 @@ Surge <- class extends Player {
 			if (blinking == 0) {
 				blinking = 60;
 				playSound(sndHurt, 0);
-				if (
-					stats.weapon == "earth" &&
-					anim == "ball" &&
-					stats.stamina > 0
-				) {
+				if (stats.weapon == "earth" && anim == "ball" && stats.stamina > 0) {
 					stats.stamina -= hurt;
 					if (stats.stamina < 0) stats.health += stats.stamina;
 				} else {
@@ -1412,10 +1252,7 @@ Surge <- class extends Player {
 		// Air moves
 		if (
 			canMove &&
-			(anim == "jumpR" ||
-				anim == "jumpU" ||
-				anim == "jumpT" ||
-				anim == "fall") &&
+			(anim == "jumpR" || anim == "jumpU" || anim == "jumpT" || anim == "fall") &&
 			!didAirSpecial &&
 			!onPlatform() &&
 			getcon("jump", "press", true, playerNum) &&
@@ -1435,22 +1272,12 @@ Surge <- class extends Player {
 				case "ice":
 					local target = null;
 					foreach (i in actor) {
-						if (
-							!(
-								i instanceof Enemy ||
-								(i == otherPlayer && gvBattleMode)
-							)
-						)
-							continue;
+						if (!(i instanceof Enemy || (i == otherPlayer && gvBattleMode))) continue;
 						if (flip == 0 && i.x < x - 32) continue;
 						if (flip == 1 && i.x > x + 32) continue;
 						if (!inDistance2(x, y, i.x, i.y, 128)) continue;
 						if ("notarget" in i && i.notarget) continue;
-						if (
-							target == null ||
-							distance2(x, y, i.x, i.y) <
-								distance2(x, y, target.x, target.y)
-						)
+						if (target == null || distance2(x, y, i.x, i.y) < distance2(x, y, target.x, target.y))
 							target = i;
 					}
 
@@ -1460,6 +1287,7 @@ Surge <- class extends Player {
 						didAirSpecial = true;
 						jumpBuffer = 0;
 						popSound(sndThrow);
+						homingSpeed = max(distance2(0, 0, hspeed, vspeed), 6.0)
 					}
 					break;
 
@@ -1499,29 +1327,13 @@ Surge <- class extends Player {
 					pseudoBlink = 8;
 			}
 
-		if (
-			(anim == "ball" || (anim == "jumpR" && didAirSpecial)) &&
-			stats.weapon == "fire"
-		) {
+		if ((anim == "ball" || (anim == "jumpR" && didAirSpecial)) && stats.weapon == "fire") {
 			if (fabs(hspeed) > 2) {
 				if (getFrames() % 4 == 0)
-					fireWeapon(
-						DashFlame,
-						x + hspeed * 2,
-						y + (anim == "ball" ? 4 : -2) + vspeed,
-						1,
-						id
-					);
+					fireWeapon(DashFlame, x + hspeed * 2, y + (anim == "ball" ? 4 : -2) + vspeed, 1, id);
 
 				if (getFrames() % 4 == 0) {
-					local c =
-						actor[
-							newActor(
-								FlameTiny,
-								x - 4 + randInt(8),
-								y - 4 + randInt(8)
-							)
-						];
+					local c = actor[newActor(FlameTiny, x - 4 + randInt(8), y - 4 + randInt(8))];
 					c.hspeed = -0.5 + randFloat(1);
 					c.vspeed = -0.5 + randFloat(1);
 				}
@@ -1532,39 +1344,17 @@ Surge <- class extends Player {
 
 		// Homing attack
 		if (stats.weapon == "ice" && checkActor(homingTarget) && antigrav > 0) {
-			local godir = pointAngle(
-				x,
-				y,
-				actor[homingTarget].x,
-				actor[homingTarget].y - 8
-			);
-			hspeed = lendirX(6, godir);
-			vspeed = lendirY(6, godir);
+			local godir = pointAngle(x, y, actor[homingTarget].x, actor[homingTarget].y - 8);
+			hspeed = lendirX(homingSpeed, godir);
+			vspeed = lendirY(homingSpeed, godir);
 
-			if (
-				inDistance2(
-					x,
-					y,
-					actor[homingTarget].x,
-					actor[homingTarget].y,
-					32
-				)
-			) {
+			if (inDistance2(x, y, actor[homingTarget].x, actor[homingTarget].y, 32)) {
 				fireWeapon(InstaShield, x, y, 1, id);
 				pseudoBlink = 8;
 			}
 
 			if (getFrames() % 2 == 0)
-				newActor(AfterImage, xprev, yprev, [
-					sprExplodeI,
-					randInt(4) + 1,
-					0,
-					0,
-					randInt(360),
-					1,
-					1,
-					4
-				]);
+				newActor(AfterImage, xprev, yprev, [sprExplodeI, randInt(4) + 1, 0, 0, randInt(360), 1, 1, 4]);
 		}
 		if (
 			stats.weapon == "ice" &&
@@ -1602,9 +1392,7 @@ Surge <- class extends Player {
 				flip,
 				1,
 				1,
-				blinking && anim != "hurt"
-					? wrap(blinking, 0, 10).tofloat() / 10.0
-					: 1
+				blinking && anim != "hurt" ? wrap(blinking, 0, 10).tofloat() / 10.0 : 1
 			);
 		else
 			drawSpriteZ(
@@ -1617,9 +1405,7 @@ Surge <- class extends Player {
 				flip,
 				1,
 				1,
-				blinking && anim != "hurt"
-					? wrap(blinking, 0, 10).tofloat() / 15.0
-					: 1
+				blinking && anim != "hurt" ? wrap(blinking, 0, 10).tofloat() / 15.0 : 1
 			);
 
 		// Transformation flash

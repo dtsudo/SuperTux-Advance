@@ -814,6 +814,7 @@ bgAurora <- newSprite("res/gfx/aurora.png", 720, 240);
 bgAuroraNight <- newSprite("res/gfx/aurora-night.png", 720, 240);
 bgRiverCity <- newSprite("res/gfx/rivercity.png", 380, 240);
 bgOcean <- newSprite("res/gfx/ocean.png", 480, 8);
+bgOceanSunset <- newSprite("res/gfx/ocean-sunset.png", 480, 8);
 bgOceanNight <- newSprite("res/gfx/ocean-night.png", 480, 8);
 bgForest0 <- newSprite("res/gfx/forest0.png", 128, 180);
 bgForest1 <- newSprite("res/gfx/forest1.png", 128, 240, 0, -4);
