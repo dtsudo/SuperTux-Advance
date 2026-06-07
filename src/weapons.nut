@@ -562,28 +562,31 @@ FlameBreath <- class extends WeaponEffect {
 	element = "fire";
 	frame = 0.0;
 	angle = 0;
+	hasInitializedAngle = false
 	power = 1.0;
 	piercing = 0;
+	perf = 0
 
 	constructor(_x, _y, _arr = null) {
 		shape = Rec(x, y, 4, 4, 0);
 		base.constructor(_x, _y, _arr);
 		vspeed = 0.5 - randFloat(1.0);
 		fireWeapon(AfterFlame, x, y, alignment, owner);
+		perf = 0
 	}
 
 	function run() {
-		angle = pointAngle(0, 0, hspeed, vspeed) - 90;
+		perf++
+		if (!hasInitializedAngle) {
+			hasInitializedAngle = true
+			angle = pointAngle(0, 0, hspeed, vspeed) - 90
+		}
 		frame += 0.2;
 		x += hspeed;
 		y += vspeed;
-		if (checkActor(owner)) {
-			x += actor[owner].hspeed;
-			y += actor[owner].vspeed / 2;
-		}
 		shape.setPos(x, y);
-		if (!placeFree(x, y)) deleteActor(id);
-		if (frame >= 6) deleteActor(id);
+		if (perf % 2 == 0 && !placeFree(x, y)) deleteActor(id);
+		if (frame >= 15) deleteActor(id);
 	}
 
 	function draw() {
@@ -612,29 +615,34 @@ FlameBreath <- class extends WeaponEffect {
 };
 
 FireballK <- class extends WeaponEffect {
-	timer = 90;
+	timer = null;
 	angle = 0;
 	element = "fire";
 	power = 1;
+	inWaterBool = false
 
 	constructor(_x, _y, _arr = null) {
 		base.constructor(_x, _y, _arr);
 
-		shape = Cir(x, y, 2);
+		shape = Rec(x, y, 2, 2, 0)
+		timer = 85 + randInt(10)
 	}
 
 	function run() {
 		timer--;
 		if (timer == 0) deleteActor(id);
 
-		if (inWater(x, y)) {
+		if (timer % 5 == 0)
+			inWaterBool = inWater(x, y)
+
+		if (inWaterBool) {
 			vspeed *= 0.99;
 			hspeed *= 0.99;
 		} else vspeed += 0.1;
 
 		x += hspeed;
 		y += vspeed;
-		if (!placeFree(x, y)) deleteActor(id);
+		if (timer % 2 == 0 && !placeFree(x, y)) deleteActor(id);
 
 		if (y > gvMap.h) {
 			deleteActor(id);
@@ -690,7 +698,7 @@ ExplodeF <- class extends WeaponEffect {
 		stopSound(sndExplodeF);
 		playSound(sndExplodeF, 0);
 
-		shape = Cir(x, y, 8.0);
+		shape = Rec(x, y, 6, 6, 0)
 	}
 
 	function run() {
@@ -751,10 +759,6 @@ ExplodeF <- class extends WeaponEffect {
 			0.75 - frame / 10.0,
 			0.75 - frame / 10.0
 		);
-		if (debug) {
-			setDrawColor(0xff0000ff);
-			drawCircle(x - camx, y - camy, shape.r, false);
-		}
 	}
 };
 
@@ -1332,6 +1336,84 @@ ExplodeTiny <- class extends WeaponEffect {
 /////////////////
 // ICE ATTACKS //
 /////////////////
+::KonqiIceball <- class extends WeaponEffect {
+	element = "earth"
+	timer = 90
+	angle = null
+	xdelta = null
+	ydelta = null
+	xdeltaOriginal = null
+	ydeltaOriginal = null
+
+	constructor(_x, _y, _arr = null) {
+		base.constructor(_x, _y, _arr)
+
+		shape = Rec(x, y, 3, 3, 0)
+		timer = 90 + randInt(2)
+	}
+
+	function physics() {
+		timer--
+		if(timer == 0)
+			deleteActor(id)
+
+		if (timer % 2 == 0 && !placeFree(x, y))
+			deleteActor(id)
+
+		if(y > gvMap.h)
+			deleteActor(id)
+
+		if (xdelta == null) {
+			xdeltaOriginal = sin(angle)
+			ydeltaOriginal = cos(angle)
+			xdelta = xdeltaOriginal + xdeltaOriginal + xdeltaOriginal
+			ydelta = ydeltaOriginal + ydeltaOriginal + ydeltaOriginal
+		}
+
+		if (timer % 5 == 0) {
+			xdelta += xdeltaOriginal
+			ydelta += ydeltaOriginal
+		}
+
+		x += xdelta
+		y += ydelta
+
+		shape.setPos(x, y)
+	}
+
+	function animation() {
+		if(getFrames() % 5 == 0) newActor(Glimmer, x - 4 + randInt(8), y - 4 + randInt(8))
+	}
+
+	function draw() {
+
+		drawSprite(
+			sprIceball,
+			getFrames() / 2,
+			x - camx,
+			y - camy,
+			0,
+			0,
+			1,
+			1,
+			1
+		);
+		drawLight(
+			sprLightIce,
+			0,
+			x - camx,
+			y - camy,
+			0,
+			0,
+			1.0 / 8.0,
+			1.0 / 8.0
+		);
+	}
+
+	function destructor() {
+		fireWeapon(AfterIce, x, y, alignment, owner)
+	}
+}
 
 Iceball <- class extends WeaponEffect {
 	element = "ice";

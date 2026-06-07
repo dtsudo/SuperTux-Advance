@@ -1,5 +1,5 @@
 Boss <- class extends Enemy {
-	health = 40;
+	health = 40 * 30;
 	phantom = false; // Allows the boss to phase through walls in their intro
 	active = false;
 	routine = null;
@@ -88,7 +88,7 @@ BossManager <- class extends Actor {
 
 		foreach (i in actor["Boss"]) {
 			bossTotal++;
-			healthTotal += 40;
+			healthTotal += 40 * 30;
 			healthActual += i.health;
 		}
 	}
@@ -116,6 +116,24 @@ BossManager <- class extends Actor {
 		}
 
 		if (getFrames() % 4 == 0) {
+			if (health < healthActual - 16)
+				health += 16;
+			if (health < healthActual - 8)
+				health += 8;
+			if (health < healthActual - 4)
+				health += 4;
+			if (health < healthActual - 2)
+				health += 2;
+
+			if (health > healthActual + 80)
+				health -= 80;
+			if (health > healthActual + 40)
+				health -= 40;
+			if (health > healthActual + 20)
+				health -= 20;
+			if (health > healthActual + 10)
+				health -= 10;
+
 			if (health < round(healthActual)) {
 				stopSound(sndMenuMove);
 				playSound(sndMenuMove, 0);
@@ -124,7 +142,7 @@ BossManager <- class extends Actor {
 		}
 		if (health > 0) if (!gvBoss) gvBoss = this;
 
-		game.bossHealth = (40 / healthTotal) * health;
+		game.bossHealth = (40 * 30 / healthTotal) * health;
 	}
 
 	function destructor() {
@@ -162,7 +180,7 @@ Yeti <- class extends Boss {
 	};
 
 	// Boss specific variables
-	health = 40;
+	health = 40 * 30;
 	eventTimer = 0;
 	eventStage = 0;
 	hasThrown = false;
@@ -407,7 +425,7 @@ Yeti <- class extends Boss {
 					YetiShock,
 					x,
 					y + 32,
-					(40 - health).tofloat() / 20.0 + 1.0
+					(40 - (health / 30)).tofloat() / 20.0 + 1.0
 				);
 			} else {
 				eventTimer = 60;
@@ -560,7 +578,7 @@ Yeti <- class extends Boss {
 		if (_stomp) damage *= damageMult["stomp"];
 
 		health -= damage;
-		if (damage > 0) blinking = blinkMax;
+		if (damage > 0) blinking = 0;
 
 		if (routine == ruDizzy && _stomp) {
 			hurtStomp(_by);

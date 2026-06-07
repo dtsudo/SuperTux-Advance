@@ -1379,7 +1379,7 @@ gmPlay <- function () {
 
 		// Draw boss health
 		if (gvBoss) {
-			local fullhearts = floor(game.bossHealth / 4);
+			local fullhearts = floor(game.bossHealth / (4 * 30));
 			if (game.bossHealth == 0) fullhearts = 0;
 
 			drawSprite(sprBossHealth, 6, gvScreenW - 23, gvScreenH - 88);
@@ -1387,7 +1387,7 @@ gmPlay <- function () {
 			for (local i = 0; i < 10; i++) {
 				if (i < fullhearts) drawSprite(sprBossHealth, 4, gvScreenW - 23, gvScreenH - 96 - 8 * i);
 				else if (i == fullhearts && game.bossHealth > 0)
-					drawSprite(sprBossHealth, game.bossHealth % 4, gvScreenW - 23, gvScreenH - 96 - 8 * i);
+					drawSprite(sprBossHealth, floor(game.bossHealth / 30) % 4, gvScreenW - 23, gvScreenH - 96 - 8 * i);
 				else drawSprite(sprBossHealth, 0, gvScreenW - 23, gvScreenH - 96 - 8 * i);
 			}
 			drawSprite(sprBossHealth, 5, gvScreenW - 23, gvScreenH - 96 - 8 * 10);

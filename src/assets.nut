@@ -12,7 +12,7 @@ font2 <- newFont(sprFont2, 0, 0, true, -4);
 sprFont2A <- newSprite("res/gfx/font-achieve.png", 12, 14);
 font2A <- newFont(sprFont2A, 32, 0, true, -4);
 sprDebug <- newSprite("res/gfx/debugkeys.png", 8, 8);
-sprTitle <- newSprite("res/gfx/title.png", 220, 55, 110, 0);
+sprTitle <- newSprite("res/gfx/title.png", 220, 80, 110, 0);
 sprActors <- newSprite("res/gfx/actors.png", 16, 16);
 sprTuxTitle <- newSprite("res/gfx/tux-title.png", 155, 213, 155, 213);
 sprCRT <- newSprite("res/gfx/crt.png", 240, 240);

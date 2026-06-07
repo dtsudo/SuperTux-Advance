@@ -1013,52 +1013,33 @@ Konqi <- class extends Player {
 							if (anim == "crouch") fy = 6;
 							if (anim == "crawl") fy = 10;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(FireballK, x + fx, y - 4 + fy, 1, id);
-							if (!flip) c.hspeed = 5;
-							else c.hspeed = -5;
-							c.vspeed = -0.5;
-							playSound(sndFireball, 0);
-							if (getcon("up", "hold", true, playerNum)) {
-								c.vspeed = -2.5;
-								c.hspeed /= 1.5;
-							}
-							stats.energy--;
-							firetime = 60;
 
-							c.hspeed += hspeed / 1.5;
+							playSound(sndFireball, 0);
+							stats.energy -= 0.04
+							firetime = 60;
+							for (local i = 0; i < 20; i++) {
+								local c = fireWeapon(FireballK, x + fx, y - 4 + fy, 1, id)
+								c.hspeed = (randInt(1000) - 500) / 50
+								c.vspeed = -(randInt(100) / 15)
+							}
 						}
 						break;
 
 					case "ice":
 						if (cooldown > 0) break;
 						if (getcon("shoot", "press", true, playerNum)) {
-							cooldown = 60;
-							breatheFire();
-							playSoundChannel(sndFlame, 0, 0);
-						}
-						if (
-							getcon("shoot", "press", true, playerNum) &&
-							anim != "slide" &&
-							anim != "hurt" &&
-							stats.energy > 0
-						) {
+							cooldown = 8;
+							playSound(sndFireball, 0)
+
 							local fx = 6;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(Iceball, x + fx, y, 1, id);
-							if (!flip) c.hspeed = 5;
-							else c.hspeed = -5;
-							playSound(sndFireball, 0);
-							if (getcon("up", "hold", true, playerNum)) {
-								c.vspeed = -2.5;
-								c.hspeed /= 1.5;
+							local randAngle = randInt(20)
+							for (local i = 0; i < 360; i += 20) {
+								local c = fireWeapon(KonqiIceball, x + fx, y, 1, id)
+								c.angle = (randAngle + i) / 360.0 * 2 * pi
 							}
-							if (getcon("down", "hold", true, playerNum)) {
-								c.vspeed = 2;
-								c.hspeed /= 1.5;
-							}
-							stats.energy--;
+							stats.energy -= 0.04
 							firetime = 60;
-							if (anim == "crawl") c.y += 8;
 						}
 						break;
 
@@ -1136,30 +1117,11 @@ Konqi <- class extends Player {
 
 					default:
 						if (cooldown > 0) break;
-						if (getcon("shoot", "press", true, playerNum)) {
-							cooldown = 45;
+						if (getcon("shoot", "hold", true, playerNum)) {
+							cooldown = 6;
 							breatheFire();
 							playSoundChannel(sndFlame, 0, 0);
 
-							if (stats.energy >= 1) {
-								local fx = 6;
-								if (flip == 1) fx = -5;
-								local c = fireWeapon(Fireball, x + fx, y, 1, id);
-								if (!flip) c.hspeed = 5;
-								else c.hspeed = -5;
-								playSound(sndFireball, 0);
-								if (getcon("up", "hold", true, playerNum)) {
-									c.vspeed = -2.5;
-									c.hspeed /= 1.5;
-								}
-								if (getcon("down", "hold", true, playerNum)) {
-									c.vspeed = 2;
-									c.hspeed /= 1.5;
-								}
-								stats.energy--;
-								firetime = 60;
-								if (anim == "crawl") c.y += 8;
-							}
 						}
 						break;
 				}
@@ -1180,52 +1142,36 @@ Konqi <- class extends Player {
 							if (anim == "crouch") fy = 6;
 							if (anim == "crawl") fy = 10;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(FireballK, x + fx, y - 4 + fy, 1, id);
-							if (!flip) c.hspeed = 5;
-							else c.hspeed = -5;
-							c.vspeed = -0.5;
+
 							playSound(sndFireball, 0);
-							if (getcon("up", "hold", true, playerNum)) {
-								c.vspeed = -2.5;
-								c.hspeed /= 1.5;
-							}
-							stats.energy--;
+
+							stats.energy -= 0.04
 							firetime = 60;
 
-							c.hspeed += hspeed / 1.5;
+							for (local i = 0; i < 20; i++) {
+								local c = fireWeapon(FireballK, x + fx, y - 4 + fy, 1, id)
+								c.hspeed = (randInt(1000) - 500) / 50
+								c.vspeed = -(randInt(100) / 15)
+							}
 						}
 						break;
 
 					case "ice":
 						if (cooldown > 0) break;
 						if (getcon("spec1", "press", true, playerNum)) {
-							cooldown = 60;
-							breatheFire(1);
-							playSoundChannel(sndFlame, 0, 0);
-						}
-						if (
-							getcon("spec1", "press", true, playerNum) &&
-							anim != "slide" &&
-							anim != "hurt" &&
-							stats.energy > 0
-						) {
+							cooldown = 8;
+							playSound(sndFireball, 0)
+
 							local fx = 6;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(Iceball, x + fx, y, 1, id);
-							if (!flip) c.hspeed = 5;
-							else c.hspeed = -5;
-							playSound(sndFireball, 0);
-							if (getcon("up", "hold", true, playerNum)) {
-								c.vspeed = -2.5;
-								c.hspeed /= 1.5;
+
+							local randAngle = randInt(20)
+							for (local i = 0; i < 360; i += 20) {
+								local c = fireWeapon(KonqiIceball, x + fx, y, 1, id)
+								c.angle = (randAngle + i) / 360.0 * 2 * pi
 							}
-							if (getcon("down", "hold", true, playerNum)) {
-								c.vspeed = 2;
-								c.hspeed /= 1.5;
-							}
-							stats.energy--;
+							stats.energy -= 0.04
 							firetime = 60;
-							if (anim == "crawl") c.y += 8;
 						}
 						break;
 
@@ -1302,31 +1248,12 @@ Konqi <- class extends Player {
 
 					default:
 						if (cooldown > 0) break;
-						if (getcon("spec1", "press", true, playerNum)) {
-							cooldown = 45;
+						if (getcon("spec1", "hold", true, playerNum)) {
+							cooldown = 6;
 							breatheFire(1);
 							playSoundChannel(sndFlame, 0, 0);
 
-							if (stats.energy >= 1) {
-								local fx = 6;
-								if (flip == 1) fx = -5;
-								local c = fireWeapon(Fireball, x + fx, y, 1, id);
-								if (!flip) c.hspeed = 5;
-								else c.hspeed = -5;
-								c.hspeed += hspeed / 1.5;
-								playSound(sndFireball, 0);
-								if (getcon("up", "hold", true, playerNum)) {
-									c.vspeed = -2.5;
-									c.hspeed /= 1.5;
-								}
-								if (getcon("down", "hold", true, playerNum)) {
-									c.vspeed = 2;
-									c.hspeed /= 1.5;
-								}
-								stats.energy--;
-								firetime = 60;
-								if (anim == "crawl") c.y += 8;
-							}
+
 						}
 						break;
 				}
@@ -1463,71 +1390,32 @@ Konqi <- class extends Player {
 						) {
 							local fx = 6;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(FireballK, x + fx, y - 4, 1, id);
-							if (!flip) c.hspeed = 3;
-							else c.hspeed = -3;
-							playSound(sndFireball, 0);
-							if (getcon("up", "hold", true, playerNum)) {
-								c.vspeed = -3;
-								if (hspeed != 0) c.hspeed *= 0.75;
-								else {
-									c.hspeed = 0;
-									c.vspeed = -3;
-								}
-							}
-							if (getcon("down", "hold", true, playerNum)) {
-								c.vspeed = 3;
-								if (hspeed != 0) c.hspeed *= 0.75;
-								else {
-									c.hspeed = 0;
-									c.vspeed = 3;
-								}
+							playSound(sndFireball, 0)
+							for (local z = 0; z < 10; z++) {
+								local c = fireWeapon(FireballK, x + fx, y - 4, 1, id)
+								local angleRadians = randInt(1000) * 2 * pi / 1000
+								c.hspeed = sin(angleRadians) * 3
+								c.vspeed = cos(angleRadians) * 3
 							}
 
-							c.hspeed += hspeed / 2;
-							c.vspeed += vspeed / 2;
-
-							stats.energy--;
-							firetime = 60;
+							stats.energy -= 0.04
+							firetime = 12
 						}
 						break;
 
 					case "ice":
 						if (
-							getcon("shoot", "press", true, playerNum) &&
-							anim != "slide" &&
-							anim != "hurt" &&
-							stats.energy > 0 &&
-							!(!placeFree(x, y + 1) && getcon("down", "hold", true, playerNum))
-						) {
+							getcon("shoot", "press", true, playerNum) ) {
+									playSound(sndFireball, 0)
 							local fx = 6;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(Iceball, x + fx, y, 1, id);
-							if (!flip) c.hspeed = 3;
-							else c.hspeed = -3;
-							playSound(sndFireball, 0);
-							if (getcon("up", "hold", true, playerNum)) {
-								c.vspeed = -3;
-								if (hspeed != 0) c.hspeed *= 0.75;
-								else {
-									c.hspeed = 0;
-									c.vspeed = -3;
-								}
+							local randAngle = randInt(20)
+							for (local i = 0; i < 360; i += 20) {
+								local c = fireWeapon(KonqiIceball, x + fx, y, 1, id)
+								c.angle = (randAngle + i) / 360.0 * 2 * pi
 							}
-							if (getcon("down", "hold", true, playerNum)) {
-								c.vspeed = 3;
-								if (hspeed != 0) c.hspeed *= 0.75;
-								else {
-									c.hspeed = 0;
-									c.vspeed = 3;
-								}
-							}
-
-							c.hspeed += hspeed / 2;
-							c.vspeed += vspeed / 2;
-
-							stats.energy--;
-							firetime = 60;
+							stats.energy -= 0.04
+							firetime = 60
 						}
 						break;
 
@@ -1611,6 +1499,17 @@ Konqi <- class extends Player {
 							firetime = 60;
 						}
 						break;
+				default:
+					if(cooldown > 0) {
+						cooldown--
+						break
+					}
+					if(getcon("shoot", "hold", true, playerNum)) {
+						cooldown = 6
+						breatheFire()
+						playSoundChannel(sndFlame, 0, 0)
+					}
+					break
 				}
 
 			if (canMove)
@@ -1624,71 +1523,32 @@ Konqi <- class extends Player {
 						) {
 							local fx = 6;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(FireballK, x + fx, y - 4, 1, id);
-							if (!flip) c.hspeed = 3;
-							else c.hspeed = -3;
-							playSound(sndFireball, 0);
-							if (getcon("up", "hold", true, playerNum)) {
-								c.vspeed = -3;
-								if (hspeed != 0) c.hspeed *= 0.75;
-								else {
-									c.hspeed = 0;
-									c.vspeed = -3;
-								}
-							}
-							if (getcon("down", "hold", true, playerNum)) {
-								c.vspeed = 3;
-								if (hspeed != 0) c.hspeed *= 0.75;
-								else {
-									c.hspeed = 0;
-									c.vspeed = 3;
-								}
+							playSound(sndFireball, 0)
+							for (local z = 0; z < 10; z++) {
+								local c = fireWeapon(FireballK, x + fx, y - 4, 1, id)
+								local angleRadians = randInt(1000) * 2 * pi / 1000
+								c.hspeed = sin(angleRadians) * 3
+								c.vspeed = cos(angleRadians) * 3
 							}
 
-							c.hspeed += hspeed / 2;
-							c.vspeed += vspeed / 2;
-
-							stats.energy--;
-							firetime = 60;
+							stats.energy -= 0.04
+							firetime = 12
 						}
 						break;
 
 					case "ice":
 						if (
-							getcon("spec1", "press", true, playerNum) &&
-							anim != "slide" &&
-							anim != "hurt" &&
-							stats.energy > 0 &&
-							!(!placeFree(x, y + 1) && getcon("down", "hold", true, playerNum))
-						) {
+							getcon("spec1", "press", true, playerNum)) {
+									playSound(sndFireball, 0)
 							local fx = 6;
 							if (flip == 1) fx = -5;
-							local c = fireWeapon(Iceball, x + fx, y, 1, id);
-							if (!flip) c.hspeed = 3;
-							else c.hspeed = -3;
-							playSound(sndFireball, 0);
-							if (getcon("up", "hold", true, playerNum)) {
-								c.vspeed = -3;
-								if (hspeed != 0) c.hspeed *= 0.75;
-								else {
-									c.hspeed = 0;
-									c.vspeed = -3;
-								}
+							local randAngle = randInt(20)
+							for (local i = 0; i < 360; i += 20) {
+								local c = fireWeapon(KonqiIceball, x + fx, y, 1, id)
+								c.angle = (randAngle + i) / 360.0 * 2 * pi
 							}
-							if (getcon("down", "hold", true, playerNum)) {
-								c.vspeed = 3;
-								if (hspeed != 0) c.hspeed *= 0.75;
-								else {
-									c.hspeed = 0;
-									c.vspeed = 3;
-								}
-							}
-
-							c.hspeed += hspeed / 2;
-							c.vspeed += vspeed / 2;
-
-							stats.energy--;
-							firetime = 60;
+							stats.energy -= 0.04
+							firetime = 60
 						}
 						break;
 
@@ -1772,6 +1632,17 @@ Konqi <- class extends Player {
 							firetime = 60;
 						}
 						break;
+				default:
+					if(cooldown > 0) {
+						cooldown--
+						break
+					}
+					if(getcon("spec1", "hold", true, playerNum)) {
+						cooldown = 6
+						breatheFire(1)
+						playSoundChannel(sndFlame, 0, 0)
+					}
+					break
 				}
 		}
 
@@ -2040,6 +1911,8 @@ Konqi <- class extends Player {
 			if (vspeed > 0) c.vspeed = (-i.tofloat() + 5.0) / 8.0;
 			else c.vspeed = (i.tofloat() - 5.0) / 8.0;
 			if (anim == "crawl") c.y += 8;
+							c.vspeed *= 2
+				c.hspeed *= 5
 		}
 	}
 
